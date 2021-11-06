@@ -14,12 +14,20 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol-common"))
-      }
+package com.gabrielleeg1.javarock.api.protocol.chat
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+class Chat(val text: String) {
+  companion object {
+    /**
+     * Gets a [Chat] object from a string converting color codes
+     * 
+     * TODO: convert color codes
+     */
+    fun of(text: String): Chat {
+      return Chat(text)
     }
   }
 }

@@ -14,12 +14,8 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol-common"))
-      }
-    }
-  }
-}
+package com.gabrielleeg1.javarock.api.protocol.types
+
+operator fun Int.compareTo(value: VarInt): Int = compareTo(value.toInt())
+
+operator fun Long.compareTo(value: VarLong): Int = compareTo(value.toLong())

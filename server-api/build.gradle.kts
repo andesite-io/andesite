@@ -23,9 +23,5 @@ kotlin {
         implementation(project(":server-api:protocol-java"))
       }
     }
-    val commonTest by getting
-
-    val jvmMain by getting
-    val jvmTest by getting
   }
 }

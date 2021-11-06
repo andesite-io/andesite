@@ -14,12 +14,9 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol-common"))
-      }
-    }
-  }
-}
+package com.gabrielleeg1.javarock.api.protocol
+
+/**
+ * Determines packet id
+ */
+annotation class Packet(val id: Byte)

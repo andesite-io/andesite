@@ -14,12 +14,8 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol-common"))
-      }
-    }
-  }
+package com.gabrielleeg1.javarock.api.protocol
+
+annotation class VarIntEnum {
+  annotation class Entry(val value: Int)
 }

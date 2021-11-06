@@ -46,6 +46,8 @@ allprojects {
     sourceSets {
       val commonMain by getting {
         dependencies {
+          implementation("io.ktor:ktor-network:1.6.4")
+          implementation("com.benasher44:uuid:0.3.1")
           implementation("net.benwoodworth.knbt:knbt:0.11.1")
           implementation("io.github.microutils:kotlin-logging:1.12.5")
           implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")

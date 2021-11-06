@@ -14,12 +14,16 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol-common"))
-      }
-    }
+package com.gabrielleeg1.javarock.api.protocol
+
+import io.ktor.utils.io.core.ByteReadPacket
+
+interface Codec<T> {
+  fun write(value: T): ByteReadPacket {
+    error("The codec ${this::class.simpleName} can not write values")
+  }
+  
+  fun read(packet: ByteReadPacket): T {
+    error("The codec ${this::class.simpleName} can not read values")
   }
 }
