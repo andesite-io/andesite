@@ -14,13 +14,5 @@
  *    limitations under the License.
  */
 
-rootProject.name = "javarock"
-
-include("server-api")
-include("server-api:protocol-common")
-include("server-api:protocol-java")
-include("server-api:protocol-java:v756")
-include("server-api:protocol-bedrock")
-include("server-api:protocol-bedrock:v465")
-include("server-bedrock")
-include("server-java")
+kotlin {
+}

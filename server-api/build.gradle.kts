@@ -14,13 +14,18 @@
  *    limitations under the License.
  */
 
-rootProject.name = "javarock"
+kotlin {
+  sourceSets {
+    val commonMain by getting {
+      dependencies {
+        implementation(project(":server-api:protocol-common"))
+        implementation(project(":server-api:protocol-bedrock"))
+        implementation(project(":server-api:protocol-java"))
+      }
+    }
+    val commonTest by getting
 
-include("server-api")
-include("server-api:protocol-common")
-include("server-api:protocol-java")
-include("server-api:protocol-java:v756")
-include("server-api:protocol-bedrock")
-include("server-api:protocol-bedrock:v465")
-include("server-bedrock")
-include("server-java")
+    val jvmMain by getting
+    val jvmTest by getting
+  }
+}
