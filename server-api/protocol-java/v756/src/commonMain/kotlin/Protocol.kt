@@ -14,22 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.chat
+package com.gabrielleeg1.javarock.api.protocol.java.v756
 
-import kotlinx.serialization.Serializable
+import com.gabrielleeg1.javarock.api.protocol.protocol
 
-@Serializable
-class Chat(val text: String) {
-  companion object {
-    const val ColorCode = "\u00A7"
-    
-    /**
-     * Gets a [Chat] object from a string converting color codes
-     * 
-     * TODO: convert color codes
-     */
-    fun of(text: String): Chat {
-      return Chat(text.replace("&", ColorCode))
-    }
-  }
+val protocol756 = protocol {
+  // TODO
 }

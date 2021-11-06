@@ -14,22 +14,30 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.chat
+package com.gabrielleeg1.javarock.api.protocol
 
-import kotlinx.serialization.Serializable
+import kotlin.reflect.KClass
 
-@Serializable
-class Chat(val text: String) {
-  companion object {
-    const val ColorCode = "\u00A7"
-    
-    /**
-     * Gets a [Chat] object from a string converting color codes
-     * 
-     * TODO: convert color codes
-     */
-    fun of(text: String): Chat {
-      return Chat(text.replace("&", ColorCode))
-    }
+class Protocol(val codecs: Map<KClass<*>, Codec<*>>) {
+  // TODO
+}
+
+fun protocol(builder: ProtocolBuilder.() -> Unit): Protocol {
+  return ProtocolBuilder().apply(builder).build()
+}
+
+class ProtocolBuilder internal constructor() {
+  private val builder = LinkedHashMap<KClass<*>, Codec<*>>()
+
+  inline fun <reified T : Any> codec(codec: Codec<T>) {
+    codec(T::class, codec)
+  }
+
+  fun <T : Any> codec(aClass: KClass<T>, codec: Codec<T>) {
+    builder[aClass] = codec
+  }
+
+  internal fun build(): Protocol {
+    return Protocol(builder)
   }
 }

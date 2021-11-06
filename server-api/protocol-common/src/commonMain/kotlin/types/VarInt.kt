@@ -30,4 +30,6 @@ value class VarInt internal constructor(private val inner: Int) : Comparable<Num
   operator fun times(value: Int): VarInt = VarInt(inner * value)
   
   override fun compareTo(other: Number): Int = inner.compareTo(other.toInt())
+
+  override fun toString(): String = inner.toString()
 }

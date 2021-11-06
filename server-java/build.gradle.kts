@@ -20,7 +20,15 @@ kotlin {
       dependencies {
         implementation(project(":server-api"))
         implementation(project(":server-api:protocol-common"))
+        implementation(project(":server-api:protocol-java"))
         implementation(project(":server-api:protocol-java:v756"))
+      }
+    }
+    
+    val jvmMain by getting {
+      dependencies {
+        implementation(kotlin("reflect"))
+        implementation("ch.qos.logback:logback-classic:1.2.6")
       }
     }
   }

@@ -33,4 +33,6 @@ value class VarLong internal constructor(private val inner: Long) : Comparable<N
   operator fun div(value: Long): VarLong = VarLong(inner / value)
 
   override fun compareTo(other: Number): Int = inner.compareTo(other.toLong())
+
+  override fun toString(): String = inner.toString()
 }

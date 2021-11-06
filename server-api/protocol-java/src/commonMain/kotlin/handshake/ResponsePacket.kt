@@ -52,13 +52,13 @@ data class Players(
 @Serializable
 data class Sample(val name: String, val id: String)
 
-@Packet(0x00)
-data class ResponsePacket(val value: Response) : JavaPacket {
+@Packet(0x00, ResponsePacket.ResponseCodec::class)
+data class ResponsePacket(val response: Response) : JavaPacket {
   companion object ResponseCodec : Codec<ResponsePacket> {
     val json = Json {}
 
     override fun write(value: ResponsePacket): ByteReadPacket = buildPacket {
-      writeString(json.encodeToString(value))
+      writeString(json.encodeToString(value.response))
     }
   }
 }

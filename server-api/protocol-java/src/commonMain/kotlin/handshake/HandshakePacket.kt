@@ -26,7 +26,7 @@ import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readUShort
 
-@Packet(0x00)
+@Packet(0x00, HandshakePacket.HandshakeCodec::class)
 data class HandshakePacket(
   val protocolVersion: VarInt,
   val serverAddress: String,

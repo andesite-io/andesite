@@ -14,5 +14,13 @@
  *    limitations under the License.
  */
 
+
 kotlin {
+  sourceSets {
+    val commonMain by getting {
+      dependencies {
+        implementation("io.ktor:ktor-network:1.6.4")
+      }
+    }
+  }
 }

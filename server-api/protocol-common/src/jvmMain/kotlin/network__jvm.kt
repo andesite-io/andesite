@@ -14,22 +14,14 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.chat
+package com.gabrielleeg1.javarock.api.protocol
 
-import kotlinx.serialization.Serializable
+import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.ByteWriteChannel
 
-@Serializable
-class Chat(val text: String) {
-  companion object {
-    const val ColorCode = "\u00A7"
-    
-    /**
-     * Gets a [Chat] object from a string converting color codes
-     * 
-     * TODO: convert color codes
-     */
-    fun of(text: String): Chat {
-      return Chat(text.replace("&", ColorCode))
-    }
-  }
+suspend fun ByteWriteChannel.writeVarInt(varInt: VarInt): Unit = writeVarInt(varInt) {
+  writeByte(it)
 }
+
+suspend fun ByteReadChannel.readVarInt(): VarInt = readVarInt { readByte() }

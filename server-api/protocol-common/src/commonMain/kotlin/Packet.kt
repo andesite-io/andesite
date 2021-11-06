@@ -16,7 +16,11 @@
 
 package com.gabrielleeg1.javarock.api.protocol
 
+import kotlin.reflect.KClass
+
 /**
  * Determines packet id
  */
-annotation class Packet(val id: Byte)
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+annotation class Packet(val id: Int, val codecClass: KClass<out Codec<*>> = Codec::class)

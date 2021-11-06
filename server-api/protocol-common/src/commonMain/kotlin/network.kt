@@ -25,7 +25,11 @@ import kotlin.experimental.and
 
 fun BytePacketBuilder.writeVarInt(varint: Int): Unit = writeVarInt(VarInt(varint))
 
-fun BytePacketBuilder.writeVarInt(varint: VarInt) {
+fun BytePacketBuilder.writeVarInt(varint: VarInt): Unit = writeVarInt(varint) { writeByte(it) }
+
+fun ByteReadPacket.readVarInt(): VarInt = readVarInt { readByte() }
+
+internal inline fun writeVarInt(varint: VarInt, writeByte: (Byte) -> Unit) {
   var value = varint.toInt()
 
   while (true) {
@@ -39,7 +43,7 @@ fun BytePacketBuilder.writeVarInt(varint: VarInt) {
   }
 }
 
-fun ByteReadPacket.readVarInt(): VarInt {
+internal inline fun readVarInt(readByte: () -> Byte): VarInt {
   var offset = 0
   var value = 0L
   var byte: Byte
@@ -55,6 +59,7 @@ fun ByteReadPacket.readVarInt(): VarInt {
 
   return VarInt(value.toInt())
 }
+
 
 fun BytePacketBuilder.writeString(string: String) {
   val bytes = string.toByteArray()
