@@ -14,19 +14,19 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.player
+package com.gabrielleeg1.javarock.api.protocol.java.login
 
-import com.benasher44.uuid.Uuid
+import com.gabrielleeg1.javarock.api.protocol.Codec
+import com.gabrielleeg1.javarock.api.protocol.Packet
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.javarock.api.protocol.readString
+import io.ktor.utils.io.core.ByteReadPacket
 
-sealed interface GamePlayer {
-  val id: Uuid
-  val protocol: Int
-  val username: String
+@Packet(0x00, LoginStartPacket.LoginStartCodec::class)
+data class LoginStartPacket(val username: String) : JavaPacket {
+  companion object LoginStartCodec : Codec<LoginStartPacket> {
+    override fun read(packet: ByteReadPacket): LoginStartPacket {
+      return LoginStartPacket(packet.readString(16))
+    }
+  }
 }
-
-interface JavaPlayer : GamePlayer {
-  suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
-}
-
-interface BedrockPlayer : GamePlayer

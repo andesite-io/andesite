@@ -16,6 +16,9 @@
 
 package com.gabrielleeg1.javarock.server.java
 
+import com.benasher44.uuid.Uuid
+import com.benasher44.uuid.uuid4
+import com.gabrielleeg1.javarock.api.player.JavaPlayer
 import com.gabrielleeg1.javarock.api.protocol.Codec
 import com.gabrielleeg1.javarock.api.protocol.Packet
 import com.gabrielleeg1.javarock.api.protocol.chat.Chat
@@ -27,6 +30,8 @@ import com.gabrielleeg1.javarock.api.protocol.java.handshake.Players
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Response
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.ResponsePacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Version
+import com.gabrielleeg1.javarock.api.protocol.java.login.LoginStartPacket
+import com.gabrielleeg1.javarock.api.protocol.java.login.LoginSuccessPacket
 import com.gabrielleeg1.javarock.api.protocol.readVarInt
 import com.gabrielleeg1.javarock.api.protocol.writeVarInt
 import io.ktor.network.selector.ActorSelectorManager
@@ -124,8 +129,8 @@ suspend fun main(): Unit = withContext(context) {
         val handshake = session.receivePacket<HandshakePacket>()
 
         when (handshake.nextState) {
-          NextState.Status -> handleLogin(session, handshake)
-          NextState.Login -> TODO()
+          NextState.Status -> handleStatus(session, handshake)
+          NextState.Login -> handlePlay(session, handleLogin(session, handshake))
         }
       } catch (error: Throwable) {
         logger.error(error) { "Error thrown while handling connection ${socket.remoteAddress}" }
@@ -134,7 +139,31 @@ suspend fun main(): Unit = withContext(context) {
   }
 }
 
-private suspend fun handleLogin(session: Session, handshake: HandshakePacket) {
+class JavaPlayerImpl(
+  override val id: Uuid,
+  override val protocol: Int,
+  override val username: String,
+  val session: Session,
+) : JavaPlayer {
+  override suspend fun sendPacket(packet: JavaPacket, queue: Boolean) {
+    session.sendPacket(packet)
+  }
+}
+
+private suspend fun handlePlay(session: Session, player: JavaPlayer) {
+}
+
+private suspend fun handleLogin(session: Session, handshake: HandshakePacket): JavaPlayer {
+  val id = uuid4()
+  val protocol = handshake.protocolVersion.toInt()
+  val (username) = session.receivePacket<LoginStartPacket>()
+
+  session.sendPacket(LoginSuccessPacket(id, username))
+
+  return JavaPlayerImpl(id, protocol, username, session)
+}
+
+private suspend fun handleStatus(session: Session, handshake: HandshakePacket) {
   session.sendPacket(
     ResponsePacket(
       Response(

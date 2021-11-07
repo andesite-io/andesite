@@ -14,19 +14,23 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.player
+package com.gabrielleeg1.javarock.api.protocol.java.login
 
 import com.benasher44.uuid.Uuid
+import com.gabrielleeg1.javarock.api.protocol.Codec
+import com.gabrielleeg1.javarock.api.protocol.Packet
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.javarock.api.protocol.writeString
+import com.gabrielleeg1.javarock.api.protocol.writeUuid
+import io.ktor.utils.io.core.ByteReadPacket
+import io.ktor.utils.io.core.buildPacket
 
-sealed interface GamePlayer {
-  val id: Uuid
-  val protocol: Int
-  val username: String
+@Packet(0x02, LoginSuccessPacket.LoginSuccessCodec::class)
+data class LoginSuccessPacket(val id: Uuid, val username: String) : JavaPacket {
+  companion object LoginSuccessCodec : Codec<LoginSuccessPacket> {
+    override fun write(value: LoginSuccessPacket): ByteReadPacket = buildPacket {
+      writeUuid(value.id)
+      writeString(value.username)
+    }
+  }
 }
-
-interface JavaPlayer : GamePlayer {
-  suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
-}
-
-interface BedrockPlayer : GamePlayer

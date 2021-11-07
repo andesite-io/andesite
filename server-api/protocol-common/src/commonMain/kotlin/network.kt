@@ -16,11 +16,14 @@
 
 package com.gabrielleeg1.javarock.api.protocol
 
+import com.benasher44.uuid.Uuid
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readBytes
+import io.ktor.utils.io.core.readLong
 import io.ktor.utils.io.core.writeFully
+import io.ktor.utils.io.core.writeLong
 import kotlin.experimental.and
 
 fun BytePacketBuilder.writeVarInt(varint: Int): Unit = writeVarInt(VarInt(varint))
@@ -60,6 +63,17 @@ internal inline fun readVarInt(readByte: () -> Byte): VarInt {
   return VarInt(value.toInt())
 }
 
+fun BytePacketBuilder.writeUuid(uuid: Uuid) {
+  writeLong(uuid.mostSignificantBits)
+  writeLong(uuid.leastSignificantBits)
+}
+
+fun ByteReadPacket.readUuid(): Uuid {
+  val mostSignificantBits = readLong()
+  val leastSignificantBits = readLong()
+
+  return Uuid(mostSignificantBits, leastSignificantBits)
+}
 
 fun BytePacketBuilder.writeString(string: String) {
   val bytes = string.toByteArray()
