@@ -29,8 +29,49 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import net.benwoodworth.knbt.Nbt
 
+/**
+ * Minecraft's protocol codec.
+ * 
+ * This codec is used to serialize and deserialize objects to and from the Minecraft protocol.
+ * 
+ * Example:
+ * ```kotlin
+ *
+ * @Packet(0x00)
+ * @Serializable
+ * data class HandshakePacket(
+ *   val protocolVersion: VarInt,
+ *   val serverAddress: String,
+ *   val serverPort: UShort,
+ *   val nextState: NextState,
+ * )
+ *
+ * @ProtocolEnum
+ * @Serializable
+ * enum class NextState {
+ *   @ProtocolEnum.Entry(1)
+ *   Status,
+ *
+ *   @ProtocolEnum.Entry(2)
+ *   Login;
+ * }
+ * 
+ * val codec = MinecraftCodec { protocolVersion = 756 }
+ * val packet = codec.decodeFromByteArray<HandshakePacket>(bytes)
+ * 
+ * println(packet)
+ * ```
+ */
 class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
   override val serializersModule = configuration.serializersModule
+  
+  /**
+   * Decodes a packet from a byte array.
+   *
+   * @param deserializer The packet deserializer.
+   * @param bytes The byte array to decode.
+   * @return The decoded packet.
+   */
   override fun <T> decodeFromByteArray(
     deserializer: DeserializationStrategy<T>,
     bytes: ByteArray
@@ -39,6 +80,13 @@ class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
       .decodeSerializableValue(deserializer)
   }
 
+  /**
+   * Encodes a packet to a byte array.
+   *
+   * @param serializer The packet serializer.
+   * @param value The packet to encode.
+   * @return The encoded packet.
+   */
   override fun <T> encodeToByteArray(serializer: SerializationStrategy<T>, value: T): ByteArray {
     return buildPacket {
       ProtocolEncoderImpl(this, configuration).encodeSerializableValue(serializer, value)

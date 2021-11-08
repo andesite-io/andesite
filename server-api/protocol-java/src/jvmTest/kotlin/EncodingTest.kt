@@ -26,7 +26,7 @@ fun main() {
 
   val bytes = codec.encodeToByteArray(
     HandshakePacket(
-      protocolVersion = VarInt.of(756),
+      protocolVersion = VarInt(756),
       serverAddress = "localhost",
       serverPort = 25565.toUShort(),
       nextState = NextState.Status,

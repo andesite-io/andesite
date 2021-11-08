@@ -25,29 +25,28 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * A variable-length integer.
+ *
+ * @param int The value of the integer.
+ */
 @Serializable(with = VarIntSerializer::class)
 @JvmInline
-value class VarInt internal constructor(private val inner: Int) : Comparable<Number> {
-  companion object {
-    fun of(value: Int): VarInt {
-      return VarInt(value)
-    }
-  }
-  
-  fun toInt(): Int = inner
+value class VarInt(private val int: Int) : Comparable<Number> {
+  fun toInt(): Int = int
 
-  operator fun minus(value: VarInt): VarInt = VarInt(inner - value.inner)
-  operator fun minus(value: Int): VarInt = VarInt(inner - value)
+  operator fun minus(value: VarInt): VarInt = VarInt(int - value.int)
+  operator fun minus(value: Int): VarInt = VarInt(int - value)
 
-  operator fun plus(value: VarInt): VarInt = VarInt(inner + value.inner)
-  operator fun plus(value: Int): VarInt = VarInt(inner + value)
+  operator fun plus(value: VarInt): VarInt = VarInt(int + value.int)
+  operator fun plus(value: Int): VarInt = VarInt(int + value)
 
-  operator fun times(value: VarInt): VarInt = VarInt(inner * value.inner)
-  operator fun times(value: Int): VarInt = VarInt(inner * value)
+  operator fun times(value: VarInt): VarInt = VarInt(int * value.int)
+  operator fun times(value: Int): VarInt = VarInt(int * value)
 
-  override fun compareTo(other: Number): Int = inner.compareTo(other.toInt())
+  override fun compareTo(other: Number): Int = int.compareTo(other.toInt())
 
-  override fun toString(): String = inner.toString()
+  override fun toString(): String = int.toString()
 }
 
 fun Decoder.decodeVarInt(): VarInt = decodeSerializableValue(VarInt.serializer())

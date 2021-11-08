@@ -22,32 +22,47 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialInfo
 
 /**
- * Determines packet id
+ * Determines packet id.
  */
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class Packet(val id: Int)
 
+/**
+ * Sets packet's field to decode with Json format.
+ */
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolJson
 
+/**
+ * Sets packet's field to decode with Nbt format.
+ */
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolNbt
 
+/**
+ * Sets packet's field to decode string with [max] size.
+ */
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolString(val max: Int)
 
+/**
+ * Determines a VarInt enum.
+ */
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
 annotation class ProtocolEnum {
+  /**
+   * Determines a VarInt enum entry.
+   */
   @SerialInfo
   @Retention(AnnotationRetention.RUNTIME)
   @Target(AnnotationTarget.FIELD)

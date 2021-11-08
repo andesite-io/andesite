@@ -16,4 +16,7 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java
 
+/**
+ * Minecraft Java Edition packet.
+ */
 interface JavaPacket

@@ -22,32 +22,31 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * A variable-length long.
+ *
+ * @param long The value of the long.
+ */
 @Serializable(with = VarLongSerializer::class)
 @JvmInline
-value class VarLong internal constructor(private val inner: Long) : Comparable<Number> {
-  companion object {
-    fun of(value: Long): VarLong {
-      return VarLong(value)
-    }
-  }
-  
-  fun toLong(): Long = inner
+value class VarLong(val long: Long) : Comparable<Number> {
+  fun toLong(): Long = long
 
-  operator fun minus(value: VarLong): VarLong = VarLong(inner - value.inner)
-  operator fun minus(value: Long): VarLong = VarLong(inner - value)
+  operator fun minus(value: VarLong): VarLong = VarLong(long - value.long)
+  operator fun minus(value: Long): VarLong = VarLong(long - value)
 
-  operator fun plus(value: VarLong): VarLong = VarLong(inner + value.inner)
-  operator fun plus(value: Long): VarLong = VarLong(inner + value)
+  operator fun plus(value: VarLong): VarLong = VarLong(long + value.long)
+  operator fun plus(value: Long): VarLong = VarLong(long + value)
 
-  operator fun times(value: VarLong): VarLong = VarLong(inner * value.inner)
-  operator fun times(value: Long): VarLong = VarLong(inner * value)
+  operator fun times(value: VarLong): VarLong = VarLong(long * value.long)
+  operator fun times(value: Long): VarLong = VarLong(long * value)
 
-  operator fun div(value: VarLong): VarLong = VarLong(inner / value.inner)
-  operator fun div(value: Long): VarLong = VarLong(inner / value)
+  operator fun div(value: VarLong): VarLong = VarLong(long / value.long)
+  operator fun div(value: Long): VarLong = VarLong(long / value)
 
-  override fun compareTo(other: Number): Int = inner.compareTo(other.toLong())
+  override fun compareTo(other: Number): Int = long.compareTo(other.toLong())
 
-  override fun toString(): String = inner.toString()
+  override fun toString(): String = long.toString()
 }
 
 fun Decoder.decodeVarLong(): VarInt = decodeSerializableValue(VarInt.serializer())
