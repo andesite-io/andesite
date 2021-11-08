@@ -14,13 +14,37 @@
  *    limitations under the License.
  */
 
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package com.gabrielleeg1.javarock.api.protocol
 
-import kotlin.reflect.KClass
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerialInfo
 
 /**
  * Determines packet id
  */
+@SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class Packet(val id: Int, val codecClass: KClass<out Codec<*>> = Codec::class)
+annotation class Packet(val id: Int)
+
+@SerialInfo
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.PROPERTY)
+annotation class ProtocolJson
+
+@SerialInfo
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.PROPERTY)
+annotation class ProtocolString(val max: Int)
+
+@SerialInfo
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS)
+annotation class ProtocolEnum {
+  @SerialInfo
+  @Retention(AnnotationRetention.RUNTIME)
+  @Target(AnnotationTarget.FIELD)
+  annotation class Entry(val value: Int)
+}

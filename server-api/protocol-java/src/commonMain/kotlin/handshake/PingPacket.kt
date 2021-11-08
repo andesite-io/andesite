@@ -16,23 +16,10 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.Codec
 import com.gabrielleeg1.javarock.api.protocol.Packet
-import com.gabrielleeg1.javarock.api.protocol.currentTimeMillis
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import io.ktor.utils.io.core.ByteReadPacket
-import io.ktor.utils.io.core.buildPacket
-import io.ktor.utils.io.core.writeLong
+import kotlinx.serialization.Serializable
 
-@Packet(0x01, PingPacket.PingCodec::class)
-data class PingPacket(val payload: Long) : JavaPacket {
-  companion object PingCodec : Codec<PingPacket> {
-    override fun write(value: PingPacket): ByteReadPacket = buildPacket {
-      writeLong(value.payload)
-    }
-
-    override fun read(packet: ByteReadPacket): PingPacket {
-      return PingPacket(currentTimeMillis())
-    }
-  }
-}
+@Packet(0x01)
+@Serializable
+data class PingPacket(val payload: Long) : JavaPacket

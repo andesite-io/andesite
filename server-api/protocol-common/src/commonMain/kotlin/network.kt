@@ -81,10 +81,11 @@ fun BytePacketBuilder.writeString(string: String) {
   writeFully(bytes)
 }
 
-fun ByteReadPacket.readString(max: Int): String {
-  val size = readVarInt()
+fun ByteReadPacket.readString(max: Int = -1): String {
+  val size = readVarInt().toInt()
   return when {
+    max == -1 -> readBytes(size).decodeToString()
     size > max -> error("The string size is larger than the supported: $max")
-    else -> readBytes(size.toInt()).decodeToString()
+    else -> readBytes(size).decodeToString()
   }
 }

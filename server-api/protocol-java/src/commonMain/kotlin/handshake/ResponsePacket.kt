@@ -16,16 +16,11 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.Codec
 import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
 import com.gabrielleeg1.javarock.api.protocol.chat.Chat
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import com.gabrielleeg1.javarock.api.protocol.writeString
-import io.ktor.utils.io.core.ByteReadPacket
-import io.ktor.utils.io.core.buildPacket
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
 @Serializable
 data class Response(
@@ -52,13 +47,6 @@ data class Players(
 @Serializable
 data class Sample(val name: String, val id: String)
 
-@Packet(0x00, ResponsePacket.ResponseCodec::class)
-data class ResponsePacket(val response: Response) : JavaPacket {
-  companion object ResponseCodec : Codec<ResponsePacket> {
-    val json = Json {}
-
-    override fun write(value: ResponsePacket): ByteReadPacket = buildPacket {
-      writeString(json.encodeToString(value.response))
-    }
-  }
-}
+@Packet(0x00)
+@Serializable
+data class ResponsePacket(@ProtocolJson val response: Response) : JavaPacket

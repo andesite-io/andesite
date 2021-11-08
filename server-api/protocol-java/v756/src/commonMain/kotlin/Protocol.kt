@@ -15,9 +15,3 @@
  */
 
 package com.gabrielleeg1.javarock.api.protocol.java.v756
-
-import com.gabrielleeg1.javarock.api.protocol.protocol
-
-val protocol756 = protocol {
-  // TODO
-}

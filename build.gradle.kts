@@ -42,7 +42,7 @@ allprojects {
         useJUnitPlatform()
       }
     }
-    
+
     sourceSets {
       val commonMain by getting {
         dependencies {
@@ -54,14 +54,22 @@ allprojects {
           implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
         }
       }
-      val commonTest by getting
+      val commonTest by getting {
+        dependencies {
+          implementation(kotlin("test-common"))
+        }
+      }
 
       val jvmMain by getting {
         dependencies {
           implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
         }
       }
-      val jvmTest by getting
+      val jvmTest by getting {
+        dependencies {
+          implementation(kotlin("test-junit5"))
+        }
+      }
     }
   }
 }

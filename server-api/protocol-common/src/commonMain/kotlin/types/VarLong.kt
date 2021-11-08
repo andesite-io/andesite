@@ -16,10 +16,23 @@
 
 package com.gabrielleeg1.javarock.api.protocol.types
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+
+@Serializable(with = VarLongSerializer::class)
 @JvmInline
 value class VarLong internal constructor(private val inner: Long) : Comparable<Number> {
-  fun toLong(): Long = inner
+  companion object {
+    fun of(value: Long): VarLong {
+      return VarLong(value)
+    }
+  }
   
+  fun toLong(): Long = inner
+
   operator fun minus(value: VarLong): VarLong = VarLong(inner - value.inner)
   operator fun minus(value: Long): VarLong = VarLong(inner - value)
 
@@ -35,4 +48,25 @@ value class VarLong internal constructor(private val inner: Long) : Comparable<N
   override fun compareTo(other: Number): Int = inner.compareTo(other.toLong())
 
   override fun toString(): String = inner.toString()
+}
+
+fun Decoder.decodeVarLong(): VarInt = decodeSerializableValue(VarInt.serializer())
+
+fun Encoder.encodeVarLong(value: Long): Unit =
+  encodeSerializableValue(VarLong.serializer(), VarLong(value))
+
+fun Encoder.encodeVarLong(value: VarLong): Unit =
+  encodeSerializableValue(VarLong.serializer(), value)
+
+object VarLongSerializer : KSerializer<VarLong> {
+  override val descriptor: SerialDescriptor
+    get() = TODO("Not yet implemented")
+
+  override fun deserialize(decoder: Decoder): VarLong {
+    TODO("Not yet implemented")
+  }
+
+  override fun serialize(encoder: Encoder, value: VarLong) {
+    TODO("Not yet implemented")
+  }
 }

@@ -16,46 +16,27 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.Codec
 import com.gabrielleeg1.javarock.api.protocol.Packet
-import com.gabrielleeg1.javarock.api.protocol.VarIntEnum
+import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import com.gabrielleeg1.javarock.api.protocol.readString
-import com.gabrielleeg1.javarock.api.protocol.readVarInt
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
-import io.ktor.utils.io.core.ByteReadPacket
-import io.ktor.utils.io.core.readUShort
+import kotlinx.serialization.Serializable
 
-@Packet(0x00, HandshakePacket.HandshakeCodec::class)
+@Packet(0x00)
+@Serializable
 data class HandshakePacket(
   val protocolVersion: VarInt,
   val serverAddress: String,
   val serverPort: UShort,
   val nextState: NextState,
-) : JavaPacket {
+) : JavaPacket
 
-  companion object HandshakeCodec : Codec<HandshakePacket> {
-    @ExperimentalUnsignedTypes
-    override fun read(packet: ByteReadPacket): HandshakePacket {
-      val protocolVersion = packet.readVarInt()
-      val serverAddress = packet.readString(255)
-      val serverPort = packet.readUShort()
-      val nextState = when (val nextState = packet.readVarInt().toInt()) {
-        1 -> NextState.Status
-        2 -> NextState.Login
-        else -> error("Unknown next state: $nextState")
-      }
-
-      return HandshakePacket(protocolVersion, serverAddress, serverPort, nextState)
-    }
-  }
-}
-
-@VarIntEnum
+@ProtocolEnum
+@Serializable
 enum class NextState {
-  @VarIntEnum.Entry(1)
+  @ProtocolEnum.Entry(1)
   Status,
-  
-  @VarIntEnum.Entry(2)
+
+  @ProtocolEnum.Entry(2)
   Login;
 }

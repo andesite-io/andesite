@@ -1,0 +1,118 @@
+/*
+ *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *
+ *    Licensed under the Apache License, Version 2.0 (the "License");
+ *    you may not use this file except in compliance with the License.
+ *    You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *    Unless required by applicable law or agreed to in writing, software
+ *    distributed under the License is distributed on an "AS IS" BASIS,
+ *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *    See the License for the specific language governing permissions and
+ *    limitations under the License.
+ */
+
+@file:OptIn(ExperimentalSerializationApi::class)
+
+package com.gabrielleeg1.javarock.server.java
+
+import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.javarock.api.protocol.readVarInt
+import com.gabrielleeg1.javarock.api.protocol.writeVarInt
+import io.ktor.network.sockets.Socket
+import io.ktor.network.sockets.openReadChannel
+import io.ktor.network.sockets.openWriteChannel
+import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.readBytes
+import io.ktor.utils.io.core.writeFully
+import io.ktor.utils.io.readPacket
+import io.ktor.utils.io.writePacket
+import kotlinx.serialization.BinaryFormat
+import kotlinx.serialization.DeserializationStrategy
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.serializer
+import mu.KLogging
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
+
+data class Session(val format: BinaryFormat, val socket: Socket) {
+  companion object : KLogging()
+
+  val input = socket.openReadChannel()
+  val output = socket.openWriteChannel()
+
+  suspend fun acceptPacket(): JavaPacket {
+    TODO()
+  }
+
+  suspend fun <T : JavaPacket> receivePacket(deserializer: DeserializationStrategy<T>): T {
+    val name = deserializer.descriptor.serialName
+
+    val size = input.readVarInt()
+    val packet = input.readPacket(size.toInt())
+
+    val id = packet.readVarInt().toInt()
+
+    logger.debug {
+      "%s packet received with id [0x%02x] and size [$size]".format(name, id)
+    }
+
+    return format.decodeFromByteArray(deserializer, packet.readBytes())
+  }
+
+  suspend fun <T : JavaPacket> sendPacket(serializer: SerializationStrategy<T>, packet: T) {
+    val packetName = serializer.descriptor.serialName
+    val packetId = extractPacketId(packet::class)
+
+    output.writePacket {
+      val data = buildPacket {
+        writeVarInt(packetId)
+        writeFully(format.encodeToByteArray(serializer, packet))
+      }
+
+      logger.debug { "Packet %s sent with id [0x%02x]".format(packetName, packetId) }
+
+      writeVarInt(data.remaining.toInt())
+      writePacket(data)
+    }
+    output.flush()
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as Session
+
+    if (socket != other.socket) return false
+
+    return true
+  }
+
+  override fun hashCode(): Int {
+    return socket.hashCode()
+  }
+
+  override fun toString(): String {
+    return "Session(remoteAddress=${socket.remoteAddress})"
+  }
+}
+
+suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T {
+  return receivePacket(serializer())
+}
+
+suspend inline fun <reified T : JavaPacket> Session.sendPacket(packet: T) {
+  sendPacket(serializer(), packet)
+}
+
+private fun <T : JavaPacket> extractPacketId(packetClass: KClass<T>): Int {
+  val annotation = packetClass.findAnnotation<Packet>()
+    ?: error("Can not find Packet id annotation in packet ${packetClass.simpleName}")
+
+  return annotation.id
+}

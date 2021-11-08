@@ -16,17 +16,11 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.login
 
-import com.gabrielleeg1.javarock.api.protocol.Codec
 import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolString
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import com.gabrielleeg1.javarock.api.protocol.readString
-import io.ktor.utils.io.core.ByteReadPacket
+import kotlinx.serialization.Serializable
 
-@Packet(0x00, LoginStartPacket.LoginStartCodec::class)
-data class LoginStartPacket(val username: String) : JavaPacket {
-  companion object LoginStartCodec : Codec<LoginStartPacket> {
-    override fun read(packet: ByteReadPacket): LoginStartPacket {
-      return LoginStartPacket(packet.readString(16))
-    }
-  }
-}
+@Packet(0x00)
+@Serializable
+data class LoginStartPacket(@ProtocolString(16) val username: String) : JavaPacket
