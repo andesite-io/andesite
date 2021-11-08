@@ -43,7 +43,6 @@ data class Players(
   val sample: List<Sample> = emptyList(),
 )
 
-// TODO: use Uuid type for id field
 @Serializable
 data class Sample(val name: String, val id: String)
 
