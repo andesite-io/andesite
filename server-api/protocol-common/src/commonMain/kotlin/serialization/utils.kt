@@ -24,7 +24,3 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 internal inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
   return annotations.filterIsInstance<T>().isNotEmpty()
 }
-
-internal inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
-  return annotations.filterIsInstance<T>().singleOrNull()
-}

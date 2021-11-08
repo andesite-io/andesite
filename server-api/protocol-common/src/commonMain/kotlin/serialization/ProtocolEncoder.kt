@@ -114,8 +114,11 @@ internal class ProtocolEncoderImpl(
 
   override fun encodeStringElement(descriptor: SerialDescriptor, index: Int, value: String) {
     when {
-      descriptor.hasAnnotation<ProtocolString>() -> {
-        val string = descriptor.findAnnotation<ProtocolString>()!!
+      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolString>().isNotEmpty() -> {
+        val string = descriptor
+          .getElementAnnotations(index)
+          .filterIsInstance<ProtocolString>()
+          .first()
 
         require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
       }
@@ -138,7 +141,7 @@ internal class ProtocolEncoderImpl(
     if (descriptor.isElementOptional(index) && !configuration.encodeDefaults) {
       return
     }
-    
+
     error("Can not encode null in Minecraft Protocol format.")
   }
 

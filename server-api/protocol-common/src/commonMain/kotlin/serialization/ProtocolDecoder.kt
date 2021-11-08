@@ -88,8 +88,11 @@ internal class ProtocolDecoderImpl(
   override fun decodeInline(inlineDescriptor: SerialDescriptor): Decoder = this
 
   override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String = when {
-    descriptor.hasAnnotation<ProtocolString>() -> {
-      val string = descriptor.findAnnotation<ProtocolString>()!!
+    descriptor.getElementAnnotations(index).filterIsInstance<ProtocolString>().isNotEmpty() -> {
+      val string = descriptor
+        .getElementAnnotations(index)
+        .filterIsInstance<ProtocolString>()
+        .first()
       val value = decodeString()
 
       require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
