@@ -18,17 +18,17 @@ package com.gabrielleeg1.javarock.api.protocol.serializers
 
 import com.benasher44.uuid.Uuid
 import kotlinx.serialization.KSerializer
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.descriptors.serialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 object UuidSerializer : KSerializer<Uuid> {
-  override val descriptor = buildClassSerialDescriptor("Uuid") {
-    element("mostSignificantBits", PrimitiveSerialDescriptor("Long", PrimitiveKind.LONG))
-    element("leastSignificantBits", PrimitiveSerialDescriptor("Long", PrimitiveKind.LONG))
-  }
+  override val descriptor =
+    buildClassSerialDescriptor("com.gabrielleeg1.javarock.api.protocol.serializers.Uuid") {
+      element("mostSignificantBits", serialDescriptor<Long>())
+      element("leastSignificantBits", serialDescriptor<Long>())
+    }
 
   override fun serialize(encoder: Encoder, value: Uuid) {
     encoder.encodeLong(value.mostSignificantBits)

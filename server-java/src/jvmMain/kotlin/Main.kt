@@ -33,6 +33,7 @@ import com.gabrielleeg1.javarock.api.protocol.java.handshake.Version
 import com.gabrielleeg1.javarock.api.protocol.java.login.LoginStartPacket
 import com.gabrielleeg1.javarock.api.protocol.java.login.LoginSuccessPacket
 import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
+import com.gabrielleeg1.javarock.api.protocol.serializers.UuidSerializer
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import mu.KotlinLogging
 import java.util.concurrent.Executors
 
@@ -55,6 +58,9 @@ suspend fun main(): Unit = withContext(context) {
     protocolVersion = 756
     json = Json {
       prettyPrint = true
+    }
+    serializersModule = SerializersModule { 
+      contextual(UuidSerializer)
     }
   }
 
