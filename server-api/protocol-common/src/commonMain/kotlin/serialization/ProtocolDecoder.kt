@@ -142,10 +142,10 @@ internal class ProtocolDecoderImpl(
     previousValue: T?
   ): T {
     return when {
-      descriptor.hasAnnotation<ProtocolJson>() -> {
+      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {
         configuration.json.decodeFromString(deserializer, packet.readString())
       }
-      descriptor.hasAnnotation<ProtocolNbt>() -> {
+      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
         configuration.nbt.decodeFromByteArray(deserializer, packet.readBytes())
         // TODO: NBT
       }

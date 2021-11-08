@@ -31,17 +31,17 @@ annotation class Packet(val id: Int)
 
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolJson
 
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolNbt
 
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.PROPERTY)
+@Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolString(val max: Int)
 
 @SerialInfo

@@ -40,6 +40,7 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import java.util.concurrent.Executors
 
@@ -50,13 +51,15 @@ private val logger = KotlinLogging.logger { }
 suspend fun main(): Unit = withContext(context) {
   val selector = ActorSelectorManager(Dispatchers.IO)
   val server = aSocket(selector).tcp().bind(hostname = "0.0.0.0", port = 25565)
+  val codec = MinecraftCodec {
+    protocolVersion = 756
+    json = Json {
+      prettyPrint = true
+    }
+  }
 
   while (true) {
-    val codec = MinecraftCodec {
-      protocolVersion = 756
-    }
-    val socket = server.accept()
-    val session = Session(codec, socket)
+    val session = Session(codec, server.accept())
 
     launch {
       try {
@@ -66,12 +69,14 @@ suspend fun main(): Unit = withContext(context) {
           NextState.Status -> handleStatus(session, handshake)
           NextState.Login -> handlePlay(session, handleLogin(session, handshake))
         }
-        
-        withContext(Dispatchers.IO) {
-          socket.close()
-        }
       } catch (error: Throwable) {
-        logger.error(error) { "Error thrown while handling connection ${socket.remoteAddress}" }
+        logger.error(error) {
+          "Error thrown while handling connection ${session.socket.remoteAddress}"
+        }
+
+        withContext(Dispatchers.IO) {
+          session.socket.close()
+        }
       }
     }
   }
@@ -111,6 +116,6 @@ private suspend fun handleStatus(session: Session, handshake: HandshakePacket) {
       ),
     ),
   )
-  
+
   session.sendPacket(session.receivePacket<PingPacket>())
 }

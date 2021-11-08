@@ -149,10 +149,10 @@ internal class ProtocolEncoderImpl(
     value: T
   ) {
     when {
-      descriptor.hasAnnotation<ProtocolJson>() -> {
+      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {
         builder.writeString(configuration.json.encodeToString(serializer, value))
       }
-      descriptor.hasAnnotation<ProtocolNbt>() -> {
+      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
         builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
       }
       else -> serializer.serialize(this, value)
