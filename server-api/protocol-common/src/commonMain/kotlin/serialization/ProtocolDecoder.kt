@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, OkioApi::class)
 
 package com.gabrielleeg1.javarock.api.protocol.serialization
 
@@ -37,6 +37,7 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
+import net.benwoodworth.knbt.OkioApi
 
 interface ProtocolDecoder : Decoder, CompositeDecoder
 
@@ -139,15 +140,14 @@ internal class ProtocolDecoderImpl(
     descriptor: SerialDescriptor,
     index: Int,
     deserializer: DeserializationStrategy<T>,
-    previousValue: T?
+    previousValue: T?,
   ): T {
     return when {
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {
         configuration.json.decodeFromString(deserializer, packet.readString())
       }
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
-        configuration.nbt.decodeFromByteArray(deserializer, packet.readBytes())
-        // TODO: NBT
+        configuration.nbt.decodeFromSource(deserializer, InputSource(packet))
       }
       else -> deserializer.deserialize(this)
     }
@@ -158,7 +158,7 @@ internal class ProtocolDecoderImpl(
     descriptor: SerialDescriptor,
     index: Int,
     deserializer: DeserializationStrategy<T?>,
-    previousValue: T?
+    previousValue: T?,
   ): T? {
     if (descriptor.isElementOptional(index) && !configuration.encodeDefaults) {
       return previousValue

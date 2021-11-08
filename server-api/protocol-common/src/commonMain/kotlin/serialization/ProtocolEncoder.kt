@@ -133,7 +133,7 @@ internal class ProtocolEncoderImpl(
     descriptor: SerialDescriptor,
     index: Int,
     serializer: SerializationStrategy<T>,
-    value: T?
+    value: T?,
   ) {
     if (descriptor.isElementOptional(index) && !configuration.encodeDefaults) {
       return
@@ -146,7 +146,7 @@ internal class ProtocolEncoderImpl(
     descriptor: SerialDescriptor,
     index: Int,
     serializer: SerializationStrategy<T>,
-    value: T
+    value: T,
   ) {
     when {
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {

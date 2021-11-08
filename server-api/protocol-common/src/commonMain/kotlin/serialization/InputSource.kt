@@ -14,14 +14,22 @@
  *    limitations under the License.
  */
 
+package com.gabrielleeg1.javarock.api.protocol.serialization
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation("io.ktor:ktor-network:1.6.4")
-        implementation("com.squareup.okio:okio:3.0.0")
-      }
-    }
+import io.ktor.utils.io.core.ByteReadPacket
+import io.ktor.utils.io.core.readBytes
+import okio.Buffer
+import okio.Source
+import okio.Timeout
+
+internal class InputSource(val input: ByteReadPacket) : Source {
+  override fun read(sink: Buffer, byteCount: Long): Long {
+    sink.write(input.readBytes(sink.size.toInt()))
+
+    return byteCount
   }
+  
+  override fun close(): Unit = input.close()
+
+  override fun timeout(): Timeout = Timeout.NONE
 }
