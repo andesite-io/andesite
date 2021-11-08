@@ -17,9 +17,10 @@
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
 import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.currentTimeMillis
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
 
 @Packet(0x01)
 @Serializable
-data class PingPacket(val payload: Long) : JavaPacket
+data class PingPacket(val payload: Long = currentTimeMillis()) : JavaPacket

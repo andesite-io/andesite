@@ -62,6 +62,7 @@ class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   var nbt: Nbt = configuration.nbt
   var serializersModule: SerializersModule = configuration.serializersModule
   var encryption: Boolean = configuration.encryption
+  var encodeDefaults: Boolean = configuration.encodeDefaults
 
   internal fun build(): MinecraftCodec {
     require(protocolVersion != -1) { "protocolVersion must be set" }
@@ -74,6 +75,7 @@ class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
         nbt,
         json,
         encryption,
+        encodeDefaults,
       ),
     )
   }

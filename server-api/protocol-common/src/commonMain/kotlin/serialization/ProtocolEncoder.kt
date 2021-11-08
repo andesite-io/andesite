@@ -19,11 +19,15 @@
 package com.gabrielleeg1.javarock.api.protocol.serialization
 
 import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
+import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
+import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
+import com.gabrielleeg1.javarock.api.protocol.ProtocolString
 import com.gabrielleeg1.javarock.api.protocol.writeString
 import com.gabrielleeg1.javarock.api.protocol.writeVarInt
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.writeDouble
 import io.ktor.utils.io.core.writeFloat
+import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeInt
 import io.ktor.utils.io.core.writeLong
 import io.ktor.utils.io.core.writeShort
@@ -59,7 +63,7 @@ internal class ProtocolEncoderImpl(
   override fun encodeString(value: String): Unit = builder.writeString(value)
 
   override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) {
-    if (enumDescriptor.annotations.filterIsInstance<ProtocolEnum>().isNotEmpty()) {
+    if (enumDescriptor.hasAnnotation<ProtocolEnum>()) {
       val value = enumDescriptor
         .getElementAnnotations(index)
         .filterIsInstance<ProtocolEnum.Entry>()
@@ -109,7 +113,14 @@ internal class ProtocolEncoderImpl(
   }
 
   override fun encodeStringElement(descriptor: SerialDescriptor, index: Int, value: String) {
-    encodeString(value)
+    when {
+      descriptor.hasAnnotation<ProtocolString>() -> {
+        val string = descriptor.findAnnotation<ProtocolString>()!!
+
+        require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
+      }
+      else -> encodeString(value)
+    }
   }
 
   @ExperimentalSerializationApi
@@ -124,6 +135,10 @@ internal class ProtocolEncoderImpl(
     serializer: SerializationStrategy<T>,
     value: T?
   ) {
+    if (descriptor.isElementOptional(index) && !configuration.encodeDefaults) {
+      return
+    }
+    
     error("Can not encode null in Minecraft Protocol format.")
   }
 
@@ -133,7 +148,16 @@ internal class ProtocolEncoderImpl(
     serializer: SerializationStrategy<T>,
     value: T
   ) {
-    serializer.serialize(this, value)
+    when {
+      descriptor.hasAnnotation<ProtocolJson>() -> {
+        builder.writeString(configuration.json.encodeToString(serializer, value))
+      }
+      descriptor.hasAnnotation<ProtocolNbt>() -> {
+        builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
+      }
+      else -> serializer.serialize(this, value)
+    }
+
   }
 
   @ExperimentalSerializationApi

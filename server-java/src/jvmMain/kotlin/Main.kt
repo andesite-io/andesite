@@ -66,6 +66,10 @@ suspend fun main(): Unit = withContext(context) {
           NextState.Status -> handleStatus(session, handshake)
           NextState.Login -> handlePlay(session, handleLogin(session, handshake))
         }
+        
+        withContext(Dispatchers.IO) {
+          socket.close()
+        }
       } catch (error: Throwable) {
         logger.error(error) { "Error thrown while handling connection ${socket.remoteAddress}" }
       }
@@ -107,6 +111,6 @@ private suspend fun handleStatus(session: Session, handshake: HandshakePacket) {
       ),
     ),
   )
-
+  
   session.sendPacket(session.receivePacket<PingPacket>())
 }

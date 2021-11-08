@@ -19,29 +19,12 @@
 package com.gabrielleeg1.javarock.api.protocol.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.EmptySerializersModule
-import kotlinx.serialization.modules.SerializersModule
-import net.benwoodworth.knbt.Nbt
-import net.benwoodworth.knbt.NbtCompression
-import net.benwoodworth.knbt.NbtVariant
+import kotlinx.serialization.descriptors.SerialDescriptor
 
-/**
- * Configuration for the serialization of the protocol.
- */
-class ProtocolConfiguration(
-  val protocolVersion: Int,
-  val protocolVariant: ProtocolVariant = ProtocolVariant.Java,
-  val serializersModule: SerializersModule = EmptySerializersModule,
-  val nbt: Nbt = Nbt {
-    variant = NbtVariant.Java
-    compression = NbtCompression.None
-  },
-  val json: Json = Json {},
-  val encryption: Boolean = false,
-  var encodeDefaults: Boolean = false,
-)
+internal inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
+  return annotations.filterIsInstance<T>().isNotEmpty()
+}
 
-enum class ProtocolVariant {
-  Java, Bedrock;
+internal inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
+  return annotations.filterIsInstance<T>().singleOrNull()
 }

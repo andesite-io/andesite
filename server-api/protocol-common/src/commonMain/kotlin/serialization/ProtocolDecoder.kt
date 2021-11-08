@@ -19,9 +19,14 @@
 package com.gabrielleeg1.javarock.api.protocol.serialization
 
 import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
+import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
+import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
+import com.gabrielleeg1.javarock.api.protocol.ProtocolString
 import com.gabrielleeg1.javarock.api.protocol.readString
 import com.gabrielleeg1.javarock.api.protocol.readVarInt
 import io.ktor.utils.io.core.ByteReadPacket
+import io.ktor.utils.io.core.isEmpty
+import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.readDouble
 import io.ktor.utils.io.core.readInt
 import io.ktor.utils.io.core.readLong
@@ -57,16 +62,17 @@ internal class ProtocolDecoderImpl(
   override fun decodeInt(): Int = packet.readInt()
   override fun decodeLong(): Long = packet.readLong()
   override fun decodeShort(): Short = packet.readShort()
-  override fun decodeString(): String = packet.readString(String.hashCode())
+  override fun decodeString(): String = packet.readString()
 
   override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
     val value = packet.readVarInt().toInt()
 
-    return if (enumDescriptor.annotations.filterIsInstance<ProtocolEnum>().isNotEmpty()) {
+    return if (enumDescriptor.hasAnnotation<ProtocolEnum>()) {
       enumDescriptor.elementDescriptors
         .withIndex()
         .singleOrNull { (i) ->
-          value == enumDescriptor.getElementAnnotations(i)
+          value == enumDescriptor
+            .getElementAnnotations(i)
             .filterIsInstance<ProtocolEnum.Entry>()
             .singleOrNull()
             ?.value
@@ -81,8 +87,18 @@ internal class ProtocolDecoderImpl(
   @ExperimentalSerializationApi
   override fun decodeInline(inlineDescriptor: SerialDescriptor): Decoder = this
 
-  override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String =
-    decodeString()
+  override fun decodeStringElement(descriptor: SerialDescriptor, index: Int): String = when {
+    descriptor.hasAnnotation<ProtocolString>() -> {
+      val string = descriptor.findAnnotation<ProtocolString>()!!
+      val value = decodeString()
+
+      require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
+
+      value
+    }
+    else -> decodeString()
+  }
+
 
   override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean =
     decodeBoolean()
@@ -106,6 +122,11 @@ internal class ProtocolDecoderImpl(
     val i = currentIndex
     currentIndex++
 
+    if (packet.isEmpty) {
+      currentIndex = 0
+      return -1
+    }
+
     if (i >= descriptor.elementsCount) {
       currentIndex = 0
       return -1
@@ -120,7 +141,16 @@ internal class ProtocolDecoderImpl(
     deserializer: DeserializationStrategy<T>,
     previousValue: T?
   ): T {
-    return deserializer.deserialize(this)
+    return when {
+      descriptor.hasAnnotation<ProtocolJson>() -> {
+        configuration.json.decodeFromString(deserializer, packet.readString())
+      }
+      descriptor.hasAnnotation<ProtocolNbt>() -> {
+        configuration.nbt.decodeFromByteArray(deserializer, packet.readBytes())
+        // TODO: NBT
+      }
+      else -> deserializer.deserialize(this)
+    }
   }
 
   @ExperimentalSerializationApi
@@ -130,6 +160,10 @@ internal class ProtocolDecoderImpl(
     deserializer: DeserializationStrategy<T?>,
     previousValue: T?
   ): T? {
+    if (descriptor.isElementOptional(index) && !configuration.encodeDefaults) {
+      return previousValue
+    }
+
     error("Can not decode null in Minecraft Protocol format.")
   }
 
@@ -141,4 +175,8 @@ internal class ProtocolDecoderImpl(
 
   @ExperimentalSerializationApi
   override fun decodeNotNullMark(): Boolean = true
+
+  private fun <T> getOrDefault(descriptor: SerialDescriptor, i: Int, fn: () -> T): T {
+    return fn()
+  }
 }

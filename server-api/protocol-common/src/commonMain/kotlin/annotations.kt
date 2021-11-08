@@ -37,6 +37,11 @@ annotation class ProtocolJson
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.PROPERTY)
+annotation class ProtocolNbt
+
+@SerialInfo
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.PROPERTY)
 annotation class ProtocolString(val max: Int)
 
 @SerialInfo
