@@ -15,8 +15,8 @@
  */
 
 plugins {
-  kotlin("multiplatform") version "1.5.10"
-  kotlin("plugin.serialization") version "1.5.10"
+  kotlin("multiplatform") version "1.5.31"
+  kotlin("plugin.serialization") version "1.5.31"
 }
 
 group = "com.gabrielleeg1"
@@ -36,6 +36,7 @@ allprojects {
 
       compilations.all {
         kotlinOptions.jvmTarget = "16"
+        kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all")
       }
 
       testRuns["test"].executionTask.configure {
@@ -44,6 +45,13 @@ allprojects {
     }
 
     sourceSets {
+      all {
+        languageSettings {
+          optIn("kotlin.RequiresOptIn")
+          optIn("kotlin.contracts.ExperimentalContracts")
+        }
+      }
+      
       val commonMain by getting {
         dependencies {
           implementation("io.ktor:ktor-network:1.6.4")

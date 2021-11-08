@@ -26,7 +26,6 @@ import com.gabrielleeg1.javarock.api.protocol.readString
 import com.gabrielleeg1.javarock.api.protocol.readVarInt
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.isEmpty
-import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.readDouble
 import io.ktor.utils.io.core.readInt
 import io.ktor.utils.io.core.readLong
