@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class, OkioApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, OkioApi::class, ExperimentalUnsignedTypes::class)
 
 package com.gabrielleeg1.javarock.api.protocol.serialization
 
@@ -22,6 +22,9 @@ import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
 import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
 import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
 import com.gabrielleeg1.javarock.api.protocol.ProtocolString
+import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
+import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
+import com.gabrielleeg1.javarock.api.protocol.Variant
 import com.gabrielleeg1.javarock.api.protocol.readString
 import com.gabrielleeg1.javarock.api.protocol.readVarInt
 import io.ktor.utils.io.core.ByteReadPacket
@@ -30,11 +33,14 @@ import io.ktor.utils.io.core.readDouble
 import io.ktor.utils.io.core.readInt
 import io.ktor.utils.io.core.readLong
 import io.ktor.utils.io.core.readShort
+import io.ktor.utils.io.core.readUByte
+import io.ktor.utils.io.core.readUInt
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 import kotlinx.serialization.encoding.Decoder
 import net.benwoodworth.knbt.OkioApi
 
@@ -65,15 +71,20 @@ internal class ProtocolDecoderImpl(
   override fun decodeString(): String = packet.readString()
 
   override fun decodeEnum(enumDescriptor: SerialDescriptor): Int {
-    val value = packet.readVarInt().toInt()
-
     return if (enumDescriptor.hasAnnotation<ProtocolEnum>()) {
+      val variant = enumDescriptor
+        .annotations
+        .filterIsInstance<ProtocolVariant>()
+        .singleOrNull()?.kind ?: Variant.VarInt
+
+      val value = decodeType(variant)
+
       enumDescriptor.elementDescriptors
         .withIndex()
         .singleOrNull { (i) ->
           value == enumDescriptor
             .getElementAnnotations(i)
-            .filterIsInstance<ProtocolEnum.Entry>()
+            .filterIsInstance<ProtocolValue>()
             .singleOrNull()
             ?.value
         }
@@ -93,6 +104,7 @@ internal class ProtocolDecoderImpl(
         .getElementAnnotations(index)
         .filterIsInstance<ProtocolString>()
         .first()
+
       val value = decodeString()
 
       require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
@@ -127,12 +139,12 @@ internal class ProtocolDecoderImpl(
 
     if (packet.isEmpty) {
       currentIndex = 0
-      return -1
+      return DECODE_DONE
     }
 
     if (i >= descriptor.elementsCount) {
       currentIndex = 0
-      return -1
+      return DECODE_DONE
     }
 
     return i
@@ -151,8 +163,18 @@ internal class ProtocolDecoderImpl(
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
         configuration.nbt.decodeFromSource(deserializer, InputSource(packet))
       }
-      else -> deserializer.deserialize(this)
+      else -> deserializer.deserialize(ProtocolDecoderImpl(packet, configuration))
     }
+  }
+
+  override fun decodeSequentially(): Boolean = true
+
+  override fun decodeCollectionSize(descriptor: SerialDescriptor): Int {
+    val variant = descriptor.annotations
+      .filterIsInstance<ProtocolVariant>()
+      .singleOrNull()?.kind ?: Variant.VarInt
+
+    return decodeType(variant)
   }
 
   @ExperimentalSerializationApi
@@ -170,6 +192,7 @@ internal class ProtocolDecoderImpl(
   }
 
   override fun endStructure(descriptor: SerialDescriptor) {
+    currentIndex = 0
   }
 
   @ExperimentalSerializationApi
@@ -178,7 +201,14 @@ internal class ProtocolDecoderImpl(
   @ExperimentalSerializationApi
   override fun decodeNotNullMark(): Boolean = true
 
-  private fun <T> getOrDefault(descriptor: SerialDescriptor, i: Int, fn: () -> T): T {
-    return fn()
+  private fun decodeType(variant: Variant): Int {
+    return when (variant) {
+      Variant.Byte -> packet.readByte().toInt()
+      Variant.UByte -> packet.readUByte().toInt()
+      Variant.Int -> packet.readInt()
+      Variant.UInt -> packet.readUInt().toInt()
+      Variant.VarInt -> packet.readVarInt().toInt()
+      Variant.VarLong -> TODO()
+    }
   }
 }

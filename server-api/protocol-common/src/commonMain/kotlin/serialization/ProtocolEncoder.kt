@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalUnsignedTypes::class)
 
 package com.gabrielleeg1.javarock.api.protocol.serialization
 
@@ -22,6 +22,9 @@ import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
 import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
 import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
 import com.gabrielleeg1.javarock.api.protocol.ProtocolString
+import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
+import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
+import com.gabrielleeg1.javarock.api.protocol.Variant
 import com.gabrielleeg1.javarock.api.protocol.writeString
 import com.gabrielleeg1.javarock.api.protocol.writeVarInt
 import io.ktor.utils.io.core.BytePacketBuilder
@@ -31,9 +34,12 @@ import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeInt
 import io.ktor.utils.io.core.writeLong
 import io.ktor.utils.io.core.writeShort
+import io.ktor.utils.io.core.writeUByte
+import io.ktor.utils.io.core.writeUInt
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
 
@@ -64,14 +70,19 @@ internal class ProtocolEncoderImpl(
 
   override fun encodeEnum(enumDescriptor: SerialDescriptor, index: Int) {
     if (enumDescriptor.hasAnnotation<ProtocolEnum>()) {
+      val variant = enumDescriptor
+        .annotations
+        .filterIsInstance<ProtocolVariant>()
+        .singleOrNull()?.kind ?: Variant.VarInt
+
       val value = enumDescriptor
         .getElementAnnotations(index)
-        .filterIsInstance<ProtocolEnum.Entry>()
+        .filterIsInstance<ProtocolValue>()
         .singleOrNull()
         ?.value
-        ?: error("Can not encode enum ${enumDescriptor.serialName} index: 0 cause it does not have the @ProtocolEnum.Entry annotation")
+        ?: error("Can not encode enum ${enumDescriptor.serialName} index: 0 cause it does not have the @ProtocolValue annotation")
 
-      builder.writeVarInt(value)
+      encodeType(variant, value)
     } else {
       builder.writeString(enumDescriptor.getElementName(index))
     }
@@ -158,14 +169,35 @@ internal class ProtocolEncoderImpl(
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
         builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
       }
+      serializer.descriptor.kind == StructureKind.LIST -> {
+        value as Collection<*>
+
+        val variant = descriptor
+          .getElementAnnotations(index)
+          .filterIsInstance<ProtocolVariant>()
+          .singleOrNull()?.kind ?: Variant.VarInt
+
+        encodeType(variant, value.size)
+        serializer.serialize(this, value)
+      }
       else -> serializer.serialize(this, value)
     }
-
   }
 
   @ExperimentalSerializationApi
   override fun encodeNull(): Unit = error("Can not encode null in Minecraft Protocol format.")
 
   override fun endStructure(descriptor: SerialDescriptor) {
+  }
+
+  private fun encodeType(variant: Variant, value: Int) {
+    when (variant) {
+      Variant.Byte -> builder.writeByte(value.toByte())
+      Variant.UByte -> builder.writeUByte(value.toUByte())
+      Variant.Int -> builder.writeInt(value)
+      Variant.UInt -> builder.writeUInt(value.toUInt())
+      Variant.VarInt -> builder.writeVarInt(value)
+      Variant.VarLong -> TODO()
+    }
   }
 }

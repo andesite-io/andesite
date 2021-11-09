@@ -14,17 +14,9 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
+package com.gabrielleeg1.javarock.api.protocol
 
-package com.gabrielleeg1.javarock.api.protocol.serialization
-
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
-
-internal inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
-  return annotations.filterIsInstance<T>().isNotEmpty()
-}
-
-internal inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
-  return annotations.filterIsInstance<T>().singleOrNull()
+@Suppress("NOTHING_TO_INLINE")
+actual inline fun resource(path: String): String {
+    return ClassLoader.getSystemResource(path)?.file ?: error("Can not find file $path")
 }

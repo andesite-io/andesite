@@ -27,13 +27,20 @@ import com.gabrielleeg1.javarock.api.protocol.java.handshake.HandshakePacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.NextState
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.PingPacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Players
+import com.gabrielleeg1.javarock.api.protocol.java.handshake.PongPacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Response
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.ResponsePacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Version
 import com.gabrielleeg1.javarock.api.protocol.java.login.LoginStartPacket
 import com.gabrielleeg1.javarock.api.protocol.java.login.LoginSuccessPacket
+import com.gabrielleeg1.javarock.api.protocol.java.play.GameMode
+import com.gabrielleeg1.javarock.api.protocol.java.play.JoinGamePacket
+import com.gabrielleeg1.javarock.api.protocol.java.play.PlayerPositionAndLookPacket
+import com.gabrielleeg1.javarock.api.protocol.java.play.PreviousGameMode
+import com.gabrielleeg1.javarock.api.protocol.resource
 import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
 import com.gabrielleeg1.javarock.api.protocol.serializers.UuidSerializer
+import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.Dispatchers
@@ -41,15 +48,25 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
 import mu.KotlinLogging
+import net.benwoodworth.knbt.Nbt
+import net.benwoodworth.knbt.NbtCompression
+import net.benwoodworth.knbt.NbtVariant
+import java.io.File
 import java.util.concurrent.Executors
 
 private val context = Executors.newCachedThreadPool().asCoroutineDispatcher()
 
 private val logger = KotlinLogging.logger { }
+
+private val nbt = Nbt {
+  variant = NbtVariant.Java
+  compression = NbtCompression.None
+}
 
 suspend fun main(): Unit = withContext(context) {
   val selector = ActorSelectorManager(Dispatchers.IO)
@@ -59,7 +76,7 @@ suspend fun main(): Unit = withContext(context) {
     json = Json {
       prettyPrint = true
     }
-    serializersModule = SerializersModule { 
+    serializersModule = SerializersModule {
       contextual(UuidSerializer)
     }
   }
@@ -100,6 +117,37 @@ class JavaPlayerImpl(
 }
 
 private suspend fun handlePlay(session: Session, player: JavaPlayer) {
+  val packet = JoinGamePacket(
+    entityId = 0,
+    isHardcore = false,
+    gameMode = GameMode.Adventure,
+    previousGameMode = PreviousGameMode.Unknown,
+    worlds = listOf("world"),
+    dimensionCodec = nbt.decodeFromByteArray(File(resource("dimension_codec.nbt")).readBytes()),
+    dimension = nbt.decodeFromByteArray(File(resource("dimension.nbt")).readBytes()),
+    world = "world",
+    hashedSeed = 0,
+    maxPlayers = VarInt(20),
+    viewDistance = VarInt(32),
+    reducedDebugInfo = false,
+    enableRespawnScreen = false,
+    isDebug = false,
+    isFlat = true,
+  )
+  
+  session.sendPacket(packet)
+  session.sendPacket(
+    PlayerPositionAndLookPacket(
+      x = 0.0,
+      y = 50.0,
+      z = 0.0,
+      yaw = 0f,
+      pitch = 0f,
+      flags = 0x00,
+      teleportId = VarInt(0),
+      dismountVehicle = false,
+    ),
+  )
 }
 
 private suspend fun handleLogin(session: Session, handshake: HandshakePacket): JavaPlayer {
@@ -122,6 +170,8 @@ private suspend fun handleStatus(session: Session, handshake: HandshakePacket) {
       ),
     ),
   )
+  
+  session.receivePacket<PingPacket>()
 
-  session.sendPacket(session.receivePacket<PingPacket>())
+  session.sendPacket(PongPacket())
 }

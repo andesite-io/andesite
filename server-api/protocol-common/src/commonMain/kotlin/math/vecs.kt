@@ -14,17 +14,12 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
+package com.gabrielleeg1.javarock.api.protocol.math
 
-package com.gabrielleeg1.javarock.api.protocol.serialization
+data class Vector3i(val x: Int, val y: Int, val z: Int)
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
+data class Vector2i(val x: Int, val y: Int)
 
-internal inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
-  return annotations.filterIsInstance<T>().isNotEmpty()
-}
+data class Vector3f(val x: Float, val y: Float, val z: Float)
 
-internal inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
-  return annotations.filterIsInstance<T>().singleOrNull()
-}
+data class Vector2f(val x: Float, val y: Float)

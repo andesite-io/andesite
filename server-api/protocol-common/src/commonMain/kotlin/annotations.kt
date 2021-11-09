@@ -20,6 +20,7 @@ package com.gabrielleeg1.javarock.api.protocol
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialInfo
+import kotlinx.serialization.Serializable
 
 /**
  * Determines packet id.
@@ -54,17 +55,32 @@ annotation class ProtocolNbt
 annotation class ProtocolString(val max: Int)
 
 /**
- * Determines a VarInt enum.
+ * Determines a number enum.
  */
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class ProtocolEnum {
-  /**
-   * Determines a VarInt enum entry.
-   */
-  @SerialInfo
-  @Retention(AnnotationRetention.RUNTIME)
-  @Target(AnnotationTarget.FIELD)
-  annotation class Entry(val value: Int)
+annotation class ProtocolEnum
+
+/**
+ * Determines a number value.
+ */
+@SerialInfo
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.FIELD)
+annotation class ProtocolValue(val value: Int)
+
+/**
+ * Determines the int variant to the List or Enum.
+ */
+@SerialInfo
+@Retention(AnnotationRetention.RUNTIME)
+@Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
+annotation class ProtocolVariant(val kind: Variant)
+
+@Serializable
+enum class Variant {
+  VarInt, VarLong,
+  UByte, Byte,
+  UInt, Int,
 }

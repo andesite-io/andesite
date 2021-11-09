@@ -1,10 +1,3 @@
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.HandshakePacket
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.NextState
-import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
-import kotlinx.serialization.decodeFromByteArray
-import kotlinx.serialization.encodeToByteArray
-
 /*
  *    Copyright 2021 Gabrielle Guimarães de Oliveira
  *
@@ -21,19 +14,40 @@ import kotlinx.serialization.encodeToByteArray
  *    limitations under the License.
  */
 
+package tests
+
+import com.gabrielleeg1.javarock.api.protocol.java.play.GameMode
+import com.gabrielleeg1.javarock.api.protocol.java.play.JoinGamePacket
+import com.gabrielleeg1.javarock.api.protocol.java.play.PreviousGameMode
+import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
+import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
+import net.benwoodworth.knbt.buildNbtCompound
+import net.benwoodworth.knbt.put
+
 fun main() {
   val codec = MinecraftCodec { protocolVersion = 756 }
 
-  val bytes = codec.encodeToByteArray(
-    HandshakePacket(
-      protocolVersion = VarInt(756),
-      serverAddress = "localhost",
-      serverPort = 25565.toUShort(),
-      nextState = NextState.Status,
-    ),
+  val packet = JoinGamePacket(
+    entityId = 0,
+    isHardcore = false,
+    gameMode = GameMode.Adventure,
+    previousGameMode = PreviousGameMode.Unknown,
+    worlds = listOf("world"),
+    dimensionCodec = buildNbtCompound { put("hello", "world") },
+    dimension = buildNbtCompound { put("hello", "world") },
+    world = "world",
+    hashedSeed = 0,
+    maxPlayers = VarInt(20),
+    viewDistance = VarInt(32),
+    reducedDebugInfo = false,
+    enableRespawnScreen = false,
+    isDebug = false,
+    isFlat = true,
   )
-  
-  val packet = codec.decodeFromByteArray<HandshakePacket>(bytes)
-  
-  println("Packet $packet")
+
+  val bytes = codec.encodeToByteArray(packet)
+
+  println("Packet ${codec.decodeFromByteArray<JoinGamePacket>(bytes)}")
 }

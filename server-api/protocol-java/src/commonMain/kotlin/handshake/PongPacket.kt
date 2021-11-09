@@ -17,30 +17,10 @@
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
 import com.gabrielleeg1.javarock.api.protocol.Packet
-import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
-import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
-import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
-import com.gabrielleeg1.javarock.api.protocol.Variant
+import com.gabrielleeg1.javarock.api.protocol.currentTimeMillis
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 
-@Packet(0x00)
+@Packet(0x01)
 @Serializable
-data class HandshakePacket(
-  val protocolVersion: VarInt,
-  val serverAddress: String,
-  val serverPort: UShort,
-  val nextState: NextState,
-) : JavaPacket
-
-@Serializable
-@ProtocolEnum
-@ProtocolVariant(kind = Variant.VarInt)
-enum class NextState {
-  @ProtocolValue(1)
-  Status,
-
-  @ProtocolValue(2)
-  Login;
-}
+data class PongPacket(val payload: Long = currentTimeMillis()) : JavaPacket

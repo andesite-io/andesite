@@ -14,6 +14,22 @@
  *    limitations under the License.
  */
 
-fun main() {
-  println("Hello, world")
-}
+package com.gabrielleeg1.javarock.api.protocol.java.play
+
+import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import kotlinx.serialization.Serializable
+
+@Packet(0x38)
+@Serializable
+data class PlayerPositionAndLookPacket(
+  val x: Double,
+  val y: Double,
+  val z: Double,
+  val yaw: Float,
+  val pitch: Float,
+  val flags: Byte,
+  val teleportId: VarInt,
+  val dismountVehicle: Boolean,
+) : JavaPacket
