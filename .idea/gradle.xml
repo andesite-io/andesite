@@ -10,11 +10,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/server-api" />
-            <option value="$PROJECT_DIR$/server-api/protocol-bedrock" />
-            <option value="$PROJECT_DIR$/server-api/protocol-bedrock/v465" />
-            <option value="$PROJECT_DIR$/server-api/protocol-common" />
-            <option value="$PROJECT_DIR$/server-api/protocol-java" />
-            <option value="$PROJECT_DIR$/server-api/protocol-java/v756" />
+            <option value="$PROJECT_DIR$/server-api/protocol" />
+            <option value="$PROJECT_DIR$/server-api/protocol/bedrock" />
+            <option value="$PROJECT_DIR$/server-api/protocol/bedrock/v465" />
+            <option value="$PROJECT_DIR$/server-api/protocol/common" />
+            <option value="$PROJECT_DIR$/server-api/protocol/java" />
+            <option value="$PROJECT_DIR$/server-api/protocol/java/v756" />
             <option value="$PROJECT_DIR$/server-bedrock" />
             <option value="$PROJECT_DIR$/server-java" />
           </set>
