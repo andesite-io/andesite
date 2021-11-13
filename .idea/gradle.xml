@@ -9,19 +9,21 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/server-api" />
-            <option value="$PROJECT_DIR$/server-api/protocol" />
-            <option value="$PROJECT_DIR$/server-api/protocol/bedrock" />
-            <option value="$PROJECT_DIR$/server-api/protocol/bedrock/v465" />
-            <option value="$PROJECT_DIR$/server-api/protocol/common" />
-            <option value="$PROJECT_DIR$/server-api/protocol/java" />
-            <option value="$PROJECT_DIR$/server-api/protocol/java/v756" />
-            <option value="$PROJECT_DIR$/server-api/world" />
-            <option value="$PROJECT_DIR$/server-api/world/anvil" />
-            <option value="$PROJECT_DIR$/server-api/world/common" />
-            <option value="$PROJECT_DIR$/server-api/world/slime" />
-            <option value="$PROJECT_DIR$/server-bedrock" />
-            <option value="$PROJECT_DIR$/server-java" />
+            <option value="$PROJECT_DIR$/protocol" />
+            <option value="$PROJECT_DIR$/protocol/bedrock" />
+            <option value="$PROJECT_DIR$/protocol/bedrock/v465" />
+            <option value="$PROJECT_DIR$/protocol/common" />
+            <option value="$PROJECT_DIR$/protocol/java" />
+            <option value="$PROJECT_DIR$/protocol/java/v756" />
+            <option value="$PROJECT_DIR$/server" />
+            <option value="$PROJECT_DIR$/server/bedrock" />
+            <option value="$PROJECT_DIR$/server/common" />
+            <option value="$PROJECT_DIR$/server/java" />
+            <option value="$PROJECT_DIR$/server/logging" />
+            <option value="$PROJECT_DIR$/world" />
+            <option value="$PROJECT_DIR$/world/anvil" />
+            <option value="$PROJECT_DIR$/world/common" />
+            <option value="$PROJECT_DIR$/world/slime" />
           </set>
         </option>
       </GradleProjectSettings>

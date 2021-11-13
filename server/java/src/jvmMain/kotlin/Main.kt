@@ -43,7 +43,6 @@ import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
 import com.gabrielleeg1.javarock.api.protocol.serializers.UuidSerializer
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import com.gabrielleeg1.javarock.api.protocol.writeVarInt
-import com.gabrielleeg1.javarock.api.world.Chunk
 import com.gabrielleeg1.javarock.api.world.Location
 import com.gabrielleeg1.javarock.api.world.anvil.AnvilChunk
 import com.gabrielleeg1.javarock.api.world.anvil.readAnvilWorld
@@ -97,6 +96,8 @@ suspend fun main(): Unit = withContext(context) {
       contextual(UuidSerializer)
     }
   }
+
+  logger.info { "Server started at 0.0.0.0:25565" }
 
   while (true) {
     val session = Session(codec, server.accept())
@@ -225,7 +226,7 @@ private fun AnvilChunk.toPacket(): ChunkDataPacket {
       writeFully(section.blockStates)
     }
   }.readBytes()
-  
+
   return ChunkDataPacket(
     x, z,
     LongArray(sections.size) { 1 },
