@@ -33,6 +33,7 @@ import com.gabrielleeg1.javarock.api.protocol.java.handshake.ResponsePacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Version
 import com.gabrielleeg1.javarock.api.protocol.java.login.LoginStartPacket
 import com.gabrielleeg1.javarock.api.protocol.java.login.LoginSuccessPacket
+import com.gabrielleeg1.javarock.api.protocol.java.play.ChunkDataPacket
 import com.gabrielleeg1.javarock.api.protocol.java.play.GameMode
 import com.gabrielleeg1.javarock.api.protocol.java.play.JoinGamePacket
 import com.gabrielleeg1.javarock.api.protocol.java.play.PlayerPositionAndLookPacket
@@ -41,14 +42,27 @@ import com.gabrielleeg1.javarock.api.protocol.resource
 import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
 import com.gabrielleeg1.javarock.api.protocol.serializers.UuidSerializer
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import com.gabrielleeg1.javarock.api.protocol.writeVarInt
+import com.gabrielleeg1.javarock.api.world.Chunk
+import com.gabrielleeg1.javarock.api.world.Location
+import com.gabrielleeg1.javarock.api.world.anvil.AnvilChunk
+import com.gabrielleeg1.javarock.api.world.anvil.readAnvilWorld
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
+import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.readBytes
+import io.ktor.utils.io.core.writeFully
+import io.ktor.utils.io.core.writeShort
+import io.ktor.utils.io.core.writeUByte
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.encodeToByteArray
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -66,7 +80,10 @@ private val logger = KotlinLogging.logger { }
 private val nbt = Nbt {
   variant = NbtVariant.Java
   compression = NbtCompression.None
+  ignoreUnknownKeys = true
 }
+
+private val world = readAnvilWorld(File(resource("world")))
 
 suspend fun main(): Unit = withContext(context) {
   val selector = ActorSelectorManager(Dispatchers.IO)
@@ -116,26 +133,27 @@ class JavaPlayerImpl(
   }
 }
 
-private suspend fun handlePlay(session: Session, player: JavaPlayer) {
-  val packet = JoinGamePacket(
-    entityId = 0,
-    isHardcore = false,
-    gameMode = GameMode.Adventure,
-    previousGameMode = PreviousGameMode.Unknown,
-    worlds = listOf("world"),
-    dimensionCodec = nbt.decodeFromByteArray(File(resource("dimension_codec.nbt")).readBytes()),
-    dimension = nbt.decodeFromByteArray(File(resource("dimension.nbt")).readBytes()),
-    world = "world",
-    hashedSeed = 0,
-    maxPlayers = VarInt(20),
-    viewDistance = VarInt(32),
-    reducedDebugInfo = false,
-    enableRespawnScreen = false,
-    isDebug = false,
-    isFlat = true,
+private suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = coroutineScope {
+  session.sendPacket(
+    JoinGamePacket(
+      entityId = 0,
+      isHardcore = false,
+      gameMode = GameMode.Adventure,
+      previousGameMode = PreviousGameMode.Unknown,
+      worlds = listOf("world"),
+      dimensionCodec = nbt.decodeFromByteArray(File(resource("dimension_codec.nbt")).readBytes()),
+      dimension = nbt.decodeFromByteArray(File(resource("dimension.nbt")).readBytes()),
+      world = "world",
+      hashedSeed = 0,
+      maxPlayers = VarInt(20),
+      viewDistance = VarInt(32),
+      reducedDebugInfo = false,
+      enableRespawnScreen = false,
+      isDebug = false,
+      isFlat = true,
+    ),
   )
-  
-  session.sendPacket(packet)
+
   session.sendPacket(
     PlayerPositionAndLookPacket(
       x = 0.0,
@@ -148,6 +166,18 @@ private suspend fun handlePlay(session: Session, player: JavaPlayer) {
       dismountVehicle = false,
     ),
   )
+
+  val spawn = Location.Empty
+
+  launch(Job()) {
+    for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
+      for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
+        val chunk = world.getChunkAt(x, z) ?: continue
+
+        session.sendPacket(chunk.toPacket())
+      }
+    }
+  }
 }
 
 private suspend fun handleLogin(session: Session, handshake: HandshakePacket): JavaPlayer {
@@ -170,8 +200,38 @@ private suspend fun handleStatus(session: Session, handshake: HandshakePacket) {
       ),
     ),
   )
-  
+
   session.receivePacket<PingPacket>()
 
   session.sendPacket(PongPacket())
+}
+
+private fun AnvilChunk.toPacket(): ChunkDataPacket {
+  val data = buildPacket {
+    for (section in sections) {
+      val blocks = section.blockStates.toList()
+        .map(Long::toInt)
+        .mapNotNull(section.palette::getOrNull)
+
+      writeShort(blocks.size.toShort())
+      writeUByte(4.toUByte())
+
+      writeVarInt(section.palette.size)
+      for (item in blocks) {
+        writeFully(nbt.encodeToByteArray(item))
+      }
+
+      writeVarInt(section.blockStates.size)
+      writeFully(section.blockStates)
+    }
+  }.readBytes()
+  
+  return ChunkDataPacket(
+    x, z,
+    LongArray(sections.size) { 1 },
+    heightmaps,
+    biomes,
+    data,
+    tileEntities,
+  )
 }

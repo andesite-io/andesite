@@ -32,8 +32,6 @@ allprojects {
 
   kotlin {
     jvm {
-      withJava()
-
       compilations.all {
         kotlinOptions.jvmTarget = "16"
         kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all")

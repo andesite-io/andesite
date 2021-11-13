@@ -16,6 +16,10 @@
             <option value="$PROJECT_DIR$/server-api/protocol/common" />
             <option value="$PROJECT_DIR$/server-api/protocol/java" />
             <option value="$PROJECT_DIR$/server-api/protocol/java/v756" />
+            <option value="$PROJECT_DIR$/server-api/world" />
+            <option value="$PROJECT_DIR$/server-api/world/anvil" />
+            <option value="$PROJECT_DIR$/server-api/world/common" />
+            <option value="$PROJECT_DIR$/server-api/world/slime" />
             <option value="$PROJECT_DIR$/server-bedrock" />
             <option value="$PROJECT_DIR$/server-java" />
           </set>

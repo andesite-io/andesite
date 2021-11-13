@@ -170,14 +170,30 @@ internal class ProtocolEncoderImpl(
         builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
       }
       serializer.descriptor.kind == StructureKind.LIST -> {
-        value as Collection<*>
+        val listValue = when (value) {
+          is Collection<*> -> value
+          is Array<*> -> value.toList()
+          is ByteArray -> value.toList()
+          is CharArray -> value.toList()
+          is ShortArray -> value.toList()
+          is IntArray -> value.toList()
+          is LongArray -> value.toList()
+          is FloatArray -> value.toList()
+          is DoubleArray -> value.toList()
+          is BooleanArray -> value.toList()
+          is UByteArray -> value.toList()
+          is UShortArray -> value.toList()
+          is UIntArray -> value.toList()
+          is ULongArray -> value.toList()
+          else -> error("Can not encode list of descriptor ${serializer.descriptor.serialName}")
+        }
 
         val variant = descriptor
           .getElementAnnotations(index)
           .filterIsInstance<ProtocolVariant>()
           .singleOrNull()?.kind ?: Variant.VarInt
 
-        encodeType(variant, value.size)
+        encodeType(variant, listValue.size)
         serializer.serialize(this, value)
       }
       else -> serializer.serialize(this, value)

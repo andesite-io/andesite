@@ -14,13 +14,17 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol:common"))
-        implementation(project(":server-api:world:common"))
-      }
-    }
-  }
-}
+package com.gabrielleeg1.javarock.api.world.anvil
+
+import com.gabrielleeg1.javarock.api.world.ChunkSection
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import net.benwoodworth.knbt.NbtCompound
+
+@Serializable
+class AnvilChunkSection(
+  @SerialName("Y") val y: Byte,
+  @SerialName("SkyLight") val skyLight: ByteArray = ByteArray(1024),
+  @SerialName("BlockStates") val blockStates: LongArray = LongArray(1024),
+  @SerialName("Palette") val palette: List<NbtCompound> = emptyList(),
+) : ChunkSection

@@ -14,13 +14,25 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol:common"))
-        implementation(project(":server-api:world:common"))
-      }
+package com.gabrielleeg1.javarock.api.world.anvil
+
+import com.gabrielleeg1.javarock.api.world.Location
+import com.gabrielleeg1.javarock.api.world.World
+
+private const val LoadFactor = 4000000
+
+class AnvilWorld(val regions: Array<AnvilRegion>) : World {
+  val chunks = HashMap<Long, AnvilChunk>().apply {
+    regions.flatMap(AnvilRegion::chunks).forEach {
+      put((it.x * LoadFactor + it.z).toLong(), it)
     }
+  }
+
+  override fun getChunkAt(x: Int, z: Int): AnvilChunk? {
+    return chunks[(x * LoadFactor + z).toLong()]
+  }
+
+  override fun getChunkAt(location: Location): AnvilChunk? {
+    return null
   }
 }

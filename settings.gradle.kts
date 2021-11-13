@@ -17,6 +17,9 @@
 rootProject.name = "javarock"
 
 include("server-api")
+include("server-api:world:common")
+include("server-api:world:anvil")
+include("server-api:world:slime")
 include("server-api:protocol:common")
 include("server-api:protocol:java")
 include("server-api:protocol:java:v756")

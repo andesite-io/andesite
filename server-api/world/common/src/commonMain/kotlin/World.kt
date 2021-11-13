@@ -14,13 +14,9 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol:common"))
-        implementation(project(":server-api:world:common"))
-      }
-    }
-  }
+package com.gabrielleeg1.javarock.api.world
+
+interface World {
+  fun getChunkAt(x: Int, z: Int): Chunk?
+  fun getChunkAt(location: Location): Chunk?
 }

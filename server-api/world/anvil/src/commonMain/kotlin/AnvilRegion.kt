@@ -14,13 +14,9 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":server-api:protocol:common"))
-        implementation(project(":server-api:world:common"))
-      }
-    }
-  }
+package com.gabrielleeg1.javarock.api.world.anvil
+
+class AnvilRegion(
+  val chunks: List<AnvilChunk>,
+) {
 }
