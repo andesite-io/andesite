@@ -16,12 +16,12 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.play
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 
-@Packet(0x38)
+@ProtocolPacket(0x38)
 @Serializable
 data class PlayerPositionAndLookPacket(
   val x: Double,

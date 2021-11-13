@@ -16,7 +16,7 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.play
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
 import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
 import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
@@ -28,7 +28,7 @@ import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 
 // TODO: use Identifier type
-@Packet(0x26)
+@ProtocolPacket(0x26)
 @Serializable
 class JoinGamePacket(
   val entityId: Int,

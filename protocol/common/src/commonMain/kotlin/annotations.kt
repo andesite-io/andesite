@@ -28,7 +28,7 @@ import kotlinx.serialization.Serializable
 @SerialInfo
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)
-annotation class Packet(val id: Int)
+annotation class ProtocolPacket(val id: Int)
 
 /**
  * Sets packet's field to decode with Json format.

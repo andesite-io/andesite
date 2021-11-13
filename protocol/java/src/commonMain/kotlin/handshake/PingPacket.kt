@@ -16,11 +16,11 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
 
-@Packet(0x01)
+@ProtocolPacket(0x01)
 @Serializable
 object PingPacket : JavaPacket {
   override fun toString(): String = "PingPacket"

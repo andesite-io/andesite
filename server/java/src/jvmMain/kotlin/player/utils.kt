@@ -14,13 +14,25 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.login
+package com.gabrielleeg1.javarock.server.java.player
 
 import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.ProtocolString
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import kotlinx.serialization.Serializable
+import kotlinx.serialization.serializer
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
 
-@ProtocolPacket(0x00)
-@Serializable
-data class LoginStartPacket(@ProtocolString(16) val username: String) : JavaPacket
+internal suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T {
+  return receivePacket(serializer())
+}
+
+internal suspend inline fun <reified T : JavaPacket> Session.sendPacket(packet: T) {
+  sendPacket(serializer(), packet)
+}
+
+internal fun <T : JavaPacket> extractPacketId(packetClass: KClass<T>): Int {
+  val annotation = packetClass.findAnnotation<ProtocolPacket>()
+    ?: error("Can not find Packet id annotation in packet ${packetClass.simpleName}")
+
+  return annotation.id
+}

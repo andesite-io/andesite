@@ -16,7 +16,16 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.PolymorphicSerializer
+
 /**
  * Minecraft Java Edition packet.
  */
-interface JavaPacket
+@Polymorphic
+interface JavaPacket {
+  companion object {
+    fun serializer(): KSerializer<JavaPacket> = PolymorphicSerializer(JavaPacket::class)
+  }
+}

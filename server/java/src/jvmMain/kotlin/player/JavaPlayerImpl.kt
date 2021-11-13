@@ -14,13 +14,19 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.login
+package com.gabrielleeg1.javarock.server.java.player
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.ProtocolString
+import com.benasher44.uuid.Uuid
+import com.gabrielleeg1.javarock.api.player.JavaPlayer
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import kotlinx.serialization.Serializable
 
-@ProtocolPacket(0x00)
-@Serializable
-data class LoginStartPacket(@ProtocolString(16) val username: String) : JavaPacket
+internal class JavaPlayerImpl(
+  override val id: Uuid,
+  override val protocol: Int,
+  override val username: String,
+  val session: Session,
+) : JavaPlayer {
+  override suspend fun sendPacket(packet: JavaPacket, queue: Boolean) {
+    session.sendPacket(JavaPacket.serializer(), packet)
+  }
+}

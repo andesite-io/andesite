@@ -16,7 +16,7 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
 import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
 import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
@@ -25,7 +25,7 @@ import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 
-@Packet(0x00)
+@ProtocolPacket(0x00)
 @Serializable
 data class HandshakePacket(
   val protocolVersion: VarInt,

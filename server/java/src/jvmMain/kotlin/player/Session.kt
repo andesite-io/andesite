@@ -16,9 +16,8 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.javarock.server.java
+package com.gabrielleeg1.javarock.server.java.player
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import com.gabrielleeg1.javarock.api.protocol.readVarInt
 import com.gabrielleeg1.javarock.api.protocol.writeVarInt
@@ -34,12 +33,9 @@ import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
-import kotlinx.serialization.serializer
 import mu.KLogging
-import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
 
-data class Session(val format: BinaryFormat, val socket: Socket) {
+internal data class Session(val format: BinaryFormat, val socket: Socket) {
   companion object : KLogging()
 
   val input = socket.openReadChannel()
@@ -100,19 +96,4 @@ data class Session(val format: BinaryFormat, val socket: Socket) {
   override fun toString(): String {
     return "Session(remoteAddress=${socket.remoteAddress})"
   }
-}
-
-suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T {
-  return receivePacket(serializer())
-}
-
-suspend inline fun <reified T : JavaPacket> Session.sendPacket(packet: T) {
-  sendPacket(serializer(), packet)
-}
-
-private fun <T : JavaPacket> extractPacketId(packetClass: KClass<T>): Int {
-  val annotation = packetClass.findAnnotation<Packet>()
-    ?: error("Can not find Packet id annotation in packet ${packetClass.simpleName}")
-
-  return annotation.id
 }

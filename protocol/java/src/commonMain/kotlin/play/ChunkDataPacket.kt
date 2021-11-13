@@ -16,7 +16,7 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.play
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
@@ -24,7 +24,7 @@ import net.benwoodworth.knbt.NbtCompound
 import net.benwoodworth.knbt.NbtTag
 
 @Serializable
-@Packet(0x22)
+@ProtocolPacket(0x22)
 data class ChunkDataPacket(
   val chunkX: Int,
   val chunkZ: Int,

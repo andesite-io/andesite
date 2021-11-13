@@ -16,7 +16,7 @@
 
 package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.Packet
+import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
 import com.gabrielleeg1.javarock.api.protocol.chat.Chat
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
@@ -46,6 +46,6 @@ data class Players(
 @Serializable
 data class Sample(val name: String, val id: String)
 
-@Packet(0x00)
+@ProtocolPacket(0x00)
 @Serializable
 data class ResponsePacket(@ProtocolJson val response: Response) : JavaPacket
