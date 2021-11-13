@@ -47,12 +47,13 @@ import net.benwoodworth.knbt.Nbt
  * )
  *
  * @ProtocolEnum
+ * @ProtocolVariant(Variant.VarInt)
  * @Serializable
  * enum class NextState {
- *   @ProtocolEnum.Entry(1)
+ *   @ProtocolValue(1)
  *   Status,
  *
- *   @ProtocolEnum.Entry(2)
+ *   @ProtocolValue(2)
  *   Login;
  * }
  * 
