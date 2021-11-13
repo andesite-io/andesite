@@ -18,7 +18,22 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(project(":server-api:world:common"))
+        implementation(project(":server:common"))
+        
+        implementation(project(":protocol:common"))
+        implementation(project(":protocol:java"))
+        implementation(project(":protocol:java:v756"))
+        
+        implementation(project(":world:common"))
+        implementation(project(":world:slime"))
+        implementation(project(":world:anvil"))
+      }
+    }
+    
+    val jvmMain by getting {
+      dependencies {
+        implementation(kotlin("reflect"))
+        implementation("ch.qos.logback:logback-classic:1.2.6")
       }
     }
   }

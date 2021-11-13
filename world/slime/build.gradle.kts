@@ -18,7 +18,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(project(":server-api:protocol:common"))
+        implementation(project(":world:common"))
       }
     }
   }
