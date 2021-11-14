@@ -18,7 +18,6 @@ package com.gabrielleeg1.javarock.server.java
 
 import com.benasher44.uuid.uuid4
 import com.gabrielleeg1.javarock.api.player.JavaPlayer
-import com.gabrielleeg1.javarock.api.protocol.chat.Chat
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.HandshakePacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.PingPacket
 import com.gabrielleeg1.javarock.api.protocol.java.handshake.Players
@@ -32,6 +31,8 @@ import com.gabrielleeg1.javarock.api.protocol.java.play.GameMode
 import com.gabrielleeg1.javarock.api.protocol.java.play.JoinGamePacket
 import com.gabrielleeg1.javarock.api.protocol.java.play.PlayerPositionAndLookPacket
 import com.gabrielleeg1.javarock.api.protocol.java.play.PreviousGameMode
+import com.gabrielleeg1.javarock.api.protocol.misc.Chat
+import com.gabrielleeg1.javarock.api.protocol.misc.Identifier
 import com.gabrielleeg1.javarock.api.protocol.resource
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import com.gabrielleeg1.javarock.api.world.Location
@@ -78,10 +79,10 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
       isHardcore = false,
       gameMode = GameMode.Adventure,
       previousGameMode = PreviousGameMode.Unknown,
-      worlds = listOf("world"),
+      worlds = listOf(Identifier("world")),
       dimensionCodec = nbt.decodeFromByteArray(File(resource("dimension_codec.nbt")).readBytes()),
       dimension = nbt.decodeFromByteArray(File(resource("dimension.nbt")).readBytes()),
-      world = "world",
+      world = Identifier("world"),
       hashedSeed = 0,
       maxPlayers = VarInt(20),
       viewDistance = VarInt(32),

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.chat
+package com.gabrielleeg1.javarock.api.protocol.misc
 
 import kotlinx.serialization.Serializable
 

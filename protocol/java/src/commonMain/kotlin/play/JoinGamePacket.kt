@@ -23,11 +23,11 @@ import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
 import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
 import com.gabrielleeg1.javarock.api.protocol.Variant
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.javarock.api.protocol.misc.Identifier
 import com.gabrielleeg1.javarock.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 
-// TODO: use Identifier type
 @ProtocolPacket(0x26)
 @Serializable
 class JoinGamePacket(
@@ -35,12 +35,12 @@ class JoinGamePacket(
   val isHardcore: Boolean,
   val gameMode: GameMode,
   val previousGameMode: PreviousGameMode,
-  val worlds: List<String>,
+  val worlds: List<Identifier>,
   @ProtocolNbt
   val dimensionCodec: NbtCompound,
   @ProtocolNbt
   val dimension: NbtCompound,
-  val world: String,
+  val world: Identifier,
   val hashedSeed: Long,
   val maxPlayers: VarInt,
   val viewDistance: VarInt,

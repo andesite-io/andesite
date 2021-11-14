@@ -18,16 +18,16 @@ package com.gabrielleeg1.javarock.api.protocol.java.handshake
 
 import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
 import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
-import com.gabrielleeg1.javarock.api.protocol.chat.Chat
+import com.gabrielleeg1.javarock.api.protocol.misc.Chat
 import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Response(
-  val version: Version,
-  val players: Players,
-  val description: Chat,
-  val favicon: String? = null,
+    val version: Version,
+    val players: Players,
+    val description: Chat,
+    val favicon: String? = null,
 )
 
 @Serializable
