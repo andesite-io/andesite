@@ -2,15 +2,15 @@ package com.gabrielleeg1.javarock.logging
 
 import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.encoder.EncoderBase
-import java.time.LocalDateTime
+import java.time.Instant
 import java.time.format.DateTimeFormatter
 
-internal class LogEncoder(private val dateFormatter: DateTimeFormatter) : EncoderBase<ILoggingEvent>() {
+internal class LogEncoder : EncoderBase<ILoggingEvent>() {
   override fun headerBytes() = byteArrayOf()
   override fun footerBytes() = byteArrayOf()
 
   override fun encode(event: ILoggingEvent): ByteArray {
-    val time = dateFormatter.format(LocalDateTime.now())
+    val time = DateTimeFormatter.ISO_INSTANT.format(Instant.now())
     val level = LogLevel.fromLogbackLevel(event.level)
 
     val name = event.loggerName.split(".").let { it[it.size - 1] }

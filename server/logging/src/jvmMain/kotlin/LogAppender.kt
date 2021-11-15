@@ -4,11 +4,10 @@ import ch.qos.logback.classic.spi.ILoggingEvent
 import ch.qos.logback.core.OutputStreamAppender
 import org.fusesource.jansi.AnsiConsole
 import java.io.PrintStream
-import java.time.format.DateTimeFormatter
 
 class LogAppender : OutputStreamAppender<ILoggingEvent>() {
   init {
-    encoder = LogEncoder(DateTimeFormatter.ofPattern("HH:mm:ss.SSS"))
+    encoder = LogEncoder()
   }
 
   override fun start() {
