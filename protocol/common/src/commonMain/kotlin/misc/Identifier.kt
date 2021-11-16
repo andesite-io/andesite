@@ -33,7 +33,7 @@ class Identifier(private val fullPath: String) {
   override fun toString(): String = fullPath
 }
 
-private object IdentifierSerializer : KSerializer<Identifier> {
+internal object IdentifierSerializer : KSerializer<Identifier> {
   override val descriptor = PrimitiveSerialDescriptor(
     "com.gabrielleeg1.javarock.api.protocol.misc.Identifier",
     PrimitiveKind.STRING,
