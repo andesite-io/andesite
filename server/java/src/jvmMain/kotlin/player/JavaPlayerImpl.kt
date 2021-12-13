@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.server.java.player
+package com.gabrielleeg1.andesite.server.java.player
 
 import com.benasher44.uuid.Uuid
-import com.gabrielleeg1.javarock.api.player.JavaPlayer
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.player.JavaPlayer
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 
 internal class JavaPlayerImpl(
   override val id: Uuid,

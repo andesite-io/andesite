@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.world.anvil
+package com.gabrielleeg1.andesite.api.world.anvil
 
-import com.gabrielleeg1.javarock.api.world.Location
-import com.gabrielleeg1.javarock.api.world.World
+import com.gabrielleeg1.andesite.api.world.Location
+import com.gabrielleeg1.andesite.api.world.World
 
 private const val LoadFactor = 4000000
 

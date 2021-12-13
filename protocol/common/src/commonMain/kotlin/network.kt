@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol
+package com.gabrielleeg1.andesite.api.protocol
 
 import com.benasher44.uuid.Uuid
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readBytes

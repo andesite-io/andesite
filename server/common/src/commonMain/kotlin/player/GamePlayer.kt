@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.player
+package com.gabrielleeg1.andesite.api.player
 
 import com.benasher44.uuid.Uuid
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 
 sealed interface GamePlayer {
   val id: Uuid

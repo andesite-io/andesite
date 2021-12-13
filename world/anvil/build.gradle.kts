@@ -14,10 +14,15 @@
  *    limitations under the License.
  */
 
+repositories {
+  maven("https://repo.kryptonmc.org/releases")
+}
+
 kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        implementation(project(":protocol:common"))
         implementation(project(":world:common"))
       }
     }

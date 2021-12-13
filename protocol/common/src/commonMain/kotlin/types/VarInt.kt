@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.types
+package com.gabrielleeg1.andesite.api.protocol.types
 
-import com.gabrielleeg1.javarock.api.protocol.readVarInt
-import com.gabrielleeg1.javarock.api.protocol.writeVarInt
+import com.gabrielleeg1.andesite.api.protocol.readVarInt
+import com.gabrielleeg1.andesite.api.protocol.writeVarInt
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind

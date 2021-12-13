@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.world
+package com.gabrielleeg1.andesite.api.world
 
 interface World {
   fun getChunkAt(x: Int, z: Int): Chunk?

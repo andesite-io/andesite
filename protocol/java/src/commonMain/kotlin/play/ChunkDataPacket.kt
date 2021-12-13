@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.play
+package com.gabrielleeg1.andesite.api.protocol.java.play
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 import net.benwoodworth.knbt.NbtTag
@@ -33,7 +33,7 @@ data class ChunkDataPacket(
   val heightmaps: NbtCompound,
   val biomes: IntArray,
   val data: ByteArray,
-  @ProtocolNbt
+//  todo support only on list field @ProtocolNbt
   val blockEntities: List<NbtTag>,
 ) : JavaPacket {
   override fun equals(other: Any?): Boolean {

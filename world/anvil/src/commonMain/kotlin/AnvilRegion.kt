@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.world.anvil
+package com.gabrielleeg1.andesite.api.world.anvil
 
 class AnvilRegion(
   val chunks: List<AnvilChunk>,

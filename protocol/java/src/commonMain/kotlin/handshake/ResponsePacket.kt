@@ -14,12 +14,12 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.handshake
+package com.gabrielleeg1.andesite.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
-import com.gabrielleeg1.javarock.api.protocol.misc.Chat
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolJson
+import com.gabrielleeg1.andesite.api.protocol.misc.Chat
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
 
 @Serializable

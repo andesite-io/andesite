@@ -14,17 +14,92 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.world.anvil
+package com.gabrielleeg1.andesite.api.world.anvil
 
-import com.gabrielleeg1.javarock.api.world.ChunkSection
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.gabrielleeg1.andesite.api.world.ChunkSection
+import com.gabrielleeg1.andesite.api.world.anvil.block.GlobalPalette
+import com.gabrielleeg1.andesite.api.world.anvil.block.PalettedContainer
+import com.gabrielleeg1.andesite.api.world.anvil.block.directPalette
+import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockPalette
+import io.ktor.utils.io.core.ByteReadPacket
+import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.readBytes
+import io.ktor.utils.io.core.writeFully
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.ByteArraySerializer
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.LongArraySerializer
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.descriptors.buildClassSerialDescriptor
+import kotlinx.serialization.descriptors.element
+import kotlinx.serialization.encoding.CompositeDecoder
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.encoding.decodeStructure
 import net.benwoodworth.knbt.NbtCompound
 
-@Serializable
 class AnvilChunkSection(
-  @SerialName("Y") val y: Byte,
-  @SerialName("SkyLight") val skyLight: ByteArray = ByteArray(1024),
-  @SerialName("BlockStates") val blockStates: LongArray = LongArray(1024),
-  @SerialName("Palette") val palette: List<NbtCompound> = emptyList(),
-) : ChunkSection
+  val y: Int,
+  val skyLight: ByteArray,
+  val blockLight: ByteArray,
+  val blockStates: PalettedContainer,
+) : ChunkSection {
+  val bitsPerBlock = blockStates.bitsPerBlock
+  val sectionHeight = 16
+  val sectionWidth = 16
+
+  @OptIn(ExperimentalUnsignedTypes::class)
+  override fun writeToNetwork(): ByteReadPacket = buildPacket {
+    writeFully(blockStates.writeToNetwork().readBytes())
+  }
+}
+
+class AnvilChunkSectionSerializer(
+  private val globalPalette: GlobalPalette,
+) : KSerializer<AnvilChunkSection> {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AnvilChunkSection") {
+    element<Byte>("Y")
+    element<ByteArray>("SkyLight")
+    element<ByteArray>("BlockLight")
+    element<LongArray>("BlockStates")
+    element<List<NbtCompound>>("Palette")
+  }
+
+  override fun serialize(encoder: Encoder, value: AnvilChunkSection) {
+    TODO("Not yet implemented")
+  }
+
+  override fun deserialize(decoder: Decoder): AnvilChunkSection {
+    return decoder.decodeStructure(descriptor) {
+      var y: Int = -1
+      var skyLight = ByteArray(1024 * 2)
+      var blockLight = ByteArray(1024 * 2)
+      var blockStates: LongArray? = null
+      var palette: List<NbtCompound>? = null
+
+      while (true) {
+        when (val index = decodeElementIndex(descriptor)) {
+          0 -> y = decodeByteElement(descriptor, index).toInt()
+          1 -> skyLight = decodeSerializableElement(descriptor, index, ByteArraySerializer())
+          2 -> blockLight = decodeSerializableElement(descriptor, index, ByteArraySerializer())
+          3 -> blockStates = decodeSerializableElement(descriptor, index, LongArraySerializer())
+          4 -> palette = decodeSerializableElement(
+            descriptor = descriptor,
+            index = 3,
+            deserializer = ListSerializer(NbtCompound.serializer()),
+          )
+          CompositeDecoder.DECODE_DONE -> break
+          else -> error("Unexpected index: $index")
+        }
+      }
+
+      val blocks = when {
+        blockStates == null -> directPalette(globalPalette)
+        palette == null -> directPalette(globalPalette)
+        else -> readBlockPalette(globalPalette, blockStates, palette)
+      }
+
+      AnvilChunkSection(y, skyLight, blockLight, blocks)
+    }
+  }
+}

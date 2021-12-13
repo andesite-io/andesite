@@ -1,4 +1,4 @@
-package com.gabrielleeg1.javarock.logging
+package com.gabrielleeg1.andesite.logging
 
 import ch.qos.logback.classic.Level
 

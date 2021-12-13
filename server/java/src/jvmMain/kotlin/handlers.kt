@@ -14,32 +14,32 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.server.java
+package com.gabrielleeg1.andesite.server.java
 
 import com.benasher44.uuid.uuid4
-import com.gabrielleeg1.javarock.api.player.JavaPlayer
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.HandshakePacket
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.PingPacket
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.Players
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.PongPacket
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.Response
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.ResponsePacket
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.Version
-import com.gabrielleeg1.javarock.api.protocol.java.login.LoginStartPacket
-import com.gabrielleeg1.javarock.api.protocol.java.login.LoginSuccessPacket
-import com.gabrielleeg1.javarock.api.protocol.java.play.GameMode
-import com.gabrielleeg1.javarock.api.protocol.java.play.JoinGamePacket
-import com.gabrielleeg1.javarock.api.protocol.java.play.PlayerPositionAndLookPacket
-import com.gabrielleeg1.javarock.api.protocol.java.play.PreviousGameMode
-import com.gabrielleeg1.javarock.api.protocol.misc.Chat
-import com.gabrielleeg1.javarock.api.protocol.misc.Identifier
-import com.gabrielleeg1.javarock.api.protocol.resource
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
-import com.gabrielleeg1.javarock.api.world.Location
-import com.gabrielleeg1.javarock.server.java.player.JavaPlayerImpl
-import com.gabrielleeg1.javarock.server.java.player.Session
-import com.gabrielleeg1.javarock.server.java.player.receivePacket
-import com.gabrielleeg1.javarock.server.java.player.sendPacket
+import com.gabrielleeg1.andesite.api.player.JavaPlayer
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.PingPacket
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.Players
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.PongPacket
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.Response
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.ResponsePacket
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.Version
+import com.gabrielleeg1.andesite.api.protocol.java.login.LoginStartPacket
+import com.gabrielleeg1.andesite.api.protocol.java.login.LoginSuccessPacket
+import com.gabrielleeg1.andesite.api.protocol.java.play.GameMode
+import com.gabrielleeg1.andesite.api.protocol.java.play.JoinGamePacket
+import com.gabrielleeg1.andesite.api.protocol.java.play.PlayerPositionAndLookPacket
+import com.gabrielleeg1.andesite.api.protocol.java.play.PreviousGameMode
+import com.gabrielleeg1.andesite.api.protocol.misc.Chat
+import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
+import com.gabrielleeg1.andesite.api.protocol.resource
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import com.gabrielleeg1.andesite.api.world.Location
+import com.gabrielleeg1.andesite.server.java.player.JavaPlayerImpl
+import com.gabrielleeg1.andesite.server.java.player.Session
+import com.gabrielleeg1.andesite.server.java.player.receivePacket
+import com.gabrielleeg1.andesite.server.java.player.sendPacket
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -60,7 +60,7 @@ internal suspend fun handleStatus(session: Session, handshake: HandshakePacket) 
   session.sendPacket(
     ResponsePacket(
       Response(
-        version = Version(name = "Javarock for 1.17", protocol = handshake.protocolVersion.toInt()),
+        version = Version(name = "Andesite for 1.17", protocol = handshake.protocolVersion.toInt()),
         players = Players(max = 20, online = 0),
         description = Chat.of("&eHello, world"),
       ),

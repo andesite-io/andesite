@@ -1,4 +1,4 @@
-package com.gabrielleeg1.javarock.logging
+package com.gabrielleeg1.andesite.logging
 
 internal const val Reset = "\u001B[0m"
 internal const val Black = "\u001B[30m"

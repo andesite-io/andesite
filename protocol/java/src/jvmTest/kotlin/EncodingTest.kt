@@ -16,11 +16,11 @@
 
 package tests
 
-import com.gabrielleeg1.javarock.api.protocol.java.play.GameMode
-import com.gabrielleeg1.javarock.api.protocol.java.play.JoinGamePacket
-import com.gabrielleeg1.javarock.api.protocol.java.play.PreviousGameMode
-import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import com.gabrielleeg1.andesite.api.protocol.java.play.GameMode
+import com.gabrielleeg1.andesite.api.protocol.java.play.JoinGamePacket
+import com.gabrielleeg1.andesite.api.protocol.java.play.PreviousGameMode
+import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
 import net.benwoodworth.knbt.buildNbtCompound

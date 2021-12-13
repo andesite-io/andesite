@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.play
+package com.gabrielleeg1.andesite.api.protocol.java.play
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 
 @ProtocolPacket(0x38)

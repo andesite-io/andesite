@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.handshake
+package com.gabrielleeg1.andesite.api.protocol.java.handshake
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.currentTimeMillis
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.currentTimeMillis
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import kotlinx.serialization.Serializable
 
 @ProtocolPacket(0x01)

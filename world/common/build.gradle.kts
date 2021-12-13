@@ -18,6 +18,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        implementation(project(":protocol:common"))
         implementation("io.ktor:ktor-network:1.6.4")
       }
     }

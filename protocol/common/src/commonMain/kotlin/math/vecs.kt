@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.math
+package com.gabrielleeg1.andesite.api.protocol.math
 
 data class Vector3i(val x: Int, val y: Int, val z: Int)
 

@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.login
+package com.gabrielleeg1.andesite.api.protocol.java.login
 
 import com.benasher44.uuid.Uuid
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 

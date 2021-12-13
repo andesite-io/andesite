@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java
+package com.gabrielleeg1.andesite.api.protocol.java
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Polymorphic

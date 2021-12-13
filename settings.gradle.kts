@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-rootProject.name = "javarock"
+rootProject.name = "andesite"
 
 include("world:common")
 include("world:anvil")

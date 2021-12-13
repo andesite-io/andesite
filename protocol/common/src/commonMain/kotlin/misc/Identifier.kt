@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.misc
+package com.gabrielleeg1.andesite.api.protocol.misc
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -30,12 +30,16 @@ class Identifier(private val fullPath: String) {
   
   constructor(namespace: String, path: String) : this("$namespace:$path")
 
+  override fun equals(other: Any?): Boolean {
+    return fullPath == other
+  }
+
   override fun toString(): String = fullPath
 }
 
 internal object IdentifierSerializer : KSerializer<Identifier> {
   override val descriptor = PrimitiveSerialDescriptor(
-    "com.gabrielleeg1.javarock.api.protocol.misc.Identifier",
+    "com.gabrielleeg1.andesite.api.protocol.misc.Identifier",
     PrimitiveKind.STRING,
   )
 

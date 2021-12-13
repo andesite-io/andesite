@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.types
+package com.gabrielleeg1.andesite.api.protocol.types
 
 /**
  * Compares this value with the specified value for order.

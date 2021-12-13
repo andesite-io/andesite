@@ -14,44 +14,41 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.server.java
+package com.gabrielleeg1.andesite.server.java
 
-import com.gabrielleeg1.javarock.api.protocol.java.play.ChunkDataPacket
-import com.gabrielleeg1.javarock.api.protocol.writeVarInt
-import com.gabrielleeg1.javarock.api.world.anvil.AnvilChunk
+import com.gabrielleeg1.andesite.api.protocol.java.play.ChunkDataPacket
+import com.gabrielleeg1.andesite.api.world.anvil.AnvilChunk
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
-import io.ktor.utils.io.core.writeShort
-import io.ktor.utils.io.core.writeUByte
-import kotlinx.serialization.encodeToByteArray
+import net.benwoodworth.knbt.buildNbtCompound
+import java.util.BitSet
 
 internal fun AnvilChunk.toPacket(): ChunkDataPacket {
+  val primaryBitmask = BitSet()
   val data = buildPacket {
-    for (section in sections) {
-      val blocks = section.blockStates.toList()
-        .map(Long::toInt)
-        .mapNotNull(section.palette::getOrNull)
-
-      writeShort(blocks.size.toShort())
-      writeUByte(4.toUByte())
-
-      writeVarInt(section.palette.size)
-      for (item in blocks) {
-        writeFully(nbt.encodeToByteArray(item))
-      }
-
-      writeVarInt(section.blockStates.size)
-      writeFully(section.blockStates)
+    for (i in sections.indices) {
+      primaryBitmask.set(i)
+      writeFully(sections[i].writeToNetwork().readBytes())
     }
   }.readBytes()
+  
+  val heightmaps = buildNbtCompound { put("", heightmaps) }
+  
+  println("Sending chunk packet")
+  println("Primary bitmask: $primaryBitmask")
+  println("Heightmaps:      $heightmaps")
+  println("Biomes length:   ${biomes.size}")
+  println("Biomes:          $biomes")
+  println("Data length:     ${data.size}")
+  println("Data:            $data")
 
   return ChunkDataPacket(
     x, z,
-    LongArray(sections.size) { 1 },
+    primaryBitmask.toLongArray(),
     heightmaps,
     biomes,
     data,
-    tileEntities,
+    emptyList(), // TODO
   )
 }

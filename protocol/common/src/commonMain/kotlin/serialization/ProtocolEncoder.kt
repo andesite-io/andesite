@@ -16,17 +16,17 @@
 
 @file:OptIn(ExperimentalSerializationApi::class, ExperimentalUnsignedTypes::class)
 
-package com.gabrielleeg1.javarock.api.protocol.serialization
+package com.gabrielleeg1.andesite.api.protocol.serialization
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
-import com.gabrielleeg1.javarock.api.protocol.ProtocolJson
-import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
-import com.gabrielleeg1.javarock.api.protocol.ProtocolString
-import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
-import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
-import com.gabrielleeg1.javarock.api.protocol.Variant
-import com.gabrielleeg1.javarock.api.protocol.writeString
-import com.gabrielleeg1.javarock.api.protocol.writeVarInt
+import com.gabrielleeg1.andesite.api.protocol.ProtocolEnum
+import com.gabrielleeg1.andesite.api.protocol.ProtocolJson
+import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
+import com.gabrielleeg1.andesite.api.protocol.ProtocolString
+import com.gabrielleeg1.andesite.api.protocol.ProtocolValue
+import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
+import com.gabrielleeg1.andesite.api.protocol.Variant
+import com.gabrielleeg1.andesite.api.protocol.writeString
+import com.gabrielleeg1.andesite.api.protocol.writeVarInt
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.writeDouble
 import io.ktor.utils.io.core.writeFloat
@@ -37,6 +37,7 @@ import io.ktor.utils.io.core.writeShort
 import io.ktor.utils.io.core.writeUByte
 import io.ktor.utils.io.core.writeUInt
 import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.SerializationException
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
@@ -162,41 +163,48 @@ internal class ProtocolEncoderImpl(
     serializer: SerializationStrategy<T>,
     value: T,
   ) {
-    when {
-      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {
-        builder.writeString(configuration.json.encodeToString(serializer, value))
-      }
-      descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
-        builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
-      }
-      serializer.descriptor.kind == StructureKind.LIST -> {
-        val listValue = when (value) {
-          is Collection<*> -> value
-          is Array<*> -> value.toList()
-          is ByteArray -> value.toList()
-          is CharArray -> value.toList()
-          is ShortArray -> value.toList()
-          is IntArray -> value.toList()
-          is LongArray -> value.toList()
-          is FloatArray -> value.toList()
-          is DoubleArray -> value.toList()
-          is BooleanArray -> value.toList()
-          is UByteArray -> value.toList()
-          is UShortArray -> value.toList()
-          is UIntArray -> value.toList()
-          is ULongArray -> value.toList()
-          else -> error("Can not encode list of descriptor ${serializer.descriptor.serialName}")
+    try {
+      when {
+        descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {
+          builder.writeString(configuration.json.encodeToString(serializer, value))
         }
+        descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
+          builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
+        }
+        serializer.descriptor.kind == StructureKind.LIST -> {
+          val listValue = when (value) {
+            is Collection<*> -> value
+            is Array<*> -> value.toList()
+            is ByteArray -> value.toList()
+            is CharArray -> value.toList()
+            is ShortArray -> value.toList()
+            is IntArray -> value.toList()
+            is LongArray -> value.toList()
+            is FloatArray -> value.toList()
+            is DoubleArray -> value.toList()
+            is BooleanArray -> value.toList()
+            is UByteArray -> value.toList()
+            is UShortArray -> value.toList()
+            is UIntArray -> value.toList()
+            is ULongArray -> value.toList()
+            else -> error("Can not encode list of descriptor ${serializer.descriptor.serialName}")
+          }
 
-        val variant = descriptor
-          .getElementAnnotations(index)
-          .filterIsInstance<ProtocolVariant>()
-          .singleOrNull()?.kind ?: Variant.VarInt
+          val variant = descriptor
+            .getElementAnnotations(index)
+            .filterIsInstance<ProtocolVariant>()
+            .singleOrNull()?.kind ?: Variant.VarInt
 
-        encodeType(variant, listValue.size)
-        serializer.serialize(this, value)
+          encodeType(variant, listValue.size)
+          serializer.serialize(this, value)
+        }
+        else -> serializer.serialize(this, value)
       }
-      else -> serializer.serialize(this, value)
+    } catch (exception: SerializationException) {
+      throw SerializationException(
+        "${exception::class.simpleName} while encoding ${serializer.descriptor.serialName} and index $index",
+        exception,
+      )
     }
   }
 

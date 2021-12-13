@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol
+package com.gabrielleeg1.andesite.api.protocol
 
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 

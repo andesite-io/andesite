@@ -14,9 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.world.anvil
+package com.gabrielleeg1.andesite.api.world.anvil
 
-import com.gabrielleeg1.javarock.api.world.Chunk
+import com.gabrielleeg1.andesite.api.world.Chunk
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
@@ -34,6 +35,6 @@ class AnvilChunk(
   @SerialName("TileEntities") val tileEntities: List<NbtTag>,
   @SerialName("TileTicks") val tileTicks: List<NbtTag>,
   @SerialName("Status") val status: String,
-  @SerialName("Sections") override val sections: List<AnvilChunkSection> = emptyList(),
+  @SerialName("Sections") override val sections: List<@Contextual AnvilChunkSection> = emptyList(),
 ) : Chunk {
 }

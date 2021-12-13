@@ -14,4 +14,4 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.v756
+package com.gabrielleeg1.andesite.api.protocol.java.v756

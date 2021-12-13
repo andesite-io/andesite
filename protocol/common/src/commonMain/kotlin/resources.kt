@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol
+package com.gabrielleeg1.andesite.api.protocol
 
 expect inline fun resource(path: String): String 

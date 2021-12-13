@@ -16,16 +16,17 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.javarock.server.java
+package com.gabrielleeg1.andesite.server.java
 
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.HandshakePacket
-import com.gabrielleeg1.javarock.api.protocol.java.handshake.NextState
-import com.gabrielleeg1.javarock.api.protocol.resource
-import com.gabrielleeg1.javarock.api.protocol.serialization.MinecraftCodec
-import com.gabrielleeg1.javarock.api.protocol.serializers.UuidSerializer
-import com.gabrielleeg1.javarock.api.world.anvil.readAnvilWorld
-import com.gabrielleeg1.javarock.server.java.player.Session
-import com.gabrielleeg1.javarock.server.java.player.receivePacket
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
+import com.gabrielleeg1.andesite.api.protocol.java.handshake.NextState
+import com.gabrielleeg1.andesite.api.protocol.resource
+import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
+import com.gabrielleeg1.andesite.api.protocol.serializers.UuidSerializer
+import com.gabrielleeg1.andesite.api.world.anvil.block.readGlobalPalette
+import com.gabrielleeg1.andesite.api.world.anvil.readAnvilWorld
+import com.gabrielleeg1.andesite.server.java.player.Session
+import com.gabrielleeg1.andesite.server.java.player.receivePacket
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,7 @@ import net.benwoodworth.knbt.NbtVariant
 import java.io.File
 import java.util.concurrent.Executors
 
-private val logger = KotlinLogging.logger("javarock")
+private val logger = KotlinLogging.logger("andesite")
 
 private val context = Executors.newCachedThreadPool().asCoroutineDispatcher()
 
@@ -53,7 +54,14 @@ internal val nbt = Nbt {
   ignoreUnknownKeys = true
 }
 
-internal val world = readAnvilWorld(File(resource("world")))
+internal val palette = readGlobalPalette(
+  File(resource("palettes"))
+    .resolve("v756")
+    .resolve("blocks.json")
+    .readText(),
+)
+
+internal val world = readAnvilWorld(palette, File(resource("world")))
 
 suspend fun main(): Unit = withContext(context) {
   val selector = ActorSelectorManager(Dispatchers.IO)

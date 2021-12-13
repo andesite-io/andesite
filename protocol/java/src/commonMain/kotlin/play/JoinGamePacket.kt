@@ -14,17 +14,17 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.protocol.java.play
+package com.gabrielleeg1.andesite.api.protocol.java.play
 
-import com.gabrielleeg1.javarock.api.protocol.ProtocolPacket
-import com.gabrielleeg1.javarock.api.protocol.ProtocolEnum
-import com.gabrielleeg1.javarock.api.protocol.ProtocolNbt
-import com.gabrielleeg1.javarock.api.protocol.ProtocolValue
-import com.gabrielleeg1.javarock.api.protocol.ProtocolVariant
-import com.gabrielleeg1.javarock.api.protocol.Variant
-import com.gabrielleeg1.javarock.api.protocol.java.JavaPacket
-import com.gabrielleeg1.javarock.api.protocol.misc.Identifier
-import com.gabrielleeg1.javarock.api.protocol.types.VarInt
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.ProtocolEnum
+import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
+import com.gabrielleeg1.andesite.api.protocol.ProtocolValue
+import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
+import com.gabrielleeg1.andesite.api.protocol.Variant
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 

@@ -14,11 +14,14 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.javarock.api.world.anvil
+package com.gabrielleeg1.andesite.api.world.anvil
 
+import com.gabrielleeg1.andesite.api.world.anvil.block.GlobalPalette
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
@@ -32,7 +35,7 @@ internal data class RegionChunk(
   @SerialName("DataVersion") val dataVersion: Int,
 )
 
-internal fun readRegion(regionX: Int, regionZ: Int, bytes: ByteArray): AnvilRegion {
+internal fun readRegion(nbt: Nbt, bytes: ByteArray): AnvilRegion {
   var pos: Int
   val chunks = List(1024) { i ->
     pos = i * 4
@@ -49,36 +52,39 @@ internal fun readRegion(regionX: Int, regionZ: Int, bytes: ByteArray): AnvilRegi
 
     pos = 4096 * offset + 4
 
-    val nbtCompression = NbtCompression.detect(bytes.drop(pos + 1).toByteArray())
+    val regionChunkBytes = bytes.drop(pos + 1).toByteArray()
 
-    val nbt = Nbt {
-      variant = NbtVariant.Java
-      compression = nbtCompression
-      ignoreUnknownKeys = true
-    }
-
-    nbt.decodeFromByteArray<RegionChunk>(bytes.drop(pos + 1).toByteArray())
+    Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
+      .decodeFromByteArray<RegionChunk>(regionChunkBytes)
       .level
   }
-  
+
   return AnvilRegion(chunks.filterNotNull())
 }
 
-fun readAnvilWorld(file: File): AnvilWorld {
+fun readAnvilWorld(globalPalette: GlobalPalette, file: File): AnvilWorld {
+  val nbt = Nbt {
+    variant = NbtVariant.Java
+    compression = NbtCompression.None
+    ignoreUnknownKeys = true
+    serializersModule = SerializersModule {
+      contextual(AnvilChunkSectionSerializer(globalPalette))
+    }
+  }
+
   val regions = file
     .resolve("region").listFiles()
     .orEmpty()
     .mapNotNull {
-      val (_, regionX, regionZ) = it.name.split(".")
-      val packet = it.readBytes()
+      val bytes = it.readBytes()
 
-      if (packet.isEmpty()) {
+      if (bytes.isEmpty()) {
         null
       } else {
-        readRegion(regionX.toInt(), regionZ.toInt(), packet)
+        readRegion(nbt, bytes)
       }
     }
     .toTypedArray()
-  
+
   return AnvilWorld(regions)
 }
