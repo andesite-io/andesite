@@ -33,7 +33,6 @@ kotlin {
     val jvmMain by getting {
       dependencies {
         implementation(kotlin("reflect"))
-        implementation(project(":server:logging"))
       }
     }
   }

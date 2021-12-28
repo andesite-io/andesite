@@ -21,8 +21,12 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.commonTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.iml" />
@@ -110,6 +114,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server-java/javarock.server-java.main.iml" filepath="$PROJECT_DIR$/.idea/modules/server-java/javarock.server-java.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server-java/javarock.server-java.test.iml" filepath="$PROJECT_DIR$/.idea/modules/server-java/javarock.server-java.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/javarock.test.iml" filepath="$PROJECT_DIR$/.idea/modules/javarock.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.commonMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.jvmMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/server/logging/logging.andesite.server.logging.jvmTest.iml" />
     </modules>
   </component>
 </project>

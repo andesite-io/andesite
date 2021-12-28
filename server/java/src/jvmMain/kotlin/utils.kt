@@ -18,11 +18,28 @@ package com.gabrielleeg1.andesite.server.java
 
 import com.gabrielleeg1.andesite.api.protocol.java.play.ChunkDataPacket
 import com.gabrielleeg1.andesite.api.world.anvil.AnvilChunk
+import io.klogging.config.ConfigDsl
+import io.klogging.config.KloggingConfiguration
+import io.klogging.config.LoggingConfig
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
 import net.benwoodworth.knbt.buildNbtCompound
 import java.util.BitSet
+
+@ConfigDsl
+internal fun KloggingConfiguration.logging(vararg names: String, block: LoggingConfig.() -> Unit) {
+  for (name in names) {
+    logging {
+      fromLoggerBase(name)
+      block()
+    }
+  }
+}
+
+internal fun resource(path: String): String {
+  return ClassLoader.getSystemResource(path)?.file ?: error("Can not find resource $path")
+}
 
 internal fun AnvilChunk.toPacket(): ChunkDataPacket {
   val primaryBitmask = BitSet()
@@ -32,9 +49,9 @@ internal fun AnvilChunk.toPacket(): ChunkDataPacket {
       writeFully(sections[i].writeToNetwork().readBytes())
     }
   }.readBytes()
-  
+
   val heightmaps = buildNbtCompound { put("", heightmaps) }
-  
+
   println("Sending chunk packet")
   println("Primary bitmask: $primaryBitmask")
   println("Heightmaps:      $heightmaps")

@@ -37,7 +37,7 @@ class ProtocolConfiguration(
     variant = NbtVariant.Java
     compression = NbtCompression.None
   },
-  val json: Json = Json {},
+  val json: Json = Json,
   val encryption: Boolean = false,
   var encodeDefaults: Boolean = false,
 )

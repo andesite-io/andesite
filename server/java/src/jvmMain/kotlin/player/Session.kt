@@ -21,6 +21,7 @@ package com.gabrielleeg1.andesite.server.java.player
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import com.gabrielleeg1.andesite.api.protocol.readVarInt
 import com.gabrielleeg1.andesite.api.protocol.writeVarInt
+import io.klogging.Klogging
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
@@ -33,10 +34,9 @@ import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
-import mu.KLogging
 
 internal data class Session(val format: BinaryFormat, val socket: Socket) {
-  companion object : KLogging()
+  companion object : Klogging
 
   val input = socket.openReadChannel()
   val output = socket.openWriteChannel()
@@ -53,9 +53,7 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
 
     val id = packet.readVarInt().toInt()
 
-    logger.debug {
-      "%s packet received with id [0x%02x] and size [$size]".format(name, id)
-    }
+    logger.debug("%s packet received with id [0x%02x] and size [%d]", name, id, size)
 
     return format.decodeFromByteArray(deserializer, packet.readBytes())
   }
@@ -70,7 +68,7 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
         writeFully(format.encodeToByteArray(serializer, packet))
       }
 
-      logger.debug { "Packet %s sent with id [0x%02x]".format(packetName, packetId) }
+      logger.debug("Packet %s sent with id [0x%02x]", packetName, packetId)
 
       writeVarInt(data.remaining.toInt())
       writePacket(data)

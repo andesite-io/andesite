@@ -33,7 +33,6 @@ import com.gabrielleeg1.andesite.api.protocol.java.play.PlayerPositionAndLookPac
 import com.gabrielleeg1.andesite.api.protocol.java.play.PreviousGameMode
 import com.gabrielleeg1.andesite.api.protocol.misc.Chat
 import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
-import com.gabrielleeg1.andesite.api.protocol.resource
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import com.gabrielleeg1.andesite.api.world.Location
 import com.gabrielleeg1.andesite.server.java.player.JavaPlayerImpl

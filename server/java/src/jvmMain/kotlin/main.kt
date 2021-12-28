@@ -18,86 +18,55 @@
 
 package com.gabrielleeg1.andesite.server.java
 
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.NextState
-import com.gabrielleeg1.andesite.api.protocol.resource
-import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
-import com.gabrielleeg1.andesite.api.protocol.serializers.UuidSerializer
-import com.gabrielleeg1.andesite.api.world.anvil.block.readGlobalPalette
-import com.gabrielleeg1.andesite.api.world.anvil.readAnvilWorld
-import com.gabrielleeg1.andesite.server.java.player.Session
-import com.gabrielleeg1.andesite.server.java.player.receivePacket
-import io.ktor.network.selector.ActorSelectorManager
-import io.ktor.network.sockets.aSocket
-import kotlinx.coroutines.Dispatchers
+import io.klogging.Level
+import io.klogging.config.loggingConfiguration
+import io.klogging.rendering.RENDER_ANSI
+import io.klogging.sending.STDOUT
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.modules.SerializersModule
-import kotlinx.serialization.modules.contextual
-import mu.KotlinLogging
-import net.benwoodworth.knbt.Nbt
-import net.benwoodworth.knbt.NbtCompression
-import net.benwoodworth.knbt.NbtVariant
-import java.io.File
+import java.lang.System.getSecurityManager
 import java.util.concurrent.Executors
+import java.util.concurrent.ThreadFactory
+import java.util.concurrent.atomic.AtomicInteger
 
-private val logger = KotlinLogging.logger("andesite")
-
-private val context = Executors.newCachedThreadPool().asCoroutineDispatcher()
-
-internal val nbt = Nbt {
-  variant = NbtVariant.Java
-  compression = NbtCompression.None
-  ignoreUnknownKeys = true
-}
-
-internal val palette = readGlobalPalette(
-  File(resource("palettes"))
-    .resolve("v756")
-    .resolve("blocks.json")
-    .readText(),
-)
-
-internal val world = readAnvilWorld(palette, File(resource("world")))
-
-suspend fun main(): Unit = withContext(context) {
-  val selector = ActorSelectorManager(Dispatchers.IO)
-  val server = aSocket(selector).tcp().bind(hostname = "0.0.0.0", port = 25565)
-  val codec = MinecraftCodec {
-    protocolVersion = 756
-    json = Json {
-      prettyPrint = true
+suspend fun main() {
+  loggingConfiguration {
+    kloggingMinLevel(Level.INFO)
+    sink("stdout", RENDER_ANSI, STDOUT)
+    logging("Andesite") {
+      fromMinLevel(Level.TRACE) {
+        toSink("stdout")
+      }
     }
-    serializersModule = SerializersModule {
-      contextual(UuidSerializer)
+    logging("Sink", "Dispatcher", "Configuration", "Emitter") {
+      fromMinLevel(Level.ERROR) {
+        toSink("stdout")
+      }
     }
   }
 
-  logger.info { "Server started at 0.0.0.0:25565" }
+  withContext(scope.coroutineContext) {
+    startAndesite()
+  }
+}
 
-  while (true) {
-    val session = Session(codec, server.accept())
+private val context = Executors
+  .newCachedThreadPool(AndesiteThreadFactory)
+  .asCoroutineDispatcher()
 
-    launch {
-      try {
-        val handshake = session.receivePacket<HandshakePacket>()
+private val scope = CoroutineScope(context)
 
-        when (handshake.nextState) {
-          NextState.Status -> handleStatus(session, handshake)
-          NextState.Login -> handlePlay(session, handleLogin(session, handshake))
-        }
-      } catch (error: Throwable) {
-        logger.error(error) {
-          "Error thrown while handling connection ${session.socket.remoteAddress}"
-        }
+private object AndesiteThreadFactory : ThreadFactory {
+  const val NAME_PREFIX = "andesite-pool-"
+  val threadNumber = AtomicInteger(0)
+  val group: ThreadGroup = getSecurityManager()?.threadGroup ?: Thread.currentThread().threadGroup
 
-        withContext(Dispatchers.IO) {
-          session.socket.close()
-        }
-      }
+  override fun newThread(runnable: Runnable): Thread {
+    return Thread(group, runnable, NAME_PREFIX + threadNumber.incrementAndGet(), 0).apply {
+      isDaemon = false
+      priority = Thread.NORM_PRIORITY
     }
   }
 }

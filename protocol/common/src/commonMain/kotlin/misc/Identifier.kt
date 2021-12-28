@@ -27,13 +27,11 @@ import kotlinx.serialization.encoding.Encoder
 class Identifier(private val fullPath: String) {
   val namespace: String = fullPath.substringBefore(':', "minecraft")
   val path: String = fullPath.substringAfter(':')
-  
+
   constructor(namespace: String, path: String) : this("$namespace:$path")
 
-  override fun equals(other: Any?): Boolean {
-    return fullPath == other
-  }
-
+  override fun hashCode(): Int = fullPath.hashCode()
+  override fun equals(other: Any?): Boolean = fullPath == other
   override fun toString(): String = fullPath
 }
 

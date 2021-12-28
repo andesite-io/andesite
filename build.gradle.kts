@@ -52,10 +52,10 @@ allprojects {
       
       val commonMain by getting {
         dependencies {
+          implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
           implementation("io.ktor:ktor-network:1.6.4")
           implementation("com.benasher44:uuid:0.3.1")
           implementation("net.benwoodworth.knbt:knbt:0.11.1")
-          implementation("io.github.microutils:kotlin-logging:1.12.5")
           implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
           implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
         }
@@ -68,6 +68,7 @@ allprojects {
 
       val jvmMain by getting {
         dependencies {
+          implementation("io.klogging:klogging-jvm:0.4.0")
           implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
         }
       }
