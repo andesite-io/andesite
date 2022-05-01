@@ -48,6 +48,13 @@ class AnvilChunkSection(
   val sectionHeight = 16
   val sectionWidth = 16
 
+  val serializedSize: Int
+    get(): Int = 2 + blockStates.serializedSize
+
+  fun isEmpty(): Boolean {
+    return blockStates.nonEmptyBlockCount == 0.toShort()
+  }
+
   @OptIn(ExperimentalUnsignedTypes::class)
   override fun writeToNetwork(): ByteReadPacket = buildPacket {
     writeFully(blockStates.writeToNetwork().readBytes())

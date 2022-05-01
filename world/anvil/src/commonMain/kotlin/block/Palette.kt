@@ -16,6 +16,7 @@
 
 package com.gabrielleeg1.andesite.api.world.anvil.block
 
+import com.gabrielleeg1.andesite.api.protocol.countVarInt
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import com.gabrielleeg1.andesite.api.protocol.writeVarInt
 import com.gabrielleeg1.andesite.api.world.block.Block
@@ -24,15 +25,18 @@ import io.ktor.utils.io.core.buildPacket
 
 sealed interface Palette {
   val bitsPerBlock: Int
-  
+  val serializedSize: Int
+
   fun stateIdForBlock(block: Block): StateId?
-  
+
   fun writeToNetwork(): ByteReadPacket
 }
 
 class SingleValuePalette(val singleStateId: StateId) : Palette {
-  override val bitsPerBlock: Int = 0
+  override val serializedSize: Int get() = TODO("Not yet implemented")
   
+  override val bitsPerBlock: Int = 0
+
   override fun stateIdForBlock(block: Block): StateId? {
     TODO("Not yet implemented")
   }
@@ -49,6 +53,8 @@ class SingleValuePalette(val singleStateId: StateId) : Palette {
  *   - For biomes and bits per entry <= 3, the given value is used
  */
 class IndirectPalette(override val bitsPerBlock: Int, val palette: Array<VarInt>) : Palette {
+  override val serializedSize: Int get() = TODO("Not yet implemented")
+
   override fun stateIdForBlock(block: Block): StateId? {
     TODO("Not yet implemented")
   }
@@ -66,7 +72,9 @@ class IndirectPalette(override val bitsPerBlock: Int, val palette: Array<VarInt>
  */
 class DirectPalette(val globalPalette: GlobalPalette) : Palette {
   override val bitsPerBlock: Int = globalPalette.bitsPerBlock
-  
+
+  override val serializedSize: Int = 0.countVarInt()
+
   override fun stateIdForBlock(block: Block): StateId? {
     return globalPalette.stateIdForBlock(block)
   }

@@ -22,6 +22,7 @@ import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.readLong
+import io.ktor.utils.io.core.toByteArray
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeLong
 import kotlin.experimental.and
@@ -31,6 +32,18 @@ fun BytePacketBuilder.writeVarInt(varint: Int): Unit = writeVarInt(VarInt(varint
 fun BytePacketBuilder.writeVarInt(varint: VarInt): Unit = writeVarInt(varint) { writeByte(it) }
 
 fun ByteReadPacket.readVarInt(): VarInt = readVarInt { readByte() }
+
+fun VarInt.countVarInt(): Int {
+  var count = 0
+  writeVarInt(this) { count++ }
+  return count
+}
+
+fun Int.countVarInt(): Int {
+  var count = 0
+  writeVarInt(VarInt(count)) { count++ }
+  return count
+}
 
 internal inline fun writeVarInt(varint: VarInt, writeByte: (Byte) -> Unit) {
   var value = varint.toInt()

@@ -19,6 +19,7 @@ package com.gabrielleeg1.andesite.api.protocol.java.play
 import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
 import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 import net.benwoodworth.knbt.NbtTag
@@ -31,7 +32,7 @@ data class ChunkDataPacket(
   val primaryBitmask: LongArray,
   @ProtocolNbt
   val heightmaps: NbtCompound,
-  val biomes: IntArray,
+  val biomes: List<VarInt>, // varint array
   val data: ByteArray,
 //  todo support only on list field @ProtocolNbt
   val blockEntities: List<NbtTag>,
@@ -46,7 +47,7 @@ data class ChunkDataPacket(
     if (chunkZ != other.chunkZ) return false
     if (!primaryBitmask.contentEquals(other.primaryBitmask)) return false
     if (heightmaps != other.heightmaps) return false
-    if (!biomes.contentEquals(other.biomes)) return false
+    if (biomes != other.biomes) return false
     if (!data.contentEquals(other.data)) return false
     if (blockEntities != other.blockEntities) return false
 
@@ -58,7 +59,7 @@ data class ChunkDataPacket(
     result = 31 * result + chunkZ
     result = 31 * result + primaryBitmask.contentHashCode()
     result = 31 * result + heightmaps.hashCode()
-    result = 31 * result + biomes.contentHashCode()
+    result = 31 * result + biomes.hashCode()
     result = 31 * result + data.contentHashCode()
     result = 31 * result + blockEntities.hashCode()
     return result

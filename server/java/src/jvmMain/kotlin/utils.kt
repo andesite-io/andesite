@@ -17,15 +17,19 @@
 package com.gabrielleeg1.andesite.server.java
 
 import com.gabrielleeg1.andesite.api.protocol.java.play.ChunkDataPacket
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import com.gabrielleeg1.andesite.api.world.anvil.AnvilChunk
+import com.gabrielleeg1.andesite.api.world.anvil.HeightmapUsage
 import io.klogging.config.ConfigDsl
 import io.klogging.config.KloggingConfiguration
 import io.klogging.config.LoggingConfig
-import io.ktor.utils.io.core.buildPacket
+import io.klogging.logger
+import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
-import io.ktor.utils.io.core.writeFully
+import kotlinx.serialization.encodeToString
+import net.benwoodworth.knbt.StringifiedNbt
 import net.benwoodworth.knbt.buildNbtCompound
-import java.util.BitSet
+import net.benwoodworth.knbt.encodeToNbtTag
 
 @ConfigDsl
 internal fun KloggingConfiguration.logging(vararg names: String, block: LoggingConfig.() -> Unit) {
@@ -41,30 +45,32 @@ internal fun resource(path: String): String {
   return ClassLoader.getSystemResource(path)?.file ?: error("Can not find resource $path")
 }
 
-internal fun AnvilChunk.toPacket(): ChunkDataPacket {
-  val primaryBitmask = BitSet()
-  val data = buildPacket {
-    for (i in sections.indices) {
-      primaryBitmask.set(i)
-      writeFully(sections[i].writeToNetwork().readBytes())
-    }
-  }.readBytes()
+private val logger = logger("Utils")
 
-  val heightmaps = buildNbtCompound { put("", heightmaps) }
+private val sNbt = StringifiedNbt { prettyPrint = true }
 
-  println("Sending chunk packet")
-  println("Primary bitmask: $primaryBitmask")
-  println("Heightmaps:      $heightmaps")
-  println("Biomes length:   ${biomes.size}")
-  println("Biomes:          $biomes")
-  println("Data length:     ${data.size}")
-  println("Data:            $data")
+internal suspend fun AnvilChunk.toPacket(): ChunkDataPacket {
+  val heightmaps = heightmaps
+    .filterKeys { it.usage == HeightmapUsage.Client }
+    .mapKeys { it.key.kind }
+    .let { nbt.encodeToNbtTag(it) }
+
+  val buf = BytePacketBuilder()
+  val data = buf.build().readBytes()
+  val primaryBitmask = extractChunkData(buf)
+
+  println("Sending chunk packet ${calculateChunkSize()}")
+  print("  Heightmaps    : ")
+  println(sNbt.encodeToString(heightmaps).split("\n").joinToString("\n  "))
+  println("  Biomes length : ${biomes.size}")
+  println("  Data length   : ${data.size}")
+  println("  ")
 
   return ChunkDataPacket(
     x, z,
     primaryBitmask.toLongArray(),
-    heightmaps,
-    biomes,
+    buildNbtCompound { put("", heightmaps) },
+    biomes.map(::VarInt),
     data,
     emptyList(), // TODO
   )

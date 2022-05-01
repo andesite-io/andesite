@@ -18,10 +18,12 @@
 
 package com.gabrielleeg1.andesite.api.world.anvil.block
 
+import com.gabrielleeg1.andesite.api.protocol.countVarInt
 import com.gabrielleeg1.andesite.api.protocol.writeVarInt
 import com.gabrielleeg1.andesite.api.world.block.Block
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.isNotEmpty
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeShort
@@ -38,6 +40,8 @@ class PalettedContainer(
   val blocks = mutableListOf<Block>()
   var nonEmptyBlockCount: Short = 0
     private set
+  
+  val serializedSize: Int get() = 1 + palette.serializedSize + data.size.countVarInt() + data.size * 8
 
   fun blockOf(x: Int, y: Int, z: Int): Block {
     return blocks[(y and 0xF) * 256 + (z and 0xF) * 16 + (x and 0xF)]
@@ -50,7 +54,11 @@ class PalettedContainer(
   fun writeToNetwork(): ByteReadPacket = buildPacket {
     writeShort(nonEmptyBlockCount)
     writeUByte(palette.bitsPerBlock.toUByte())
-    writeFully(palette.writeToNetwork().readBytes())
+    val palette = palette.writeToNetwork()
+    if (palette.isNotEmpty) {
+      writePacket(palette)
+    }
+    println("SIZE ${data.size}")
     writeVarInt(data.size)
     writeFully(data)
   }
