@@ -17,7 +17,7 @@
 package com.gabrielleeg1.andesite.api.world.anvil
 
 import com.gabrielleeg1.andesite.api.world.ChunkSection
-import com.gabrielleeg1.andesite.api.world.anvil.block.GlobalPalette
+import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
 import com.gabrielleeg1.andesite.api.world.anvil.block.PalettedContainer
 import com.gabrielleeg1.andesite.api.world.anvil.block.directPalette
 import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockPalette
@@ -62,7 +62,7 @@ class AnvilChunkSection(
 }
 
 class AnvilChunkSectionSerializer(
-  private val globalPalette: GlobalPalette,
+  private val registry: BlockRegistry,
 ) : KSerializer<AnvilChunkSection> {
   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AnvilChunkSection") {
     element<Byte>("Y")
@@ -101,9 +101,9 @@ class AnvilChunkSectionSerializer(
       }
       
       val blocks = when {
-        blockStates == null -> directPalette(globalPalette)
-        palette == null -> directPalette(globalPalette)
-        else -> readBlockPalette(globalPalette, blockStates, palette)
+        blockStates == null -> directPalette(registry)
+        palette == null -> directPalette(registry)
+        else -> readBlockPalette(registry, blockStates, palette)
       }
 
       AnvilChunkSection(y, skyLight, blockLight, blocks)

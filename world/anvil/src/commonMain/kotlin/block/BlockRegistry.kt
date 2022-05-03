@@ -55,7 +55,7 @@ class BlockState(
 }
 
 @Serializable(GlobalPaletteSerializer::class)
-class GlobalPalette(private val map: Map<Identifier, BlockPaletteEntry>) :
+class BlockRegistry(private val map: Map<Identifier, BlockPaletteEntry>) :
   Map<Identifier, BlockPaletteEntry> by map {
   val bitsPerBlock: Int = ceil(log2(size.toDouble())).toInt()
 
@@ -81,8 +81,8 @@ class GlobalPalette(private val map: Map<Identifier, BlockPaletteEntry>) :
   }
 
   companion object {
-    fun empty(): GlobalPalette {
-      return GlobalPalette(emptyMap())
+    fun empty(): BlockRegistry {
+      return BlockRegistry(emptyMap())
     }
   }
 }
@@ -91,22 +91,22 @@ private val json = Json {
   ignoreUnknownKeys = true
 }
 
-fun readGlobalPalette(text: String): GlobalPalette {
+fun readBlockRegistry(text: String): BlockRegistry {
   return json.decodeFromString(serializer(), text)
 }
 
-internal object GlobalPaletteSerializer : KSerializer<GlobalPalette> {
+internal object GlobalPaletteSerializer : KSerializer<BlockRegistry> {
   override val descriptor: SerialDescriptor = mapSerialDescriptor<String, BlockPaletteEntry>()
 
-  override fun serialize(encoder: Encoder, value: GlobalPalette) {
+  override fun serialize(encoder: Encoder, value: BlockRegistry) {
     encoder.encodeSerializableValue(
       MapSerializer(Identifier.serializer(), BlockPaletteEntry.serializer()),
       value,
     )
   }
 
-  override fun deserialize(decoder: Decoder): GlobalPalette {
-    return GlobalPalette(
+  override fun deserialize(decoder: Decoder): BlockRegistry {
+    return BlockRegistry(
       decoder.decodeSerializableValue(
         MapSerializer(Identifier.serializer(), BlockPaletteEntry.serializer()),
       ),

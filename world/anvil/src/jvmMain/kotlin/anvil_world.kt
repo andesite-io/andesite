@@ -16,7 +16,7 @@
 
 package com.gabrielleeg1.andesite.api.world.anvil
 
-import com.gabrielleeg1.andesite.api.world.anvil.block.GlobalPalette
+import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -62,13 +62,13 @@ internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
   return AnvilRegion(name, chunks.filterNotNull())
 }
 
-fun readAnvilWorld(globalPalette: GlobalPalette, file: File): AnvilWorld {
+fun readAnvilWorld(registry: BlockRegistry, file: File): AnvilWorld {
   val nbt = Nbt {
     variant = NbtVariant.Java
     compression = NbtCompression.None
     ignoreUnknownKeys = true
     serializersModule = SerializersModule {
-      contextual(AnvilChunkSectionSerializer(globalPalette))
+      contextual(AnvilChunkSectionSerializer(registry))
     }
   }
 

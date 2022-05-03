@@ -63,15 +63,15 @@ class PalettedContainer(val palette: Palette, val storage: BitStorage) {
   }
 }
 
-internal fun directPalette(globalPalette: GlobalPalette): PalettedContainer {
-  return PalettedContainer(DirectPalette(globalPalette), BitStorage.empty()).apply {
+internal fun directPalette(registry: BlockRegistry): PalettedContainer {
+  return PalettedContainer(DirectPalette(registry), BitStorage.empty()).apply {
     recount()
   }
 }
 
 @Suppress("UNUSED_PARAMETER")
 internal fun readBlockPalette(
-  registry: GlobalPalette,
+  registry: BlockRegistry,
   blockStates: LongArray,
   blockPalette: List<NbtCompound>,
 ): PalettedContainer {

@@ -20,7 +20,7 @@ import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
 import com.gabrielleeg1.andesite.api.protocol.java.handshake.NextState
 import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
 import com.gabrielleeg1.andesite.api.protocol.serializers.UuidSerializer
-import com.gabrielleeg1.andesite.api.world.anvil.block.readGlobalPalette
+import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockRegistry
 import com.gabrielleeg1.andesite.api.world.anvil.readAnvilWorld
 import com.gabrielleeg1.andesite.server.java.player.Session
 import com.gabrielleeg1.andesite.server.java.player.receivePacket
@@ -47,14 +47,14 @@ internal val nbt = Nbt {
   ignoreUnknownKeys = true
 }
 
-internal val palette = readGlobalPalette(
+internal val blockRegistry = readBlockRegistry(
   File(resource("palettes"))
     .resolve("v756")
     .resolve("blocks.json")
     .readText(),
 )
 
-internal val world = readAnvilWorld(palette, File(resource("world")))
+internal val world = readAnvilWorld(blockRegistry, File(resource("world")))
 
 suspend fun startAndesite(): Unit = coroutineScope {
   val selector = ActorSelectorManager(Dispatchers.IO)

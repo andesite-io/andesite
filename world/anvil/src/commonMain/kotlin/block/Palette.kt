@@ -60,7 +60,7 @@ class SingleValuePalette(val singleStateId: StateId) : Palette {
  */
 class IndirectPalette(
   override val bitsPerBlock: Int,
-  val registry: GlobalPalette,
+  val registry: BlockRegistry,
   val palette: Array<VarInt>,
 ) : Palette {
   override val serializedSize: Int
@@ -87,7 +87,7 @@ class IndirectPalette(
 /**
  * This format is used for bits per entry values greater than or equal to a threshold (9 for block states, 4 for biomes)
  */
-class DirectPalette(val registry: GlobalPalette) : Palette {
+class DirectPalette(val registry: BlockRegistry) : Palette {
   override val bitsPerBlock: Int = registry.bitsPerBlock
 
   override val serializedSize: Int = 0.countVarInt()
