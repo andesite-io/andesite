@@ -45,3 +45,27 @@ class ProtocolConfiguration(
 enum class ProtocolVariant {
   Java, Bedrock;
 }
+
+fun extractMinecraftVersion(protocolVersion: Int): String = when (protocolVersion) {
+  758 -> "1.18.1"
+  757 -> "1.18"
+  756 -> "1.17.1"
+  755 -> "1.17"
+  754 -> "1.16.4|1.16.5"
+  753 -> "1.16.3"
+  752 -> "1.16.3-rc1"
+  751 -> "1.16.2"
+  750 -> "1.16.2-rc2"
+  749 -> "1.16.2-rc1"
+  748 -> "1.16.2-pre3"
+  747 -> "1.16.2-pre2"
+  746 -> "1.16.2-pre1"
+  744 -> "1.16.2-pre1"
+  743 -> "20w30a"
+  741 -> "20w29a"
+  740 -> "20w28a"
+  738 -> "20w27a"
+  736 -> "1.16.1"
+  735 -> "1.16"
+  else -> error("Could not found minecraft version for protocol version $protocolVersion")
+}

@@ -35,7 +35,7 @@ suspend fun main() {
   loggingConfiguration {
     kloggingMinLevel(Level.INFO)
     sink("stdout", RENDER_ANSI, STDOUT)
-    logging("Andesite", "com.gabrielleeg1") {
+    logging("Andesite", "com.gabrielleeg1", "andesite") {
       fromMinLevel(Level.TRACE) {
         toSink("stdout")
       }

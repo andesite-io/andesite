@@ -17,6 +17,8 @@
 package com.gabrielleeg1.andesite.api.world.anvil
 
 import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
+import io.klogging.logger
+import io.klogging.noCoLogger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -34,6 +36,8 @@ internal data class RegionChunk(
   @SerialName("Level") val level: AnvilChunk,
   @SerialName("DataVersion") val dataVersion: Int,
 )
+
+private val logger = noCoLogger("andesite.AnvilWorld")
 
 internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
   var pos: Int
@@ -63,6 +67,8 @@ internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
 }
 
 fun readAnvilWorld(registry: BlockRegistry, file: File): AnvilWorld {
+  logger.info("Loading world `${file.name}`")
+
   val nbt = Nbt {
     variant = NbtVariant.Java
     compression = NbtCompression.None
@@ -72,19 +78,22 @@ fun readAnvilWorld(registry: BlockRegistry, file: File): AnvilWorld {
     }
   }
 
-  val regions = file
-    .resolve("region").listFiles()
-    .orEmpty()
-    .mapNotNull {
-      val bytes = it.readBytes()
+  val fileRegions = file.resolve("region").listFiles().orEmpty()
 
-      if (bytes.isEmpty()) {
-        null
-      } else {
-        readRegion(it.nameWithoutExtension, nbt, bytes)
-      }
+  val regions = fileRegions.mapIndexed { i, file ->
+    val percentage = (i.toFloat() / fileRegions.size * 100).toInt()
+    logger.info("Preparing region [$percentage%]")
+    
+    val bytes = file.readBytes()
+
+    if (bytes.isEmpty()) {
+      null
+    } else {
+      readRegion(file.nameWithoutExtension, nbt, bytes)
     }
-    .toTypedArray()
+  }
 
-  return AnvilWorld(regions)
+  logger.info("Finish loading world `${file.name}`")
+
+  return AnvilWorld(regions.filterNotNull().toTypedArray())
 }

@@ -19,7 +19,11 @@ package com.gabrielleeg1.andesite.server.java
 import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
 import com.gabrielleeg1.andesite.api.protocol.java.handshake.NextState
 import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
+import com.gabrielleeg1.andesite.api.protocol.serialization.extractMinecraftVersion
 import com.gabrielleeg1.andesite.api.protocol.serializers.UuidSerializer
+import com.gabrielleeg1.andesite.api.world.World
+import com.gabrielleeg1.andesite.api.world.anvil.AnvilWorld
+import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
 import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockRegistry
 import com.gabrielleeg1.andesite.api.world.anvil.readAnvilWorld
 import com.gabrielleeg1.andesite.server.java.player.Session
@@ -38,27 +42,31 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import java.io.File
+import java.net.InetSocketAddress
 
-private val logger = logger("Andesite")
+private val logger = logger("andesite.AnvilWorld")
 
-internal val nbt = Nbt {
+internal val nbt: Nbt = Nbt {
   variant = NbtVariant.Java
   compression = NbtCompression.None
   ignoreUnknownKeys = true
 }
 
-internal val blockRegistry = readBlockRegistry(
+internal val blockRegistry: BlockRegistry = readBlockRegistry(
   File(resource("palettes"))
     .resolve("v756")
     .resolve("blocks.json")
     .readText(),
 )
 
-internal val world = readAnvilWorld(blockRegistry, File(resource("world")))
+internal lateinit var world: AnvilWorld
 
 suspend fun startAndesite(): Unit = coroutineScope {
+  logger.info("Starting andesite...")
+
   val selector = ActorSelectorManager(Dispatchers.IO)
-  val server = aSocket(selector).tcp().bind(hostname = "0.0.0.0", port = 25565)
+  val address = InetSocketAddress("127.0.0.1", 25565)
+  val server = aSocket(selector).tcp().bind(address)
   val codec = MinecraftCodec {
     protocolVersion = 756
     json = Json {
@@ -68,8 +76,15 @@ suspend fun startAndesite(): Unit = coroutineScope {
       contextual(UuidSerializer)
     }
   }
+  
+  val protocolVersion =  codec.configuration.protocolVersion
+  val minecraftVersion = extractMinecraftVersion(codec.configuration.protocolVersion)
 
-  logger.info("Server started at 0.0.0.0:25565")
+  logger.info("Set up minecraft codec with protocol version $protocolVersion and version $minecraftVersion")
+  logger.info("Loaded ${blockRegistry.size} blocks")
+  logger.info("Server listening connections at $address")
+
+  world = readAnvilWorld(blockRegistry, File(resource("world")))
 
   while (true) {
     val session = Session(codec, server.accept())
