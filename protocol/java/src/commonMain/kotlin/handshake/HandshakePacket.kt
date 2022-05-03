@@ -23,10 +23,12 @@ import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
 import com.gabrielleeg1.andesite.api.protocol.Variant
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@ProtocolPacket(0x00)
 @Serializable
+@SerialName("HandshakePacket")
+@ProtocolPacket(0x00)
 data class HandshakePacket(
   val protocolVersion: VarInt,
   val serverAddress: String,
@@ -35,6 +37,7 @@ data class HandshakePacket(
 ) : JavaPacket
 
 @Serializable
+@SerialName("NextState")
 @ProtocolEnum
 @ProtocolVariant(kind = Variant.VarInt)
 enum class NextState {

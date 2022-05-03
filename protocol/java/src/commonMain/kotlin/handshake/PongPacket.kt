@@ -19,8 +19,10 @@ package com.gabrielleeg1.andesite.api.protocol.java.handshake
 import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
 import com.gabrielleeg1.andesite.api.protocol.currentTimeMillis
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@ProtocolPacket(0x01)
 @Serializable
+@SerialName("PongPacket")
+@ProtocolPacket(0x01)
 data class PongPacket(val payload: Long = currentTimeMillis()) : JavaPacket

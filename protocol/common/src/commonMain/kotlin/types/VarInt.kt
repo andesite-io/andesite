@@ -19,6 +19,7 @@ package com.gabrielleeg1.andesite.api.protocol.types
 import com.gabrielleeg1.andesite.api.protocol.readVarInt
 import com.gabrielleeg1.andesite.api.protocol.writeVarInt
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
@@ -32,6 +33,7 @@ import kotlin.jvm.JvmInline
  * @param int The value of the integer.
  */
 @Serializable(with = VarIntSerializer::class)
+@SerialName("VarInt")
 @JvmInline
 value class VarInt(private val int: Int) : Comparable<Number> {
   fun toInt(): Int = int

@@ -20,6 +20,7 @@ import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
 import com.gabrielleeg1.andesite.api.protocol.ProtocolJson
 import com.gabrielleeg1.andesite.api.protocol.misc.Chat
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -46,6 +47,7 @@ data class Players(
 @Serializable
 data class Sample(val name: String, val id: String)
 
-@ProtocolPacket(0x00)
 @Serializable
+@SerialName("ResponsePacket")
+@ProtocolPacket(0x00)
 data class ResponsePacket(@ProtocolJson val response: Response) : JavaPacket

@@ -19,8 +19,10 @@ package com.gabrielleeg1.andesite.api.protocol.java.login
 import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
 import com.gabrielleeg1.andesite.api.protocol.ProtocolString
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@ProtocolPacket(0x00)
 @Serializable
+@SerialName("LoginStartPacket")
+@ProtocolPacket(0x00)
 data class LoginStartPacket(@ProtocolString(16) val username: String) : JavaPacket

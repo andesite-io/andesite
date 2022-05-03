@@ -16,9 +16,11 @@
 
 package com.gabrielleeg1.andesite.api.protocol.misc
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
+@SerialName("Chat")
 class Chat(val text: String) {
   companion object {
     const val ColorCode = "\u00A7"

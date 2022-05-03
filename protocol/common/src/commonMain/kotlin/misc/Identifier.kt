@@ -32,7 +32,7 @@ class Identifier(val fullPath: String) {
 
   override fun hashCode(): Int = fullPath.hashCode()
   override fun toString(): String = fullPath
-  
+
   override fun equals(other: Any?): Boolean {
     if (other is Identifier) {
       return fullPath == other.fullPath
@@ -43,10 +43,7 @@ class Identifier(val fullPath: String) {
 }
 
 internal object IdentifierSerializer : KSerializer<Identifier> {
-  override val descriptor = PrimitiveSerialDescriptor(
-    "com.gabrielleeg1.andesite.api.protocol.misc.Identifier",
-    PrimitiveKind.STRING,
-  )
+  override val descriptor = PrimitiveSerialDescriptor("Identifier", PrimitiveKind.STRING)
 
   override fun deserialize(decoder: Decoder): Identifier {
     return Identifier(decoder.decodeString())

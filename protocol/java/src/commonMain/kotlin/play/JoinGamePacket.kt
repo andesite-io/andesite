@@ -25,10 +25,12 @@ import com.gabrielleeg1.andesite.api.protocol.Variant
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 
 @ProtocolPacket(0x26)
+@SerialName("JoinGamePacket")
 @Serializable
 class JoinGamePacket(
   val entityId: Int,
@@ -51,6 +53,7 @@ class JoinGamePacket(
 ) : JavaPacket
 
 @Serializable
+@SerialName("PreviousGameMode")
 @ProtocolEnum
 @ProtocolVariant(Variant.Byte)
 enum class PreviousGameMode {
@@ -78,6 +81,7 @@ enum class PreviousGameMode {
 }
 
 @Serializable
+@SerialName("GameMode")
 @ProtocolEnum
 @ProtocolVariant(Variant.UByte)
 enum class GameMode {

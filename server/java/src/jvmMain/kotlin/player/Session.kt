@@ -53,7 +53,7 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
 
     val id = packet.readVarInt().toInt()
 
-    logger.debug("%s packet received with id [0x%02x] and size [%s]".format(name, id, size))
+    logger.debug("Packet `$name` received with id [0x%02x] and size [$size]".format(id))
 
     return format.decodeFromByteArray(deserializer, packet.readBytes())
   }
@@ -69,11 +69,7 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
       }
 
       logger.debug(
-        "Packet %s sent with id [0x%02x] with size [%d]".format(
-          packetName,
-          packetId,
-          data.remaining,
-        ),
+        "Packet `$packetName` sent with id [0x%02x] with size [${data.remaining}]".format(packetId)
       )
 
       writeVarInt(data.remaining.toInt())

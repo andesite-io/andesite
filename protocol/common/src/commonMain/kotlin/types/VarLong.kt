@@ -17,10 +17,12 @@
 package com.gabrielleeg1.andesite.api.protocol.types
 
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlin.jvm.JvmInline
 
 /**
  * A variable-length long.
@@ -28,6 +30,7 @@ import kotlinx.serialization.encoding.Encoder
  * @param long The value of the long.
  */
 @Serializable(with = VarLongSerializer::class)
+@SerialName("VarLong")
 @JvmInline
 value class VarLong(val long: Long) : Comparable<Number> {
   fun toLong(): Long = long

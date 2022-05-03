@@ -20,8 +20,10 @@ import com.benasher44.uuid.Uuid
 import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@ProtocolPacket(0x02)
 @Serializable
+@SerialName("LoginSuccessPacket")
+@ProtocolPacket(0x02)
 data class LoginSuccessPacket(val id: @Contextual Uuid, val username: String) : JavaPacket 

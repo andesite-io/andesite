@@ -20,11 +20,13 @@ import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
 import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
 import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound
 import net.benwoodworth.knbt.NbtTag
 
 @Serializable
+@SerialName("ChunkDataPacket")
 @ProtocolPacket(0x22)
 data class ChunkDataPacket(
   val chunkX: Int,
