@@ -26,7 +26,6 @@ import io.klogging.config.LoggingConfig
 import io.klogging.logger
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
-import kotlinx.serialization.encodeToString
 import net.benwoodworth.knbt.StringifiedNbt
 import net.benwoodworth.knbt.buildNbtCompound
 import net.benwoodworth.knbt.encodeToNbtTag
@@ -56,15 +55,8 @@ internal suspend fun AnvilChunk.toPacket(): ChunkDataPacket {
     .let { nbt.encodeToNbtTag(it) }
 
   val buf = BytePacketBuilder()
-  val data = buf.build().readBytes()
   val primaryBitmask = extractChunkData(buf)
-
-  println("Sending chunk packet ${calculateChunkSize()}")
-  print("  Heightmaps    : ")
-  println(sNbt.encodeToString(heightmaps).split("\n").joinToString("\n  "))
-  println("  Biomes length : ${biomes.size}")
-  println("  Data length   : ${data.size}")
-  println("  ")
+  val data = buf.build().readBytes()
 
   return ChunkDataPacket(
     x, z,

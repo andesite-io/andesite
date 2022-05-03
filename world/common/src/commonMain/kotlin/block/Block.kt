@@ -20,6 +20,7 @@ import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import net.benwoodworth.knbt.NbtCompound
+import net.benwoodworth.knbt.NbtString
 import net.benwoodworth.knbt.buildNbtCompound
 
 data class Block(
@@ -30,8 +31,8 @@ data class Block(
 }
 
 fun NbtCompound.toBlock(): Block {
-  val id = get("Name") as String? ?: "minecraft:air"
+  val id = get("Name") as NbtString? ?: NbtString("minecraft:air")
   val properties = get("Properties") as NbtCompound? ?: buildNbtCompound {  }
   
-  return Block(Identifier(id), properties.toJsonObject())
+  return Block(Identifier(id.value), properties.toJsonObject())
 }

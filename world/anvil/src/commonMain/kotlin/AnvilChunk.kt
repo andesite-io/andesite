@@ -62,13 +62,14 @@ class AnvilChunk(
     val j = sections.size
     while (i < j) {
       val section = sections[i]
+      section.blockStates.recount()
       if (!section.isEmpty()) {
         bitset.set(i)
         buf.writePacket(section.writeToNetwork())
       }
       ++i
     }
-    
+
     return bitset
   }
 }

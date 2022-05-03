@@ -17,6 +17,7 @@
 package com.gabrielleeg1.andesite.api.world.anvil
 
 class AnvilRegion(
+  val name: String,
   val chunks: List<AnvilChunk>,
 ) {
 }

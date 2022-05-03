@@ -27,6 +27,8 @@ sealed interface Palette {
   val bitsPerBlock: Int
   val serializedSize: Int
 
+  fun blockById(id: StateId): Block?
+
   fun stateIdForBlock(block: Block): StateId?
 
   fun writeToNetwork(): ByteReadPacket
@@ -34,8 +36,12 @@ sealed interface Palette {
 
 class SingleValuePalette(val singleStateId: StateId) : Palette {
   override val serializedSize: Int get() = TODO("Not yet implemented")
-  
+
   override val bitsPerBlock: Int = 0
+
+  override fun blockById(id: StateId): Block? {
+    TODO("Not yet implemented")
+  }
 
   override fun stateIdForBlock(block: Block): StateId? {
     TODO("Not yet implemented")
@@ -52,11 +58,22 @@ class SingleValuePalette(val singleStateId: StateId) : Palette {
  *   - For block states and bits per between 5 and 8, the given value is used
  *   - For biomes and bits per entry <= 3, the given value is used
  */
-class IndirectPalette(override val bitsPerBlock: Int, val palette: Array<VarInt>) : Palette {
-  override val serializedSize: Int get() = TODO("Not yet implemented")
+class IndirectPalette(
+  override val bitsPerBlock: Int,
+  val registry: GlobalPalette,
+  val palette: Array<VarInt>,
+) : Palette {
+  override val serializedSize: Int
+    get(): Int = palette.fold(palette.size.countVarInt()) { a, b ->
+      a + b.countVarInt()
+    }
+
+  override fun blockById(id: StateId): Block? {
+    return registry.blockById(palette[id].toInt())
+  }
 
   override fun stateIdForBlock(block: Block): StateId? {
-    TODO("Not yet implemented")
+    return registry.stateIdForBlock(block)
   }
 
   override fun writeToNetwork(): ByteReadPacket = buildPacket {
@@ -70,13 +87,17 @@ class IndirectPalette(override val bitsPerBlock: Int, val palette: Array<VarInt>
 /**
  * This format is used for bits per entry values greater than or equal to a threshold (9 for block states, 4 for biomes)
  */
-class DirectPalette(val globalPalette: GlobalPalette) : Palette {
-  override val bitsPerBlock: Int = globalPalette.bitsPerBlock
+class DirectPalette(val registry: GlobalPalette) : Palette {
+  override val bitsPerBlock: Int = registry.bitsPerBlock
 
   override val serializedSize: Int = 0.countVarInt()
 
+  override fun blockById(id: StateId): Block? {
+    return registry.blockById(id)
+  }
+
   override fun stateIdForBlock(block: Block): StateId? {
-    return globalPalette.stateIdForBlock(block)
+    return registry.stateIdForBlock(block)
   }
 
   override fun writeToNetwork(): ByteReadPacket = buildPacket { }

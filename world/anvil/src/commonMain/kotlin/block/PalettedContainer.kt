@@ -19,29 +19,29 @@
 package com.gabrielleeg1.andesite.api.world.anvil.block
 
 import com.gabrielleeg1.andesite.api.protocol.countVarInt
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import com.gabrielleeg1.andesite.api.protocol.writeVarInt
+import com.gabrielleeg1.andesite.api.world.anvil.BitStorage
 import com.gabrielleeg1.andesite.api.world.block.Block
+import com.gabrielleeg1.andesite.api.world.block.toBlock
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.isNotEmpty
-import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeShort
 import io.ktor.utils.io.core.writeUByte
 import net.benwoodworth.knbt.NbtCompound
+import kotlin.math.ceil
+import kotlin.math.log2
+import kotlin.math.max
 
-class PalettedContainer(
-  val palette: Palette,
-  val data: LongArray = LongArray(((16 * 16 * 16) * palette.bitsPerBlock) / (64 * palette.bitsPerBlock)) {
-    0
-  },
-) {
+class PalettedContainer(val palette: Palette, val storage: BitStorage) {
   val bitsPerBlock = palette.bitsPerBlock
-  val blocks = mutableListOf<Block>()
+  val blocks = storage.iterator().asSequence().mapNotNull { palette.blockById(it) }.toList()
   var nonEmptyBlockCount: Short = 0
     private set
-  
-  val serializedSize: Int get() = 1 + palette.serializedSize + data.size.countVarInt() + data.size * 8
+
+  val serializedSize: Int get() = 1 + palette.serializedSize + storage.size.countVarInt() + storage.data.size * 8
 
   fun blockOf(x: Int, y: Int, z: Int): Block {
     return blocks[(y and 0xF) * 256 + (z and 0xF) * 16 + (x and 0xF)]
@@ -58,39 +58,63 @@ class PalettedContainer(
     if (palette.isNotEmpty) {
       writePacket(palette)
     }
-    println("SIZE ${data.size}")
-    writeVarInt(data.size)
-    writeFully(data)
+    writeVarInt(storage.data.size)
+    writeFully(storage.data)
   }
 }
 
 internal fun directPalette(globalPalette: GlobalPalette): PalettedContainer {
-  return PalettedContainer(DirectPalette(globalPalette)).apply {
+  return PalettedContainer(DirectPalette(globalPalette), BitStorage.empty()).apply {
     recount()
   }
 }
 
 @Suppress("UNUSED_PARAMETER")
 internal fun readBlockPalette(
-  globalPalette: GlobalPalette,
+  registry: GlobalPalette,
   blockStates: LongArray,
-  palette: List<NbtCompound>,
+  blockPalette: List<NbtCompound>,
 ): PalettedContainer {
 //  todo implement palettes
-//  val bitsPerBlock = max(4.0, log2(ceil(palette.size.toDouble()))).toInt()
-//  val palette = when {
-//    bitsPerBlock <= 4 -> TODO()
-//    bitsPerBlock in 5..8 -> IndirectPalette(
-//      bitsPerBlock,
-//      palette
-//        .map { it.toBlock() }
-//        .map { globalPalette.idForBlock(it) ?: error("Could not find state id for block $it") }
-//        .map { VarInt(it) }
-//        .toTypedArray(),
-//    )
-//    bitsPerBlock == 9 -> DirectPalette(bitsPerBlock)
-//    else -> error("Can not get palette from $bitsPerBlock bits")
-//  }
+  val bits = max(4.0, log2(ceil(blockPalette.size.toDouble()))).toInt()
+//  println("BITS PER BLOCK $bitsPerBlock")
+//  println("  PALETTE SIZE ${palette.size}")
+//  println("  PALETTE $palette")
+//  println("  BLOCK STATES ${blockStates.size}")
+//  println("    BLOCK STATES ${blockStates.toList()}")
+  
+  val size = 1 shl 4 * 3
 
-  return directPalette(globalPalette)
+  val palette = when {
+    bits == 0 -> {
+      val palette = SingleValuePalette(registry.stateIdForBlock(blockPalette.first().toBlock())!!)
+
+      PalettedContainer(palette, BitStorage.empty())
+    }
+    bits in 1..8 -> {
+      val palette = IndirectPalette(
+        bits,
+        registry,
+        blockPalette
+          .map { it.toBlock() }
+          .map { registry.stateIdForBlock(it) ?: error("Could not find id for block $it") }
+          .map { VarInt(it) }
+          .toTypedArray(),
+      )
+
+      PalettedContainer(palette, BitStorage(bits, size, blockStates))
+    }
+    bits >= 9 -> {
+      val ids = IntArray(size).also { ids ->
+        BitStorage(bits, ids.size, blockStates).unpack(ids)
+      }
+
+      val storage = BitStorage(bits, ids.size, ids)
+
+      PalettedContainer(DirectPalette(registry), storage)
+    }
+    else -> error("Can not get palette from $bits bits")
+  }
+  
+  return palette.apply { recount() }
 }

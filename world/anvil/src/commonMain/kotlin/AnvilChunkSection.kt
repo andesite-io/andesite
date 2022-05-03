@@ -99,7 +99,7 @@ class AnvilChunkSectionSerializer(
           else -> error("Unexpected index: $index")
         }
       }
-
+      
       val blocks = when {
         blockStates == null -> directPalette(globalPalette)
         palette == null -> directPalette(globalPalette)

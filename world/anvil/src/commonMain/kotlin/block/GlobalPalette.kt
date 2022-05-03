@@ -48,7 +48,11 @@ class BlockState(
   val id: StateId,
   val properties: JsonObject = buildJsonObject { },
   val default: Boolean = false,
-)
+) {
+  fun toBlock(): Block {
+    return Block(Identifier(id.toString()), properties)
+  }
+}
 
 @Serializable(GlobalPaletteSerializer::class)
 class GlobalPalette(private val map: Map<Identifier, BlockPaletteEntry>) :
@@ -57,6 +61,17 @@ class GlobalPalette(private val map: Map<Identifier, BlockPaletteEntry>) :
 
   val totalStates: Int =
     flatMap { it.value.states }.maxOfOrNull { it.id } ?: error("No states found")
+  
+  fun blockById(stateId: StateId): Block? {
+    for ((blockId, entry) in map) {
+      for (state in entry.states) {
+        if (state.id == stateId) {
+          return Block(blockId, state.properties)
+        }
+      }
+    }
+    return null
+  }
 
   fun stateIdForBlock(block: Block): StateId? {
     return this[block.id]

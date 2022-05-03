@@ -35,7 +35,7 @@ internal data class RegionChunk(
   @SerialName("DataVersion") val dataVersion: Int,
 )
 
-internal fun readRegion(nbt: Nbt, bytes: ByteArray): AnvilRegion {
+internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
   var pos: Int
   val chunks = List(1024) { i ->
     pos = i * 4
@@ -59,7 +59,7 @@ internal fun readRegion(nbt: Nbt, bytes: ByteArray): AnvilRegion {
       .level
   }
 
-  return AnvilRegion(chunks.filterNotNull())
+  return AnvilRegion(name, chunks.filterNotNull())
 }
 
 fun readAnvilWorld(globalPalette: GlobalPalette, file: File): AnvilWorld {
@@ -81,7 +81,7 @@ fun readAnvilWorld(globalPalette: GlobalPalette, file: File): AnvilWorld {
       if (bytes.isEmpty()) {
         null
       } else {
-        readRegion(nbt, bytes)
+        readRegion(it.nameWithoutExtension, nbt, bytes)
       }
     }
     .toTypedArray()

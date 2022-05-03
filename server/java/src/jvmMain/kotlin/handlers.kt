@@ -105,7 +105,7 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
     ),
   )
 
-  val spawn = Location.Empty
+  val spawn = Location(0.0, 10.0, 0.0, 0.0f, 0.0f)
 
   launch(Job()) {
     for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
