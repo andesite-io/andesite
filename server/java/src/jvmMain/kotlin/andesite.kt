@@ -21,20 +21,20 @@ import com.gabrielleeg1.andesite.api.protocol.java.handshake.NextState
 import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
 import com.gabrielleeg1.andesite.api.protocol.serialization.extractMinecraftVersion
 import com.gabrielleeg1.andesite.api.protocol.serializers.UuidSerializer
-import com.gabrielleeg1.andesite.api.world.World
 import com.gabrielleeg1.andesite.api.world.anvil.AnvilWorld
 import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
 import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockRegistry
 import com.gabrielleeg1.andesite.api.world.anvil.readAnvilWorld
 import com.gabrielleeg1.andesite.server.java.player.Session
 import com.gabrielleeg1.andesite.server.java.player.receivePacket
-import io.klogging.logger
+import io.klogging.noCoLogger
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -44,7 +44,7 @@ import net.benwoodworth.knbt.NbtVariant
 import java.io.File
 import java.net.InetSocketAddress
 
-private val logger = logger("andesite.AnvilWorld")
+private val logger = noCoLogger("Andesite")
 
 internal val nbt: Nbt = Nbt {
   variant = NbtVariant.Java
@@ -76,8 +76,8 @@ suspend fun startAndesite(): Unit = coroutineScope {
       contextual(UuidSerializer)
     }
   }
-  
-  val protocolVersion =  codec.configuration.protocolVersion
+
+  val protocolVersion = codec.configuration.protocolVersion
   val minecraftVersion = extractMinecraftVersion(codec.configuration.protocolVersion)
 
   logger.info("Set up minecraft codec with protocol version $protocolVersion and version $minecraftVersion")
@@ -89,22 +89,22 @@ suspend fun startAndesite(): Unit = coroutineScope {
   while (true) {
     val session = Session(codec, server.accept())
 
-    launch {
-      try {
-        val handshake = session.receivePacket<HandshakePacket>()
+    val exceptionHandler = CoroutineExceptionHandler { ctx, error ->
+      logger.error(error) {
+        "Error thrown while handling connection ${session.socket.remoteAddress}"
+      }
 
-        when (handshake.nextState) {
-          NextState.Status -> handleStatus(session, handshake)
-          NextState.Login -> handlePlay(session, handleLogin(session, handshake))
-        }
-      } catch (error: Throwable) {
-        logger.error(error) {
-          "Error thrown while handling connection ${session.socket.remoteAddress}"
-        }
+      runBlocking(Dispatchers.IO) {
+        session.socket.close()
+      }
+    }
 
-        withContext(Dispatchers.IO) {
-          session.socket.close()
-        }
+    launch(exceptionHandler) {
+      val handshake = session.receivePacket<HandshakePacket>()
+
+      when (handshake.nextState) {
+        NextState.Status -> handleStatus(session, handshake)
+        NextState.Login -> handlePlay(session, handleLogin(session, handshake))
       }
     }
   }
