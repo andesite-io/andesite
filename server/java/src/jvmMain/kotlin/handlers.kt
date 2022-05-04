@@ -44,17 +44,17 @@ import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
-import io.klogging.noCoLogger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromByteArray
+import org.apache.logging.log4j.kotlin.logger
 import java.io.File
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
-private val logger = noCoLogger("andesite.Handlers")
+private val logger = logger("andesite.Handlers")
 
 internal suspend fun handleLogin(session: Session, handshake: HandshakePacket): JavaPlayer {
   val id = uuid4()

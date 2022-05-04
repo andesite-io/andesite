@@ -20,31 +20,18 @@ import andesite.protocol.java.v756.ChunkDataPacket
 import andesite.protocol.types.VarInt
 import andesite.world.anvil.AnvilChunk
 import andesite.world.anvil.HeightmapUsage
-import io.klogging.config.ConfigDsl
-import io.klogging.config.KloggingConfiguration
-import io.klogging.config.LoggingConfig
-import io.klogging.logger
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
 import net.benwoodworth.knbt.StringifiedNbt
 import net.benwoodworth.knbt.buildNbtCompound
 import net.benwoodworth.knbt.encodeToNbtTag
-
-@ConfigDsl
-internal fun KloggingConfiguration.logging(vararg names: String, block: LoggingConfig.() -> Unit) {
-  for (name in names) {
-    logging {
-      fromLoggerBase(name)
-      block()
-    }
-  }
-}
+import org.apache.logging.log4j.kotlin.logger
 
 internal fun resource(path: String): String {
   return ClassLoader.getSystemResource(path)?.file ?: error("Can not find resource $path")
 }
 
-private val logger = logger("Utils")
+private val logger = logger("andesite.Utils")
 
 private val sNbt = StringifiedNbt { prettyPrint = true }
 

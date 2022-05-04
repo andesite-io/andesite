@@ -27,7 +27,6 @@ import andesite.world.anvil.block.readBlockRegistry
 import andesite.world.anvil.readAnvilWorld
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
-import io.klogging.noCoLogger
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -41,10 +40,11 @@ import kotlinx.serialization.modules.contextual
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
+import org.apache.logging.log4j.kotlin.logger
 import java.io.File
 import java.net.InetSocketAddress
 
-private val logger = noCoLogger("Andesite")
+private val logger = logger("andesite.Main")
 
 internal val nbt: Nbt = Nbt {
   variant = NbtVariant.Java

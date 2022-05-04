@@ -18,10 +18,6 @@
 
 package andesite.server.java
 
-import io.klogging.Level
-import io.klogging.config.loggingConfiguration
-import io.klogging.rendering.RENDER_ANSI
-import io.klogging.sending.STDOUT
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -31,25 +27,8 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicInteger
 
-suspend fun main() {
-  loggingConfiguration {
-    kloggingMinLevel(Level.INFO)
-    sink("stdout", RENDER_ANSI, STDOUT)
-    logging("Andesite", "com.gabrielleeg1", "andesite") {
-      fromMinLevel(Level.DEBUG) {
-        toSink("stdout")
-      }
-    }
-    logging("Sink", "Dispatcher", "Configuration", "Emitter") {
-      fromMinLevel(Level.ERROR) {
-        toSink("stdout")
-      }
-    }
-  }
-
-  withContext(scope.coroutineContext) {
-    startAndesite()
-  }
+suspend fun main(): Unit = withContext(scope.coroutineContext) {
+  startAndesite()
 }
 
 private val context = Executors

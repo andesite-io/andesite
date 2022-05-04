@@ -49,7 +49,7 @@ allprojects {
           optIn("kotlin.contracts.ExperimentalContracts")
         }
       }
-      
+
       val commonMain by getting {
         dependencies {
           implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
@@ -68,7 +68,10 @@ allprojects {
 
       val jvmMain by getting {
         dependencies {
-          implementation("io.klogging:klogging-jvm:0.4.0")
+          implementation("org.apache.logging.log4j:log4j-api-kotlin:1.1.0")
+          implementation("org.apache.logging.log4j:log4j-api:2.17.2")
+          implementation("org.apache.logging.log4j:log4j-core:2.17.2")
+
           implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
         }
       }

@@ -14,14 +14,13 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
 
 package andesite.server.java.player
 
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.readVarInt
 import andesite.protocol.writeVarInt
-import io.klogging.Klogging
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel
 import io.ktor.network.sockets.openWriteChannel
@@ -34,9 +33,10 @@ import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
+import org.apache.logging.log4j.kotlin.Logging
 
 internal data class Session(val format: BinaryFormat, val socket: Socket) {
-  companion object : Klogging
+  companion object : Logging
 
   val input = socket.openReadChannel()
   val output = socket.openWriteChannel()

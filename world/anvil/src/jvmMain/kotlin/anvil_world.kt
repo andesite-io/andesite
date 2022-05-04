@@ -17,7 +17,6 @@
 package andesite.world.anvil
 
 import andesite.world.anvil.block.BlockRegistry
-import io.klogging.noCoLogger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -27,6 +26,7 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import net.benwoodworth.knbt.detect
+import org.apache.logging.log4j.kotlin.logger
 import java.io.File
 
 @Serializable
@@ -36,7 +36,7 @@ internal data class RegionChunk(
   @SerialName("DataVersion") val dataVersion: Int,
 )
 
-private val logger = noCoLogger("andesite.AnvilWorld")
+private val logger = logger("andesite.AnvilWorld")
 
 internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
   var pos: Int
