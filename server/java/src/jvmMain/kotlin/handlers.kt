@@ -14,10 +14,13 @@
  *    limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class, ExperimentalTime::class)
+
 package andesite.server.java
 
 import com.benasher44.uuid.uuid4
 import andesite.player.JavaPlayer
+import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.PingPacket
 import andesite.protocol.java.handshake.Players
@@ -29,8 +32,10 @@ import andesite.protocol.java.login.LoginStartPacket
 import andesite.protocol.java.login.LoginSuccessPacket
 import andesite.protocol.java.v756.GameMode
 import andesite.protocol.java.v756.JoinGamePacket
+import andesite.protocol.java.v756.KeepAlivePacket
 import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
+import andesite.protocol.java.v756.ServerKeepAlivePacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
@@ -39,11 +44,17 @@ import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
+import io.klogging.noCoLogger
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromByteArray
 import java.io.File
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+
+private val logger = noCoLogger("andesite.Handlers")
 
 internal suspend fun handleLogin(session: Session, handshake: HandshakePacket): JavaPlayer {
   val id = uuid4()
@@ -106,6 +117,19 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
   )
 
   val spawn = Location(0.0, 10.0, 0.0, 0.0f, 0.0f)
+
+  launch(Job()) {
+    while (true) {
+      delay(20.seconds)
+
+      try {
+        session.sendPacket(KeepAlivePacket(currentTimeMillis()))
+        session.receivePacket<ServerKeepAlivePacket>()
+      } catch (error: Throwable) {
+        logger.debug(error) { "Player [$player] keep alive thread thrown error in $coroutineContext" }
+      }
+    }
+  }
 
   launch(Job()) {
     for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
