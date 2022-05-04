@@ -27,10 +27,6 @@ import net.benwoodworth.knbt.buildNbtCompound
 import net.benwoodworth.knbt.encodeToNbtTag
 import org.apache.logging.log4j.kotlin.logger
 
-internal fun resource(path: String): String {
-  return ClassLoader.getSystemResource(path)?.file ?: error("Can not find resource $path")
-}
-
 private val logger = logger("andesite.Utils")
 
 private val sNbt = StringifiedNbt { prettyPrint = true }

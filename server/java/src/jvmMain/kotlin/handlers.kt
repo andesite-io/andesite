@@ -38,6 +38,7 @@ import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.java.v756.ServerKeepAlivePacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.Identifier
+import andesite.protocol.resource
 import andesite.protocol.types.VarInt
 import andesite.world.Location
 import andesite.server.java.player.JavaPlayerImpl
@@ -50,7 +51,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.serialization.decodeFromByteArray
 import org.apache.logging.log4j.kotlin.logger
-import java.io.File
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 
@@ -90,8 +90,8 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
       gameMode = GameMode.Adventure,
       previousGameMode = PreviousGameMode.Unknown,
       worlds = listOf(Identifier("world")),
-      dimensionCodec = nbt.decodeFromByteArray(File(resource("dimension_codec.nbt")).readBytes()),
-      dimension = nbt.decodeFromByteArray(File(resource("dimension.nbt")).readBytes()),
+      dimensionCodec = nbt.decodeFromByteArray(resource("dimension_codec.nbt").readBytes()),
+      dimension = nbt.decodeFromByteArray(resource("dimension.nbt").readBytes()),
       world = Identifier("world"),
       hashedSeed = 0,
       maxPlayers = VarInt(20),

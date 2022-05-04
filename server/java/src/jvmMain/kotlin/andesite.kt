@@ -18,6 +18,7 @@ package andesite.server.java
 
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.NextState
+import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.protocol.serializers.UuidSerializer
@@ -41,7 +42,6 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import org.apache.logging.log4j.kotlin.logger
-import java.io.File
 import java.net.InetSocketAddress
 
 private val logger = logger("andesite.Main")
@@ -52,12 +52,8 @@ internal val nbt: Nbt = Nbt {
   ignoreUnknownKeys = true
 }
 
-internal val blockRegistry: BlockRegistry = readBlockRegistry(
-  File(resource("palettes"))
-    .resolve("v756")
-    .resolve("blocks.json")
-    .readText(),
-)
+internal val blockRegistry: BlockRegistry =
+  readBlockRegistry(resource("v756").resolve("blocks.json").readText())
 
 internal lateinit var world: AnvilWorld
 
@@ -84,7 +80,7 @@ suspend fun startAndesite(): Unit = coroutineScope {
   logger.info("Loaded ${blockRegistry.size} blocks")
   logger.info("Server listening connections at $address")
 
-  world = readAnvilWorld(blockRegistry, File(resource("world")))
+  world = readAnvilWorld(blockRegistry, resource("world"))
 
   while (true) {
     val session = Session(codec, server.accept())
