@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,13 +14,18 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":protocol:common"))
-        implementation(project(":world:common"))
-      }
-    }
+package com.gabrielleeg1.andesite.api.protocol.bedrock
+
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Polymorphic
+import kotlinx.serialization.PolymorphicSerializer
+
+/**
+ * Minecraft Bedrock Edition packet.
+ */
+@Polymorphic
+interface BedrockPacket {
+  companion object {
+    fun serializer(): KSerializer<BedrockPacket> = PolymorphicSerializer(BedrockPacket::class)
   }
 }

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,13 +14,17 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":protocol:common"))
-        implementation(project(":world:common"))
-      }
-    }
-  }
-}
+package com.gabrielleeg1.andesite.api.protocol.bedrock
+
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+@SerialName("LoginPacket")
+@ProtocolPacket(0x01)
+data class LoginPacket(
+  val protocolVersion: Int,
+  val chainData: String, // TODO: decode chain data
+  val skinData: String,
+) : BedrockPacket
