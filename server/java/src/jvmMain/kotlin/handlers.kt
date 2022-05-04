@@ -38,18 +38,17 @@ import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.java.v756.ServerKeepAlivePacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.Identifier
-import andesite.protocol.resource
 import andesite.protocol.types.VarInt
 import andesite.world.Location
 import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
+import io.ktor.network.sockets.isClosed
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.serialization.decodeFromByteArray
 import org.apache.logging.log4j.kotlin.logger
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -90,8 +89,8 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
       gameMode = GameMode.Adventure,
       previousGameMode = PreviousGameMode.Unknown,
       worlds = listOf(Identifier("world")),
-      dimensionCodec = nbt.decodeFromByteArray(resource("dimension_codec.nbt").readBytes()),
-      dimension = nbt.decodeFromByteArray(resource("dimension.nbt").readBytes()),
+      dimensionCodec = dimensionCodec,
+      dimension = dimension,
       world = Identifier("world"),
       hashedSeed = 0,
       maxPlayers = VarInt(20),
@@ -119,14 +118,14 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
   val spawn = Location(0.0, 10.0, 0.0, 0.0f, 0.0f)
 
   launch(Job()) {
-    while (true) {
+    while (!session.socket.isClosed) {
       delay(20.seconds)
 
       try {
         session.sendPacket(KeepAlivePacket(currentTimeMillis()))
         session.receivePacket<ServerKeepAlivePacket>()
       } catch (error: Throwable) {
-        logger.debug(error) { "Player [$player] keep alive thread thrown error in $coroutineContext" }
+        logger.debug { "Player [$player] keep alive thread thrown error in $coroutineContext" }
       }
     }
   }

@@ -16,6 +16,8 @@
 
 package andesite.server.java
 
+import andesite.protocol.java.data.Dimension
+import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.NextState
 import andesite.protocol.resource
@@ -57,8 +59,13 @@ internal val blockRegistry: BlockRegistry =
 
 internal lateinit var world: AnvilWorld
 
+internal val dimensionCodec = nbt.decodeRootTag<DimensionCodec>(resource("dimension_codec.nbt"))
+
+internal val dimension = nbt.decodeRootTag<Dimension>(resource("dimension.nbt"))
+
 suspend fun startAndesite(): Unit = coroutineScope {
   logger.info("Starting andesite...")
+
 
   val selector = ActorSelectorManager(Dispatchers.IO)
   val address = InetSocketAddress("127.0.0.1", 25565)

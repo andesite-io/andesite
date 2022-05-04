@@ -23,11 +23,12 @@ import andesite.protocol.ProtocolValue
 import andesite.protocol.ProtocolVariant
 import andesite.protocol.Variant
 import andesite.protocol.java.JavaPacket
+import andesite.protocol.java.data.Dimension
+import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import net.benwoodworth.knbt.NbtCompound
 
 @ProtocolPacket(0x26)
 @SerialName("JoinGamePacket")
@@ -39,9 +40,9 @@ class JoinGamePacket(
   val previousGameMode: PreviousGameMode,
   val worlds: List<Identifier>,
   @ProtocolNbt
-  val dimensionCodec: NbtCompound,
+  val dimensionCodec: DimensionCodec,
   @ProtocolNbt
-  val dimension: NbtCompound,
+  val dimension: Dimension,
   val world: Identifier,
   val hashedSeed: Long,
   val maxPlayers: VarInt,

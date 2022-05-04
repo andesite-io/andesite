@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+@file:OptIn(ExperimentalSerializationApi::class)
+
 package andesite.server.java
 
 import andesite.protocol.java.v756.ChunkDataPacket
@@ -22,14 +24,33 @@ import andesite.world.anvil.AnvilChunk
 import andesite.world.anvil.HeightmapUsage
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.descriptors.serialDescriptor
+import net.benwoodworth.knbt.Nbt
+import net.benwoodworth.knbt.NbtCompound
 import net.benwoodworth.knbt.StringifiedNbt
 import net.benwoodworth.knbt.buildNbtCompound
+import net.benwoodworth.knbt.decodeFromNbtTag
 import net.benwoodworth.knbt.encodeToNbtTag
+import net.benwoodworth.knbt.nbtCompound
 import org.apache.logging.log4j.kotlin.logger
+import java.io.File
 
 private val logger = logger("andesite.Utils")
 
 private val sNbt = StringifiedNbt { prettyPrint = true }
+
+inline fun <reified T : Any> Nbt.decodeRootTag(file: File): T {
+  val descriptor = serialDescriptor<T>()
+
+  return decodeFromNbtTag(buildNbtCompound {
+    val root = decodeFromByteArray<NbtCompound>(file.readBytes())
+    val content = root[""]?.nbtCompound ?: error("Could not find content for nbt file $file")
+
+    put(descriptor.serialName, content)
+  })
+}
 
 internal suspend fun AnvilChunk.toPacket(): ChunkDataPacket {
   val heightmaps = heightmaps
