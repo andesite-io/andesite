@@ -27,10 +27,10 @@ import com.gabrielleeg1.andesite.api.protocol.java.handshake.ResponsePacket
 import com.gabrielleeg1.andesite.api.protocol.java.handshake.Version
 import com.gabrielleeg1.andesite.api.protocol.java.login.LoginStartPacket
 import com.gabrielleeg1.andesite.api.protocol.java.login.LoginSuccessPacket
-import com.gabrielleeg1.andesite.api.protocol.java.play.GameMode
-import com.gabrielleeg1.andesite.api.protocol.java.play.JoinGamePacket
-import com.gabrielleeg1.andesite.api.protocol.java.play.PlayerPositionAndLookPacket
-import com.gabrielleeg1.andesite.api.protocol.java.play.PreviousGameMode
+import com.gabrielleeg1.andesite.api.protocol.java.v756.GameMode
+import com.gabrielleeg1.andesite.api.protocol.java.v756.JoinGamePacket
+import com.gabrielleeg1.andesite.api.protocol.java.v756.PlayerPositionAndLookPacket
+import com.gabrielleeg1.andesite.api.protocol.java.v756.PreviousGameMode
 import com.gabrielleeg1.andesite.api.protocol.misc.Chat
 import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt

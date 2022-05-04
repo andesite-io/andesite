@@ -16,7 +16,7 @@
 
 package com.gabrielleeg1.andesite.server.java
 
-import com.gabrielleeg1.andesite.api.protocol.java.play.ChunkDataPacket
+import com.gabrielleeg1.andesite.api.protocol.java.v756.ChunkDataPacket
 import com.gabrielleeg1.andesite.api.protocol.types.VarInt
 import com.gabrielleeg1.andesite.api.world.anvil.AnvilChunk
 import com.gabrielleeg1.andesite.api.world.anvil.HeightmapUsage

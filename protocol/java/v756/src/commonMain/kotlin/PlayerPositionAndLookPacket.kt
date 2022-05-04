@@ -15,3 +15,23 @@
  */
 
 package com.gabrielleeg1.andesite.api.protocol.java.v756
+
+import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
+import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@ProtocolPacket(0x38)
+@SerialName("PlayerPositionAndLookPacket")
+@Serializable
+data class PlayerPositionAndLookPacket(
+  val x: Double,
+  val y: Double,
+  val z: Double,
+  val yaw: Float,
+  val pitch: Float,
+  val flags: Byte,
+  val teleportId: VarInt,
+  val dismountVehicle: Boolean,
+) : JavaPacket
