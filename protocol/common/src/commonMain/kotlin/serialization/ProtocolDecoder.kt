@@ -42,9 +42,18 @@ import kotlinx.serialization.descriptors.elementDescriptors
 import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.CompositeDecoder.Companion.DECODE_DONE
 import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.json.Json
+import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.OkioApi
 
-interface ProtocolDecoder : Decoder, CompositeDecoder
+interface ProtocolDecoder : Decoder, CompositeDecoder {
+  val nbt: Nbt
+  val json: Json
+
+  fun <T : Any> decodeNbt(deserializer: DeserializationStrategy<T>): T
+
+  fun <T> decodeJson(deserializer: DeserializationStrategy<T>): T
+}
 
 fun Decoder.asProtocolDecoder(): ProtocolDecoder {
   return this as? ProtocolDecoder
@@ -56,6 +65,9 @@ internal class ProtocolDecoderImpl(
   val configuration: ProtocolConfiguration,
 ) : ProtocolDecoder {
   private var currentIndex = 0
+
+  override val nbt: Nbt = configuration.nbt
+  override val json: Json = configuration.json
   override val serializersModule = configuration.serializersModule
 
   override fun beginStructure(descriptor: SerialDescriptor): CompositeDecoder = this
@@ -200,6 +212,14 @@ internal class ProtocolDecoderImpl(
 
   @ExperimentalSerializationApi
   override fun decodeNotNullMark(): Boolean = true
+
+  override fun <T : Any> decodeNbt(deserializer: DeserializationStrategy<T>): T {
+    return configuration.nbt.decodeFromSource(deserializer, InputSource(packet))
+  }
+
+  override fun <T> decodeJson(deserializer: DeserializationStrategy<T>): T {
+    return configuration.json.decodeFromString(deserializer, packet.readString())
+  }
 
   private fun decodeType(variant: Variant): Int {
     return when (variant) {

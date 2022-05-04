@@ -43,8 +43,17 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.StructureKind
 import kotlinx.serialization.encoding.CompositeEncoder
 import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.Json
+import net.benwoodworth.knbt.Nbt
 
-interface ProtocolEncoder : Encoder, CompositeEncoder
+interface ProtocolEncoder : Encoder, CompositeEncoder {
+  val nbt: Nbt
+  val json: Json
+  
+  fun <T : Any> encodeNbt(serializer: SerializationStrategy<T>, value: T)
+  
+  fun <T> encodeJson(serializer: SerializationStrategy<T>, value: T)
+}
 
 fun Encoder.asProtocolEncoder(): ProtocolEncoder {
   return this as? ProtocolEncoder
@@ -55,6 +64,8 @@ internal class ProtocolEncoderImpl(
   val builder: BytePacketBuilder,
   val configuration: ProtocolConfiguration,
 ) : ProtocolEncoder {
+  override val nbt: Nbt = configuration.nbt
+  override val json: Json = configuration.json
   override val serializersModule = configuration.serializersModule
 
   override fun beginStructure(descriptor: SerialDescriptor): CompositeEncoder = this
@@ -206,6 +217,14 @@ internal class ProtocolEncoderImpl(
 
   @ExperimentalSerializationApi
   override fun encodeNull(): Unit = error("Can not encode null in Minecraft Protocol format.")
+
+  override fun <T : Any> encodeNbt(serializer: SerializationStrategy<T>, value: T) {
+    builder.writeFully(configuration.nbt.encodeToByteArray(serializer, value))
+  }
+
+  override fun <T> encodeJson(serializer: SerializationStrategy<T>, value: T) {
+    builder.writeString(configuration.json.encodeToString(serializer, value))
+  }
 
   override fun endStructure(descriptor: SerialDescriptor) {
   }
