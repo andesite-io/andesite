@@ -15,8 +15,8 @@
  */
 
 plugins {
-  kotlin("multiplatform") version "1.5.31"
-  kotlin("plugin.serialization") version "1.5.31"
+  kotlin("multiplatform") version "1.6.21"
+  kotlin("plugin.serialization") version "1.6.21"
 }
 
 group = "com.gabrielleeg1"
@@ -34,7 +34,7 @@ allprojects {
     jvm {
       compilations.all {
         kotlinOptions.jvmTarget = "16"
-        kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all")
+        kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all", "-Xcontext-receivers")
       }
 
       testRuns["test"].executionTask.configure {

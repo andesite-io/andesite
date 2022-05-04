@@ -89,7 +89,7 @@ suspend fun startAndesite(): Unit = coroutineScope {
   while (true) {
     val session = Session(codec, server.accept())
 
-    val exceptionHandler = CoroutineExceptionHandler { ctx, error ->
+    val exceptionHandler = CoroutineExceptionHandler { _, error ->
       logger.error(error) {
         "Error thrown while handling connection ${session.socket.remoteAddress}"
       }

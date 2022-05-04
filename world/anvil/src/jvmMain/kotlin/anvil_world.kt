@@ -17,7 +17,6 @@
 package com.gabrielleeg1.andesite.api.world.anvil
 
 import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
-import io.klogging.logger
 import io.klogging.noCoLogger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -66,8 +65,8 @@ internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
   return AnvilRegion(name, chunks.filterNotNull())
 }
 
-fun readAnvilWorld(registry: BlockRegistry, file: File): AnvilWorld {
-  logger.info("Loading world `${file.name}`")
+fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
+  logger.info("Loading world `${folder.name}`")
 
   val nbt = Nbt {
     variant = NbtVariant.Java
@@ -78,7 +77,7 @@ fun readAnvilWorld(registry: BlockRegistry, file: File): AnvilWorld {
     }
   }
 
-  val fileRegions = file.resolve("region").listFiles().orEmpty()
+  val fileRegions = folder.resolve("region").listFiles().orEmpty()
 
   val regions = fileRegions.mapIndexed { i, file ->
     val percentage = (i.toFloat() / fileRegions.size * 100).toInt()
@@ -93,7 +92,7 @@ fun readAnvilWorld(registry: BlockRegistry, file: File): AnvilWorld {
     }
   }
 
-  logger.info("Finish loading world `${file.name}`")
+  logger.info("Finish loading world `${folder.name}`")
 
   return AnvilWorld(regions.filterNotNull().toTypedArray())
 }
