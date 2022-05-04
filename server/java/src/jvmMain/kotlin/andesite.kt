@@ -16,6 +16,7 @@
 
 package andesite.server.java
 
+import andesite.AndesiteError
 import andesite.protocol.java.data.Dimension
 import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.java.handshake.HandshakePacket
@@ -93,8 +94,11 @@ suspend fun startAndesite(): Unit = coroutineScope {
     val session = Session(codec, server.accept())
 
     val exceptionHandler = CoroutineExceptionHandler { _, error ->
-      logger.error(error) {
-        "Error thrown while handling connection ${session.socket.remoteAddress}"
+      when (error) {
+        is AndesiteError -> logger.error(error::message)
+        else -> logger.error(error) {
+          "Error thrown while handling connection ${session.socket.remoteAddress}"
+        }
       }
 
       runBlocking(Dispatchers.IO) {
@@ -103,11 +107,15 @@ suspend fun startAndesite(): Unit = coroutineScope {
     }
 
     launch(exceptionHandler) {
-      val handshake = session.receivePacket<HandshakePacket>()
+      try {
+        val handshake = session.receivePacket<HandshakePacket>()
 
-      when (handshake.nextState) {
-        NextState.Status -> handleStatus(session, handshake)
-        NextState.Login -> handlePlay(session, handleLogin(session, handshake))
+        when (handshake.nextState) {
+          NextState.Status -> handleStatus(session, handshake)
+          NextState.Login -> handlePlay(session, handleLogin(session, handshake))
+        }
+      } catch (error: AndesiteError) {
+        logger.error(error::message)
       }
     }
   }

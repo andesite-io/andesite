@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,17 +14,10 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
+package andesite
 
-package andesite.protocol.serialization
+class AndesiteError(override val message: String) : Exception()
 
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.descriptors.SerialDescriptor
-
-inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
-  return annotations.filterIsInstance<T>().isNotEmpty()
-}
-
-inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
-  return annotations.filterIsInstance<T>().singleOrNull()
+fun andesiteError(message: String, vararg args: Any?): Nothing {
+  throw AndesiteError(message.format(args = args))
 }

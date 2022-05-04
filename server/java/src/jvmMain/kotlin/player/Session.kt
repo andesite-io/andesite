@@ -18,8 +18,12 @@
 
 package andesite.server.java.player
 
+import andesite.AndesiteError
+import andesite.andesiteError
+import andesite.protocol.ProtocolPacket
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.readVarInt
+import andesite.protocol.serialization.findAnnotation
 import andesite.protocol.writeVarInt
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel
@@ -54,6 +58,13 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
     val id = packet.readVarInt().toInt()
 
     logger.trace { "Packet `$name` received with id [0x%02x] and size [$size]".format(id) }
+
+    val realId = deserializer.descriptor.findAnnotation<ProtocolPacket>()?.id
+      ?: andesiteError("Packet `$name` is not annotated with @ProtocolPacket")
+
+    if (id != realId) {
+      andesiteError("Packet `$name` received with id [0x%02x] but expected [0x%02x]", id, realId)
+    }
 
     return format.decodeFromByteArray(deserializer, packet.readBytes())
   }

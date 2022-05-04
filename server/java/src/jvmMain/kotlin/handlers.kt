@@ -125,7 +125,7 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
         session.sendPacket(KeepAlivePacket(currentTimeMillis()))
         session.receivePacket<ServerKeepAlivePacket>()
       } catch (error: Throwable) {
-        logger.debug { "Player [$player] keep alive thread thrown error in $coroutineContext" }
+        logger.error(error) { "Player [$player] keep alive thread thrown an error" }
       }
     }
   }
