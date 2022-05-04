@@ -17,7 +17,7 @@
 <configuration>
   <statusListener class="ch.qos.logback.core.status.NopStatusListener"/>
 
-  <appender name="STDOUT" class="com.gabrielleeg1.andesite.logging.LogAppender">
+  <appender name="STDOUT" class="andesite.logging.LogAppender">
     <withJansi>true</withJansi>
   </appender>
 

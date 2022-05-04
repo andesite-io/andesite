@@ -14,13 +14,13 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.anvil
+package andesite.world.anvil
 
-import com.gabrielleeg1.andesite.api.world.ChunkSection
-import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
-import com.gabrielleeg1.andesite.api.world.anvil.block.PalettedContainer
-import com.gabrielleeg1.andesite.api.world.anvil.block.directPalette
-import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockPalette
+import andesite.world.ChunkSection
+import andesite.world.anvil.block.BlockRegistry
+import andesite.world.anvil.block.PalettedContainer
+import andesite.world.anvil.block.directPalette
+import andesite.world.anvil.block.readBlockPalette
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes

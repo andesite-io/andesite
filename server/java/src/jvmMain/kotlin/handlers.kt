@@ -14,31 +14,31 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.server.java
+package andesite.server.java
 
 import com.benasher44.uuid.uuid4
-import com.gabrielleeg1.andesite.api.player.JavaPlayer
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.PingPacket
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.Players
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.PongPacket
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.Response
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.ResponsePacket
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.Version
-import com.gabrielleeg1.andesite.api.protocol.java.login.LoginStartPacket
-import com.gabrielleeg1.andesite.api.protocol.java.login.LoginSuccessPacket
-import com.gabrielleeg1.andesite.api.protocol.java.v756.GameMode
-import com.gabrielleeg1.andesite.api.protocol.java.v756.JoinGamePacket
-import com.gabrielleeg1.andesite.api.protocol.java.v756.PlayerPositionAndLookPacket
-import com.gabrielleeg1.andesite.api.protocol.java.v756.PreviousGameMode
-import com.gabrielleeg1.andesite.api.protocol.misc.Chat
-import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
-import com.gabrielleeg1.andesite.api.world.Location
-import com.gabrielleeg1.andesite.server.java.player.JavaPlayerImpl
-import com.gabrielleeg1.andesite.server.java.player.Session
-import com.gabrielleeg1.andesite.server.java.player.receivePacket
-import com.gabrielleeg1.andesite.server.java.player.sendPacket
+import andesite.player.JavaPlayer
+import andesite.protocol.java.handshake.HandshakePacket
+import andesite.protocol.java.handshake.PingPacket
+import andesite.protocol.java.handshake.Players
+import andesite.protocol.java.handshake.PongPacket
+import andesite.protocol.java.handshake.Response
+import andesite.protocol.java.handshake.ResponsePacket
+import andesite.protocol.java.handshake.Version
+import andesite.protocol.java.login.LoginStartPacket
+import andesite.protocol.java.login.LoginSuccessPacket
+import andesite.protocol.java.v756.GameMode
+import andesite.protocol.java.v756.JoinGamePacket
+import andesite.protocol.java.v756.PlayerPositionAndLookPacket
+import andesite.protocol.java.v756.PreviousGameMode
+import andesite.protocol.misc.Chat
+import andesite.protocol.misc.Identifier
+import andesite.protocol.types.VarInt
+import andesite.world.Location
+import andesite.server.java.player.JavaPlayerImpl
+import andesite.server.java.player.Session
+import andesite.server.java.player.receivePacket
+import andesite.server.java.player.sendPacket
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch

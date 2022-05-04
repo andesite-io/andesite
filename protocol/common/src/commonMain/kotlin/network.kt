@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol
+package andesite.protocol
 
 import com.benasher44.uuid.Uuid
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import andesite.protocol.types.VarInt
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readBytes
@@ -41,7 +41,7 @@ fun VarInt.countVarInt(): Int {
 
 fun Int.countVarInt(): Int {
   var count = 0
-  writeVarInt(VarInt(count)) { count++ }
+  writeVarInt(VarInt(this)) { count++ }
   return count
 }
 

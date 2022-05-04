@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.andesite.api.world.anvil
+package andesite.world.anvil
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer

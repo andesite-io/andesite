@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.andesite.api.protocol.serialization
+package andesite.protocol.serialization
 
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor

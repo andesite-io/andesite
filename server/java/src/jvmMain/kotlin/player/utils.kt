@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.server.java.player
+package andesite.server.java.player
 
-import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
-import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
+import andesite.protocol.ProtocolPacket
+import andesite.protocol.java.JavaPacket
 import kotlinx.serialization.serializer
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotation

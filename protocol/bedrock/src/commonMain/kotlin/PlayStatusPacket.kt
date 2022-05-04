@@ -14,13 +14,13 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.bedrock
+package andesite.protocol.bedrock
 
-import com.gabrielleeg1.andesite.api.protocol.ProtocolEnum
-import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
-import com.gabrielleeg1.andesite.api.protocol.ProtocolValue
-import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
-import com.gabrielleeg1.andesite.api.protocol.Variant
+import andesite.protocol.ProtocolEnum
+import andesite.protocol.ProtocolPacket
+import andesite.protocol.ProtocolValue
+import andesite.protocol.ProtocolVariant
+import andesite.protocol.Variant
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

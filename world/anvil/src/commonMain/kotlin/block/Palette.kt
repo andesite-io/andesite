@@ -14,12 +14,12 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.anvil.block
+package andesite.world.anvil.block
 
-import com.gabrielleeg1.andesite.api.protocol.countVarInt
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
-import com.gabrielleeg1.andesite.api.protocol.writeVarInt
-import com.gabrielleeg1.andesite.api.world.block.Block
+import andesite.protocol.countVarInt
+import andesite.protocol.types.VarInt
+import andesite.protocol.writeVarInt
+import andesite.world.block.Block
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 

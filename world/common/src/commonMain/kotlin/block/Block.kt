@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.block
+package andesite.world.block
 
-import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
+import andesite.protocol.misc.Identifier
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import net.benwoodworth.knbt.NbtCompound

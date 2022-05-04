@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.block
+package andesite.world.block
 
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement

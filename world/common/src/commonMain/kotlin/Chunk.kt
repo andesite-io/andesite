@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world
+package andesite.world
 
 interface Chunk {
   val sections: List<ChunkSection>

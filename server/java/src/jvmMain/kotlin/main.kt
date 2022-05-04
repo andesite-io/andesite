@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.andesite.server.java
+package andesite.server.java
 
 import io.klogging.Level
 import io.klogging.config.loggingConfiguration

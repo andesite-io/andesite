@@ -16,17 +16,17 @@
 
 @file:OptIn(ExperimentalSerializationApi::class, OkioApi::class, ExperimentalUnsignedTypes::class)
 
-package com.gabrielleeg1.andesite.api.protocol.serialization
+package andesite.protocol.serialization
 
-import com.gabrielleeg1.andesite.api.protocol.ProtocolEnum
-import com.gabrielleeg1.andesite.api.protocol.ProtocolJson
-import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
-import com.gabrielleeg1.andesite.api.protocol.ProtocolString
-import com.gabrielleeg1.andesite.api.protocol.ProtocolValue
-import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
-import com.gabrielleeg1.andesite.api.protocol.Variant
-import com.gabrielleeg1.andesite.api.protocol.readString
-import com.gabrielleeg1.andesite.api.protocol.readVarInt
+import andesite.protocol.ProtocolEnum
+import andesite.protocol.ProtocolJson
+import andesite.protocol.ProtocolNbt
+import andesite.protocol.ProtocolString
+import andesite.protocol.ProtocolValue
+import andesite.protocol.ProtocolVariant
+import andesite.protocol.Variant
+import andesite.protocol.readString
+import andesite.protocol.readVarInt
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.isEmpty
 import io.ktor.utils.io.core.readDouble

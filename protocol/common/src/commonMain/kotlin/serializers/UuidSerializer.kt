@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.serializers
+package andesite.protocol.serializers
 
 import com.benasher44.uuid.Uuid
 import kotlinx.serialization.KSerializer
@@ -25,7 +25,7 @@ import kotlinx.serialization.encoding.Encoder
 
 object UuidSerializer : KSerializer<Uuid> {
   override val descriptor =
-    buildClassSerialDescriptor("com.gabrielleeg1.andesite.api.protocol.serializers.Uuid") {
+    buildClassSerialDescriptor("andesite.protocol.serializers.Uuid") {
       element<Long>("mostSignificantBits")
       element<Long>("leastSignificantBits")
     }

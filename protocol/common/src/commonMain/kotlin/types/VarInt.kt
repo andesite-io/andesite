@@ -14,10 +14,10 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.types
+package andesite.protocol.types
 
-import com.gabrielleeg1.andesite.api.protocol.readVarInt
-import com.gabrielleeg1.andesite.api.protocol.writeVarInt
+import andesite.protocol.readVarInt
+import andesite.protocol.writeVarInt
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

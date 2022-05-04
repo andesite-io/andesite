@@ -14,12 +14,12 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.server.java
+package andesite.server.java
 
-import com.gabrielleeg1.andesite.api.protocol.java.v756.ChunkDataPacket
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
-import com.gabrielleeg1.andesite.api.world.anvil.AnvilChunk
-import com.gabrielleeg1.andesite.api.world.anvil.HeightmapUsage
+import andesite.protocol.java.v756.ChunkDataPacket
+import andesite.protocol.types.VarInt
+import andesite.world.anvil.AnvilChunk
+import andesite.world.anvil.HeightmapUsage
 import io.klogging.config.ConfigDsl
 import io.klogging.config.KloggingConfiguration
 import io.klogging.config.LoggingConfig

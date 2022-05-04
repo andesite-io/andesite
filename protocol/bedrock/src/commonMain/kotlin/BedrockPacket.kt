@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.bedrock
+package andesite.protocol.bedrock
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Polymorphic

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,11 +14,11 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.java.v756
+package andesite.protocol.java.v756
 
-import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
-import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import andesite.protocol.ProtocolPacket
+import andesite.protocol.java.JavaPacket
+import andesite.protocol.types.VarInt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

@@ -14,6 +14,6 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol
+package andesite.protocol
 
 expect fun currentTimeMillis(): Long

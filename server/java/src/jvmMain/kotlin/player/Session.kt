@@ -16,11 +16,11 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.andesite.server.java.player
+package andesite.server.java.player
 
-import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
-import com.gabrielleeg1.andesite.api.protocol.readVarInt
-import com.gabrielleeg1.andesite.api.protocol.writeVarInt
+import andesite.protocol.java.JavaPacket
+import andesite.protocol.readVarInt
+import andesite.protocol.writeVarInt
 import io.klogging.Klogging
 import io.ktor.network.sockets.Socket
 import io.ktor.network.sockets.openReadChannel

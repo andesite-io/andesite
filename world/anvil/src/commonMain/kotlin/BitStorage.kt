@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.anvil
+package andesite.world.anvil
 
 interface BitStorage {
   val bits: Int

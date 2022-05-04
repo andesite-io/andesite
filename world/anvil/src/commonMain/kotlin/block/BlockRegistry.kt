@@ -16,10 +16,10 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package com.gabrielleeg1.andesite.api.world.anvil.block
+package andesite.world.anvil.block
 
-import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
-import com.gabrielleeg1.andesite.api.world.block.Block
+import andesite.protocol.misc.Identifier
+import andesite.world.block.Block
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

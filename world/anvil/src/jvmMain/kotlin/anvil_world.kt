@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.anvil
+package andesite.world.anvil
 
-import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
+import andesite.world.anvil.block.BlockRegistry
 import io.klogging.noCoLogger
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

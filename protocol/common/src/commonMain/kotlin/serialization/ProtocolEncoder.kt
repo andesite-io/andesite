@@ -16,17 +16,17 @@
 
 @file:OptIn(ExperimentalSerializationApi::class, ExperimentalUnsignedTypes::class)
 
-package com.gabrielleeg1.andesite.api.protocol.serialization
+package andesite.protocol.serialization
 
-import com.gabrielleeg1.andesite.api.protocol.ProtocolEnum
-import com.gabrielleeg1.andesite.api.protocol.ProtocolJson
-import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
-import com.gabrielleeg1.andesite.api.protocol.ProtocolString
-import com.gabrielleeg1.andesite.api.protocol.ProtocolValue
-import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
-import com.gabrielleeg1.andesite.api.protocol.Variant
-import com.gabrielleeg1.andesite.api.protocol.writeString
-import com.gabrielleeg1.andesite.api.protocol.writeVarInt
+import andesite.protocol.ProtocolEnum
+import andesite.protocol.ProtocolJson
+import andesite.protocol.ProtocolNbt
+import andesite.protocol.ProtocolString
+import andesite.protocol.ProtocolValue
+import andesite.protocol.ProtocolVariant
+import andesite.protocol.Variant
+import andesite.protocol.writeString
+import andesite.protocol.writeVarInt
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.writeDouble
 import io.ktor.utils.io.core.writeFloat
@@ -183,10 +183,6 @@ internal class ProtocolEncoderImpl(
             is FloatArray -> value.toList()
             is DoubleArray -> value.toList()
             is BooleanArray -> value.toList()
-            is UByteArray -> value.toList()
-            is UShortArray -> value.toList()
-            is UIntArray -> value.toList()
-            is ULongArray -> value.toList()
             else -> error("Can not encode list of descriptor ${serializer.descriptor.serialName}")
           }
 

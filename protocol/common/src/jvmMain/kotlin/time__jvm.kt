@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol
+package andesite.protocol
 
 actual fun currentTimeMillis(): Long {
   return System.currentTimeMillis()

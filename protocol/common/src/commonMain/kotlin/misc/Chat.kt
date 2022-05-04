@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.misc
+package andesite.protocol.misc
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.world.anvil
+package andesite.world.anvil
 
-import com.gabrielleeg1.andesite.api.world.Chunk
+import andesite.world.Chunk
 import io.ktor.utils.io.core.Output
 import io.ktor.utils.io.core.writePacket
 import kotlinx.serialization.Contextual

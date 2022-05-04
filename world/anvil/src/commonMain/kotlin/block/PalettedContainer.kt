@@ -16,14 +16,14 @@
 
 @file:OptIn(ExperimentalUnsignedTypes::class)
 
-package com.gabrielleeg1.andesite.api.world.anvil.block
+package andesite.world.anvil.block
 
-import com.gabrielleeg1.andesite.api.protocol.countVarInt
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
-import com.gabrielleeg1.andesite.api.protocol.writeVarInt
-import com.gabrielleeg1.andesite.api.world.anvil.BitStorage
-import com.gabrielleeg1.andesite.api.world.block.Block
-import com.gabrielleeg1.andesite.api.world.block.toBlock
+import andesite.protocol.countVarInt
+import andesite.protocol.types.VarInt
+import andesite.protocol.writeVarInt
+import andesite.world.anvil.BitStorage
+import andesite.world.block.Block
+import andesite.world.block.toBlock
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.isNotEmpty

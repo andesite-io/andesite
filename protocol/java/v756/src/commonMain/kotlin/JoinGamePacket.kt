@@ -14,17 +14,17 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.api.protocol.java.v756
+package andesite.protocol.java.v756
 
-import com.gabrielleeg1.andesite.api.protocol.ProtocolPacket
-import com.gabrielleeg1.andesite.api.protocol.ProtocolEnum
-import com.gabrielleeg1.andesite.api.protocol.ProtocolNbt
-import com.gabrielleeg1.andesite.api.protocol.ProtocolValue
-import com.gabrielleeg1.andesite.api.protocol.ProtocolVariant
-import com.gabrielleeg1.andesite.api.protocol.Variant
-import com.gabrielleeg1.andesite.api.protocol.java.JavaPacket
-import com.gabrielleeg1.andesite.api.protocol.misc.Identifier
-import com.gabrielleeg1.andesite.api.protocol.types.VarInt
+import andesite.protocol.ProtocolPacket
+import andesite.protocol.ProtocolEnum
+import andesite.protocol.ProtocolNbt
+import andesite.protocol.ProtocolValue
+import andesite.protocol.ProtocolVariant
+import andesite.protocol.Variant
+import andesite.protocol.java.JavaPacket
+import andesite.protocol.misc.Identifier
+import andesite.protocol.types.VarInt
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtCompound

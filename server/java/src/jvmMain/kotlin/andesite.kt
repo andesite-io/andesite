@@ -14,19 +14,19 @@
  *    limitations under the License.
  */
 
-package com.gabrielleeg1.andesite.server.java
+package andesite.server.java
 
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.HandshakePacket
-import com.gabrielleeg1.andesite.api.protocol.java.handshake.NextState
-import com.gabrielleeg1.andesite.api.protocol.serialization.MinecraftCodec
-import com.gabrielleeg1.andesite.api.protocol.serialization.extractMinecraftVersion
-import com.gabrielleeg1.andesite.api.protocol.serializers.UuidSerializer
-import com.gabrielleeg1.andesite.api.world.anvil.AnvilWorld
-import com.gabrielleeg1.andesite.api.world.anvil.block.BlockRegistry
-import com.gabrielleeg1.andesite.api.world.anvil.block.readBlockRegistry
-import com.gabrielleeg1.andesite.api.world.anvil.readAnvilWorld
-import com.gabrielleeg1.andesite.server.java.player.Session
-import com.gabrielleeg1.andesite.server.java.player.receivePacket
+import andesite.protocol.java.handshake.HandshakePacket
+import andesite.protocol.java.handshake.NextState
+import andesite.protocol.serialization.MinecraftCodec
+import andesite.protocol.serialization.extractMinecraftVersion
+import andesite.protocol.serializers.UuidSerializer
+import andesite.world.anvil.AnvilWorld
+import andesite.world.anvil.block.BlockRegistry
+import andesite.world.anvil.block.readBlockRegistry
+import andesite.world.anvil.readAnvilWorld
+import andesite.server.java.player.Session
+import andesite.server.java.player.receivePacket
 import io.klogging.noCoLogger
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
