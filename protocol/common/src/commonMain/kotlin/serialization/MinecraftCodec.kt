@@ -18,6 +18,7 @@
 
 package andesite.protocol.serialization
 
+import andesite.protocol.extractPacketId
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
@@ -27,6 +28,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.serializer
 import net.benwoodworth.knbt.Nbt
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -95,27 +97,29 @@ class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
       ProtocolEncoderImpl(this, configuration).encodeSerializableValue(serializer, value)
     }.readBytes()
   }
+
+  companion object Versions
 }
+
+typealias CodecBuilder = MinecraftCodecBuilder.() -> Unit
 
 val DefaultProtocolConfiguration = ProtocolConfiguration(protocolVersion = -1)
 
-fun MinecraftCodec(
-  from: ProtocolConfiguration = DefaultProtocolConfiguration,
-  builder: MinecraftCodecBuilder.() -> Unit,
-): MinecraftCodec {
+fun MinecraftCodec(from: ProtocolConfiguration = DefaultProtocolConfiguration, builder: CodecBuilder): MinecraftCodec {
   return MinecraftCodecBuilder(from).apply(builder).build()
 }
 
-class RegistryBuilder {
+class RegistryBuilder(val serializersModule: SerializersModule) {
   @PublishedApi
   internal val value = mutableMapOf<Int, KType>()
 
-  fun <A : Any> addPacket(id: Int, type: KType) {
+  fun <A : Any> register(id: Int, type: KType) {
     value[id] = type
   }
 
-  inline fun <reified A : Any> addPacket(id: Int) {
-    value[id] = typeOf<A>()
+  inline fun <reified A : Any> register() {
+    val serializer = serializersModule.serializer(typeOf<A>())
+    value[extractPacketId(serializer.descriptor)] = typeOf<A>()
   }
 }
 
@@ -130,7 +134,7 @@ class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   var packetRegistry: Map<Int, KType> = configuration.packetRegistry
 
   fun packetRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
-    val registry = RegistryBuilder().apply(builder)
+    val registry = RegistryBuilder(serializersModule).apply(builder)
 
     return registry.value
   }

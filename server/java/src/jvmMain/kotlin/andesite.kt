@@ -21,14 +21,9 @@ import andesite.protocol.java.data.Dimension
 import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.NextState
-import andesite.protocol.java.v756.ChunkDataPacket
-import andesite.protocol.java.v756.JoinGamePacket
-import andesite.protocol.java.v756.KeepAlivePacket
-import andesite.protocol.java.v756.PlayerPositionAndLookPacket
-import andesite.protocol.java.v756.ServerKeepAlivePacket
+import andesite.protocol.java.v756.v756
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
-import andesite.protocol.serialization.addPacket
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.protocol.serializers.UuidSerializer
 import andesite.world.anvil.AnvilWorld
@@ -76,20 +71,12 @@ suspend fun startAndesite(): Unit = coroutineScope {
   val selector = ActorSelectorManager(Dispatchers.IO)
   val address = InetSocketAddress("127.0.0.1", 25565)
   val server = aSocket(selector).tcp().bind(address)
-  val codec = MinecraftCodec {
-    protocolVersion = 756
+  val codec = MinecraftCodec.v756 {
     json = Json {
       prettyPrint = true
     }
     serializersModule = SerializersModule {
       contextual(UuidSerializer)
-    }
-    packetRegistry = packetRegistry {
-      addPacket<ChunkDataPacket>()
-      addPacket<JoinGamePacket>()
-      addPacket<KeepAlivePacket>()
-      addPacket<PlayerPositionAndLookPacket>()
-      addPacket<ServerKeepAlivePacket>()
     }
   }
 
