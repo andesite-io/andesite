@@ -18,11 +18,12 @@
 
 package andesite.server.java.player
 
-import andesite.AndesiteError
 import andesite.andesiteError
 import andesite.protocol.ProtocolPacket
+import andesite.protocol.extractPacketId
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.readVarInt
+import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.findAnnotation
 import andesite.protocol.writeVarInt
 import io.ktor.network.sockets.Socket
@@ -33,20 +34,45 @@ import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.readPacket
 import io.ktor.utils.io.writePacket
-import kotlinx.serialization.BinaryFormat
+import kotlinx.coroutines.channels.Channel
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.serializer
 import org.apache.logging.log4j.kotlin.Logging
 
-internal data class Session(val format: BinaryFormat, val socket: Socket) {
+internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
   companion object : Logging
 
   val input = socket.openReadChannel()
   val output = socket.openWriteChannel()
 
-  suspend fun acceptPacket(): JavaPacket {
-    TODO()
+  val inboundPacketChannel = Channel<JavaPacket>()
+
+  suspend fun acceptPacket(): JavaPacket? {
+    val size = input.readVarInt()
+    val packet = input.readPacket(size.toInt())
+
+    val id = packet.readVarInt().toInt()
+
+    val type = codec.configuration.packetRegistry[id]
+      ?: return null.also {
+        logger.trace { "Could not find a serializer for packet: 0x%02x".format(id) }
+      }
+
+    val deserializer = codec.serializersModule
+      .serializer(type)
+      .apply { checkId(id) }
+
+    val name = deserializer.descriptor.serialName
+
+    logger.trace { "Packet `$name` received with id [0x%02x] and size [$size]".format(id) }
+
+    val javaPacket = codec.decodeFromByteArray(deserializer, packet.readBytes())
+      ?: andesiteError("Decoded packet `$name` is null")
+
+    return javaPacket as? JavaPacket
+      ?: andesiteError("Packet `$name` must be a JavaPacket, received ${javaPacket::class.simpleName}")
   }
 
   suspend fun <T : JavaPacket> receivePacket(deserializer: DeserializationStrategy<T>): T {
@@ -57,16 +83,11 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
 
     val id = packet.readVarInt().toInt()
 
+    deserializer.checkId(id)
+
     logger.trace { "Packet `$name` received with id [0x%02x] and size [$size]".format(id) }
 
-    val realId = deserializer.descriptor.findAnnotation<ProtocolPacket>()?.id
-      ?: andesiteError("Packet `$name` is not annotated with @ProtocolPacket")
-
-    if (id != realId) {
-      andesiteError("Packet `$name` received with id [0x%02x] but expected [0x%02x]", id, realId)
-    }
-
-    return format.decodeFromByteArray(deserializer, packet.readBytes())
+    return codec.decodeFromByteArray(deserializer, packet.readBytes())
   }
 
   suspend fun <T : JavaPacket> sendPacket(serializer: SerializationStrategy<T>, packet: T) {
@@ -76,7 +97,7 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
     output.writePacket {
       val data = buildPacket {
         writeVarInt(packetId)
-        writeFully(format.encodeToByteArray(serializer, packet))
+        writeFully(codec.encodeToByteArray(serializer, packet))
       }
 
       logger.trace {
@@ -106,5 +127,16 @@ internal data class Session(val format: BinaryFormat, val socket: Socket) {
 
   override fun toString(): String {
     return "Session(remoteAddress=${socket.remoteAddress})"
+  }
+
+  private fun <A> DeserializationStrategy<A>.checkId(id: Int) {
+    val name = descriptor.serialName
+
+    val realId = descriptor.findAnnotation<ProtocolPacket>()?.id
+      ?: andesiteError("Packet `$name` is not annotated with @ProtocolPacket")
+
+    if (id != realId) {
+      andesiteError("Packet `$name` received with id [0x%02x] but expected [0x%02x]", id, realId)
+    }
   }
 }

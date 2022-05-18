@@ -42,6 +42,7 @@ import andesite.protocol.types.VarInt
 import andesite.world.Location
 import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
+import andesite.server.java.player.awaitPacket
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
 import io.ktor.network.sockets.isClosed
@@ -119,11 +120,19 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
 
   launch(Job()) {
     while (!session.socket.isClosed) {
+      val packet = session.acceptPacket() ?: continue
+
+      session.inboundPacketChannel.send(packet)
+    }
+  }
+
+  launch(Job()) {
+    while (!session.socket.isClosed) {
       delay(20.seconds)
 
       try {
         session.sendPacket(KeepAlivePacket(currentTimeMillis()))
-        session.receivePacket<ServerKeepAlivePacket>()
+        session.awaitPacket<ServerKeepAlivePacket>()
       } catch (error: Throwable) {
         logger.error(error) { "Player [$player] keep alive thread thrown an error" }
       }

@@ -75,13 +75,7 @@ internal fun readBlockPalette(
   blockStates: LongArray,
   blockPalette: List<NbtCompound>,
 ): PalettedContainer {
-//  todo implement palettes
   val bits = max(4.0, log2(ceil(blockPalette.size.toDouble()))).toInt()
-//  println("BITS PER BLOCK $bitsPerBlock")
-//  println("  PALETTE SIZE ${palette.size}")
-//  println("  PALETTE $palette")
-//  println("  BLOCK STATES ${blockStates.size}")
-//  println("    BLOCK STATES ${blockStates.toList()}")
   
   val size = 1 shl 4 * 3
 

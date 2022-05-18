@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,19 +14,14 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation("io.ktor:ktor-network:1.6.4")
-        implementation("com.squareup.okio:okio:3.0.0")
-      }
-    }
-    
-    val jvmMain by getting {
-      dependencies {
-        implementation(kotlin("reflect"))
-      }
-    }
-  }
+package andesite.protocol
+
+import kotlin.reflect.KClass
+import kotlin.reflect.full.findAnnotation
+
+fun <T : Any> extractPacketId(packetClass: KClass<T>): Int {
+  val annotation = packetClass.findAnnotation<ProtocolPacket>()
+    ?: error("Can not find Packet id annotation in packet ${packetClass.simpleName}")
+
+  return annotation.id
 }

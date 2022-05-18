@@ -16,11 +16,15 @@
 
 package andesite.server.java.player
 
-import andesite.protocol.ProtocolPacket
 import andesite.protocol.java.JavaPacket
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.serialization.serializer
-import kotlin.reflect.KClass
-import kotlin.reflect.full.findAnnotation
+
+internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket() {
+  return inboundPacketChannel.consumeAsFlow().filterIsInstance<T>().collect()
+}
 
 internal suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T {
   return receivePacket(serializer())
@@ -28,11 +32,4 @@ internal suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T 
 
 internal suspend inline fun <reified T : JavaPacket> Session.sendPacket(packet: T) {
   sendPacket(serializer(), packet)
-}
-
-internal fun <T : JavaPacket> extractPacketId(packetClass: KClass<T>): Int {
-  val annotation = packetClass.findAnnotation<ProtocolPacket>()
-    ?: error("Can not find Packet id annotation in packet ${packetClass.simpleName}")
-
-  return annotation.id
 }

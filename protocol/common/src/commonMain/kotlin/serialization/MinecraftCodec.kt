@@ -28,12 +28,14 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import net.benwoodworth.knbt.Nbt
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Minecraft's protocol codec.
- * 
+ *
  * This codec is used to serialize and deserialize objects to and from the Minecraft protocol.
- * 
+ *
  * Example:
  * ```kotlin
  *
@@ -56,16 +58,16 @@ import net.benwoodworth.knbt.Nbt
  *   @ProtocolValue(2)
  *   Login;
  * }
- * 
+ *
  * val codec = MinecraftCodec { protocolVersion = 756 }
  * val packet = codec.decodeFromByteArray<HandshakePacket>(bytes)
- * 
+ *
  * println(packet)
  * ```
  */
 class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
   override val serializersModule = configuration.serializersModule
-  
+
   /**
    * Decodes a packet from a byte array.
    *
@@ -104,6 +106,19 @@ fun MinecraftCodec(
   return MinecraftCodecBuilder(from).apply(builder).build()
 }
 
+class RegistryBuilder {
+  @PublishedApi
+  internal val value = mutableMapOf<Int, KType>()
+
+  fun <A : Any> addPacket(id: Int, type: KType) {
+    value[id] = type
+  }
+
+  inline fun <reified A : Any> addPacket(id: Int) {
+    value[id] = typeOf<A>()
+  }
+}
+
 class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   var protocolVersion: Int = configuration.protocolVersion
   var protocolVariant: ProtocolVariant = configuration.protocolVariant
@@ -112,6 +127,13 @@ class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   var serializersModule: SerializersModule = configuration.serializersModule
   var encryption: Boolean = configuration.encryption
   var encodeDefaults: Boolean = configuration.encodeDefaults
+  var packetRegistry: Map<Int, KType> = configuration.packetRegistry
+
+  fun packetRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
+    val registry = RegistryBuilder().apply(builder)
+    
+    return registry.value
+  }
 
   internal fun build(): MinecraftCodec {
     require(protocolVersion != -1) { "protocolVersion must be set" }
@@ -121,6 +143,7 @@ class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
         protocolVersion,
         protocolVariant,
         serializersModule,
+        packetRegistry,
         nbt,
         json,
         encryption,
