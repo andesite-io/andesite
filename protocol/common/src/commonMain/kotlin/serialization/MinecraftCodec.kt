@@ -131,7 +131,7 @@ class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
 
   fun packetRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
     val registry = RegistryBuilder().apply(builder)
-    
+
     return registry.value
   }
 
