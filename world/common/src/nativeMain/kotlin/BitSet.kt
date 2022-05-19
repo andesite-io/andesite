@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,23 +14,17 @@
  *    limitations under the License.
  */
 
-kotlin {
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+package andesite.world
+
+actual class BitSet {
+  actual fun get(index: Int): Boolean {
+    TODO("Not yet implemented")
   }
 
-  js()
-  
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":protocol:common"))
-      }
-    }
+  actual fun set(index: Int) {
+  }
+
+  actual fun toLongArray(): LongArray {
+    TODO("Not yet implemented")
   }
 }

@@ -14,8 +14,6 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package andesite.protocol.serialization
 
 import andesite.protocol.extractPacketId
@@ -24,7 +22,6 @@ import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule

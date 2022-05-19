@@ -11,13 +11,21 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/andesite.protocol.bedrock.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/bedrock/v465/andesite.protocol.bedrock.v465.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/andesite.protocol.common.commonTest.iml" />
@@ -32,13 +40,21 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/andesite.protocol.java.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/java/v756/andesite.protocol.java.v756.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/andesite.protocol.jvmTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/andesite.server.iml" filepath="$PROJECT_DIR$/.idea/modules/server/andesite.server.iml" />
@@ -70,13 +86,21 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/anvil/andesite.world.anvil.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.commonTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/common/andesite.world.common.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/andesite.world.commonMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/andesite.world.commonMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/andesite.world.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/andesite.world.commonTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/andesite.world.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/andesite.world.jvmMain.iml" />
@@ -86,6 +110,10 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/slime/andesite.world.slime.commonTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/slime/andesite.world.slime.commonTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/slime/andesite.world.slime.jvmMain.iml" filepath="$PROJECT_DIR$/.idea/modules/world/slime/andesite.world.slime.jvmMain.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/world/slime/andesite.world.slime.jvmTest.iml" filepath="$PROJECT_DIR$/.idea/modules/world/slime/andesite.world.slime.jvmTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.jsMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.jsMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.jsTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.jsTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.nativeMain.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.nativeMain.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.nativeTest.iml" filepath="$PROJECT_DIR$/.idea/modules/protocol/common/common.andesite.protocol.common.nativeTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/javarock.main.iml" filepath="$PROJECT_DIR$/.idea/modules/javarock.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server-api/javarock.server-api.main.iml" filepath="$PROJECT_DIR$/.idea/modules/server-api/javarock.server-api.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/server-api/protocol/bedrock/javarock.server-api.protocol.bedrock.main.iml" filepath="$PROJECT_DIR$/.idea/modules/server-api/protocol/bedrock/javarock.server-api.protocol.bedrock.main.iml" />

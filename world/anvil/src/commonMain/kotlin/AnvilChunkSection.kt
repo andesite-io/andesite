@@ -55,7 +55,6 @@ class AnvilChunkSection(
     return blockStates.nonEmptyBlockCount == 0.toShort()
   }
 
-  @OptIn(ExperimentalUnsignedTypes::class)
   override fun writeToNetwork(): ByteReadPacket = buildPacket {
     writeFully(blockStates.writeToNetwork().readBytes())
   }

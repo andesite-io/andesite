@@ -16,6 +16,7 @@
 
 package andesite.world.anvil
 
+import andesite.world.BitSet
 import andesite.world.Chunk
 import io.ktor.utils.io.core.Output
 import io.ktor.utils.io.core.writePacket
@@ -23,7 +24,6 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtTag
-import java.util.BitSet
 
 @Serializable
 class AnvilChunk(

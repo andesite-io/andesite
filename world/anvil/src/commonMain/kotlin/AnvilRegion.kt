@@ -19,5 +19,4 @@ package andesite.world.anvil
 class AnvilRegion(
   val name: String,
   val chunks: List<AnvilChunk>,
-) {
-}
+)

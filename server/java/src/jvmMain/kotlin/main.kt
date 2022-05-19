@@ -14,14 +14,11 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package andesite.server.java
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.ExperimentalSerializationApi
 import java.lang.System.getSecurityManager
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory

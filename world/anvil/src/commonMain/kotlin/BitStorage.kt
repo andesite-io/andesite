@@ -92,8 +92,8 @@ private class BitStorageImpl(
   init {
     val magicIndex = 3 * (valuesPerLong - 1)
 
-    divideMultiply = Integer.toUnsignedLong(MAGIC[magicIndex])
-    divideAdd = Integer.toUnsignedLong(MAGIC[magicIndex + 1])
+    divideMultiply = MAGIC[magicIndex].toLong() and 0xffffffffL
+    divideAdd = MAGIC[magicIndex + 1].toLong() and 0xffffffffL
     divideShift = MAGIC[magicIndex + 2]
 
     val dataSize = (size + valuesPerLong - 1) / valuesPerLong
@@ -216,9 +216,7 @@ private class BitStorageImpl(
 
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-
-    other as BitStorage
+    if (other !is BitStorageImpl) return false
 
     if (bits != other.bits) return false
     if (size != other.size) return false

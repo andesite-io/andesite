@@ -14,11 +14,18 @@
  *    limitations under the License.
  */
 
-repositories {
-  maven("https://repo.kryptonmc.org/releases")
-}
-
 kotlin {
+  val hostOs = System.getProperty("os.name")
+  val isMingwX64 = hostOs.startsWith("Windows")
+  when {
+    hostOs == "Mac OS X" -> macosX64("native")
+    hostOs == "Linux" -> linuxX64("native")
+    isMingwX64 -> mingwX64("native")
+    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+  }
+
+  js()
+  
   sourceSets {
     val commonMain by getting {
       dependencies {
