@@ -25,4 +25,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("LoginStartPacket")
 @ProtocolPacket(0x00)
-data class LoginStartPacket(@ProtocolString(16) val username: String) : JavaPacket
+public data class LoginStartPacket(@ProtocolString(16) val username: String) : JavaPacket

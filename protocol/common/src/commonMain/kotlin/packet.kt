@@ -22,7 +22,7 @@ import andesite.protocol.serialization.findAnnotation
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 
-fun extractPacketId(descriptor: SerialDescriptor): Int {
+public fun extractPacketId(descriptor: SerialDescriptor): Int {
   val annotation = descriptor.findAnnotation<ProtocolPacket>()
     ?: error("Can not find Packet id annotation in packet ${descriptor.serialName}")
 

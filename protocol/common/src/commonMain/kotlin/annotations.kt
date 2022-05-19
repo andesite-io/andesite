@@ -28,7 +28,7 @@ import kotlinx.serialization.Serializable
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-annotation class ProtocolPacket(val id: Int)
+public annotation class ProtocolPacket(val id: Int)
 
 /**
  * Sets packet's field to decode with Json format.
@@ -36,7 +36,7 @@ annotation class ProtocolPacket(val id: Int)
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
-annotation class ProtocolJson
+public annotation class ProtocolJson
 
 /**
  * Sets packet's field to decode with Nbt format.
@@ -44,7 +44,7 @@ annotation class ProtocolJson
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
-annotation class ProtocolNbt
+public annotation class ProtocolNbt
 
 /**
  * Sets packet's field to decode string with [max] size.
@@ -52,7 +52,7 @@ annotation class ProtocolNbt
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
-annotation class ProtocolString(val max: Int)
+public annotation class ProtocolString(val max: Int)
 
 /**
  * Determines a number enum.
@@ -60,7 +60,7 @@ annotation class ProtocolString(val max: Int)
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-annotation class ProtocolEnum
+public annotation class ProtocolEnum
 
 /**
  * Determines a number value.
@@ -68,7 +68,7 @@ annotation class ProtocolEnum
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FIELD)
-annotation class ProtocolValue(val value: Int)
+public annotation class ProtocolValue(val value: Int)
 
 /**
  * Determines the int variant to the List or Enum.
@@ -76,10 +76,10 @@ annotation class ProtocolValue(val value: Int)
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
-annotation class ProtocolVariant(val kind: Variant)
+public annotation class ProtocolVariant(val kind: Variant)
 
 @Serializable
-enum class Variant {
+public enum class Variant {
   VarInt, VarLong,
   UByte, Byte,
   UInt, Int,

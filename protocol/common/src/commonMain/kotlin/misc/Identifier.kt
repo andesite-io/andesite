@@ -24,11 +24,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable(IdentifierSerializer::class)
-class Identifier(val fullPath: String) {
-  val namespace: String = fullPath.substringBefore(':', "minecraft")
-  val path: String = fullPath.substringAfter(':')
+public class Identifier(public val fullPath: String) {
+  public val namespace: String = fullPath.substringBefore(':', "minecraft")
+  public val path: String = fullPath.substringAfter(':')
 
-  constructor(namespace: String, path: String) : this("$namespace:$path")
+  public constructor(namespace: String, path: String) : this("$namespace:$path")
 
   override fun hashCode(): Int = fullPath.hashCode()
   override fun toString(): String = fullPath

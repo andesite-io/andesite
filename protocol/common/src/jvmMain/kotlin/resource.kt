@@ -18,7 +18,7 @@ package andesite.protocol
 
 import java.io.File
 
-fun resource(path: String): File {
+public fun resource(path: String): File {
   return ClassLoader.getSystemResource(path)
     ?.file
     ?.let(::File)

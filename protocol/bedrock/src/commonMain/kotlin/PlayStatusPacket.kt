@@ -27,13 +27,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("PlayStatusPacket")
 @ProtocolPacket(0x02)
-data class PlayStatusPacket(val status: PlayStatus) : BedrockPacket
+public data class PlayStatusPacket(val status: PlayStatus) : BedrockPacket
 
 @Serializable
 @SerialName("PlayStatus")
 @ProtocolEnum
 @ProtocolVariant(Variant.Int)
-enum class PlayStatus {
+public enum class PlayStatus {
   @ProtocolValue(0)
   LoginSuccess,
 

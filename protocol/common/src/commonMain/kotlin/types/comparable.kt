@@ -21,11 +21,11 @@ package andesite.protocol.types
  * Returns zero if this value is equal to the specified other value, a negative number if it's less than other,
  * or a positive number if it's greater than the other.
  */
-operator fun Int.compareTo(value: VarInt): Int = compareTo(value.toInt())
+public operator fun Int.compareTo(value: VarInt): Int = compareTo(value.toInt())
 
 /**
  * Compares this value with the specified value for order.
  * Returns zero if this value is equal to the specified other value, a negative number if it's less than other,
  * or a positive number if it's greater than the other.
  */
-operator fun Long.compareTo(value: VarLong): Int = compareTo(value.toLong())
+public operator fun Long.compareTo(value: VarLong): Int = compareTo(value.toLong())

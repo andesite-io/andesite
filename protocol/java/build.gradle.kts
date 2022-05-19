@@ -25,7 +25,9 @@ kotlin {
   }
 
   js()
-  
+
+  explicitApi()
+
   sourceSets {
     val commonMain by getting {
       dependencies {

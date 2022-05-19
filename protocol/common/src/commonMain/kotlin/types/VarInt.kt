@@ -23,6 +23,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import kotlin.jvm.JvmInline
@@ -35,33 +36,33 @@ import kotlin.jvm.JvmInline
 @Serializable(with = VarIntSerializer::class)
 @SerialName("VarInt")
 @JvmInline
-value class VarInt(private val int: Int) : Comparable<Number> {
-  fun toInt(): Int = int
+public value class VarInt(private val int: Int) : Comparable<Number> {
+  public fun toInt(): Int = int
 
-  operator fun minus(value: VarInt): VarInt = VarInt(int - value.int)
-  operator fun minus(value: Int): VarInt = VarInt(int - value)
+  public operator fun minus(value: VarInt): VarInt = VarInt(int - value.int)
+  public operator fun minus(value: Int): VarInt = VarInt(int - value)
 
-  operator fun plus(value: VarInt): VarInt = VarInt(int + value.int)
-  operator fun plus(value: Int): VarInt = VarInt(int + value)
+  public operator fun plus(value: VarInt): VarInt = VarInt(int + value.int)
+  public operator fun plus(value: Int): VarInt = VarInt(int + value)
 
-  operator fun times(value: VarInt): VarInt = VarInt(int * value.int)
-  operator fun times(value: Int): VarInt = VarInt(int * value)
+  public operator fun times(value: VarInt): VarInt = VarInt(int * value.int)
+  public operator fun times(value: Int): VarInt = VarInt(int * value)
 
   override fun compareTo(other: Number): Int = int.compareTo(other.toInt())
 
   override fun toString(): String = int.toString()
 }
 
-fun Decoder.decodeVarInt(): VarInt = decodeSerializableValue(VarInt.serializer())
+public fun Decoder.decodeVarInt(): VarInt = decodeSerializableValue(VarInt.serializer())
 
-fun Encoder.encodeVarInt(value: Int): Unit =
+public fun Encoder.encodeVarInt(value: Int): Unit =
   encodeSerializableValue(VarInt.serializer(), VarInt(value))
 
-fun Encoder.encodeVarInt(value: VarInt): Unit =
+public fun Encoder.encodeVarInt(value: VarInt): Unit =
   encodeSerializableValue(VarInt.serializer(), value)
 
-object VarIntSerializer : KSerializer<VarInt> {
-  override val descriptor = PrimitiveSerialDescriptor("VarInt", PrimitiveKind.INT)
+public object VarIntSerializer : KSerializer<VarInt> {
+  override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("VarInt", PrimitiveKind.INT)
 
   override fun deserialize(decoder: Decoder): VarInt {
     return readVarInt(decoder::decodeByte)

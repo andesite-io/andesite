@@ -32,35 +32,35 @@ import kotlin.jvm.JvmInline
 @Serializable(with = VarLongSerializer::class)
 @SerialName("VarLong")
 @JvmInline
-value class VarLong(val long: Long) : Comparable<Number> {
-  fun toLong(): Long = long
+public value class VarLong(private val long: Long) : Comparable<Number> {
+  public fun toLong(): Long = long
 
-  operator fun minus(value: VarLong): VarLong = VarLong(long - value.long)
-  operator fun minus(value: Long): VarLong = VarLong(long - value)
+  public operator fun minus(value: VarLong): VarLong = VarLong(long - value.long)
+  public operator fun minus(value: Long): VarLong = VarLong(long - value)
 
-  operator fun plus(value: VarLong): VarLong = VarLong(long + value.long)
-  operator fun plus(value: Long): VarLong = VarLong(long + value)
+  public operator fun plus(value: VarLong): VarLong = VarLong(long + value.long)
+  public operator fun plus(value: Long): VarLong = VarLong(long + value)
 
-  operator fun times(value: VarLong): VarLong = VarLong(long * value.long)
-  operator fun times(value: Long): VarLong = VarLong(long * value)
+  public operator fun times(value: VarLong): VarLong = VarLong(long * value.long)
+  public operator fun times(value: Long): VarLong = VarLong(long * value)
 
-  operator fun div(value: VarLong): VarLong = VarLong(long / value.long)
-  operator fun div(value: Long): VarLong = VarLong(long / value)
+  public operator fun div(value: VarLong): VarLong = VarLong(long / value.long)
+  public operator fun div(value: Long): VarLong = VarLong(long / value)
 
   override fun compareTo(other: Number): Int = long.compareTo(other.toLong())
 
   override fun toString(): String = long.toString()
 }
 
-fun Decoder.decodeVarLong(): VarInt = decodeSerializableValue(VarInt.serializer())
+public fun Decoder.decodeVarLong(): VarInt = decodeSerializableValue(VarInt.serializer())
 
-fun Encoder.encodeVarLong(value: Long): Unit =
+public fun Encoder.encodeVarLong(value: Long): Unit =
   encodeSerializableValue(VarLong.serializer(), VarLong(value))
 
-fun Encoder.encodeVarLong(value: VarLong): Unit =
+public fun Encoder.encodeVarLong(value: VarLong): Unit =
   encodeSerializableValue(VarLong.serializer(), value)
 
-object VarLongSerializer : KSerializer<VarLong> {
+public object VarLongSerializer : KSerializer<VarLong> {
   override val descriptor: SerialDescriptor
     get() = TODO("Not yet implemented")
 

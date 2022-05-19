@@ -26,4 +26,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("LoginSuccessPacket")
 @ProtocolPacket(0x02)
-data class LoginSuccessPacket(val id: @Contextual Uuid, val username: String) : JavaPacket 
+public data class LoginSuccessPacket(val id: @Contextual Uuid, val username: String) : JavaPacket 

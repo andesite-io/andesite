@@ -22,10 +22,13 @@ import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.MinecraftCodec.Versions
 import andesite.protocol.serialization.ProtocolConfiguration
 
-fun Versions.v756(from: ProtocolConfiguration = DefaultProtocolConfiguration, builder: CodecBuilder): MinecraftCodec {
+public fun Versions.v756(
+  from: ProtocolConfiguration = DefaultProtocolConfiguration,
+  builder: CodecBuilder,
+): MinecraftCodec {
   return MinecraftCodec(from) {
     protocolVersion = 756
-    packetRegistry = packetRegistry {
+    packetRegistry = createPacketRegistry {
       register<ChunkDataPacket>()
       register<JoinGamePacket>()
       register<KeepAlivePacket>()

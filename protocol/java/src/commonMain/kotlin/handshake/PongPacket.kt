@@ -25,4 +25,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("PongPacket")
 @ProtocolPacket(0x01)
-data class PongPacket(val payload: Long = currentTimeMillis()) : JavaPacket
+public data class PongPacket(val payload: Long = currentTimeMillis()) : JavaPacket

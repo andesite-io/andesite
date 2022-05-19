@@ -24,8 +24,8 @@ import kotlinx.serialization.PolymorphicSerializer
  * Minecraft Java Edition packet.
  */
 @Polymorphic
-interface JavaPacket {
-  companion object {
-    fun serializer(): KSerializer<JavaPacket> = PolymorphicSerializer(JavaPacket::class)
+public interface JavaPacket {
+  public companion object {
+    public fun serializer(): KSerializer<JavaPacket> = PolymorphicSerializer(JavaPacket::class)
   }
 }

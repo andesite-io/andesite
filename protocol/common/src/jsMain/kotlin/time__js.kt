@@ -18,4 +18,4 @@ package andesite.protocol
 
 import kotlin.js.Date
 
-actual fun currentTimeMillis(): Long = Date.now().toLong()
+public actual fun currentTimeMillis(): Long = Date.now().toLong()

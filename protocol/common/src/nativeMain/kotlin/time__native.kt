@@ -18,8 +18,6 @@ package andesite.protocol
 
 import kotlin.system.getTimeMillis
 
-actual fun currentTimeMillis(): Long {
-  BitSet
-  
+public actual fun currentTimeMillis(): Long {
   return getTimeMillis()
 }

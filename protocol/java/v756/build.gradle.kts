@@ -23,10 +23,11 @@ kotlin {
     isMingwX64 -> mingwX64("native")
     else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
   }
-  
-  
-  js() 
-  
+
+  js()
+
+  explicitApi()
+
   sourceSets {
     val commonMain by getting {
       dependencies {

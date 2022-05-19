@@ -46,16 +46,16 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 
-interface ProtocolEncoder : Encoder, CompositeEncoder {
-  val nbt: Nbt
-  val json: Json
+public interface ProtocolEncoder : Encoder, CompositeEncoder {
+  public val nbt: Nbt
+  public val json: Json
   
-  fun <T : Any> encodeNbt(serializer: SerializationStrategy<T>, value: T)
+  public fun <T : Any> encodeNbt(serializer: SerializationStrategy<T>, value: T)
   
-  fun <T> encodeJson(serializer: SerializationStrategy<T>, value: T)
+  public fun <T> encodeJson(serializer: SerializationStrategy<T>, value: T)
 }
 
-fun Encoder.asProtocolEncoder(): ProtocolEncoder {
+public fun Encoder.asProtocolEncoder(): ProtocolEncoder {
   return this as? ProtocolEncoder
     ?: error("This serializer can be used only with Protocol format. Expected Encoder to be ProtocolEncoder, got ${this::class}")
 }

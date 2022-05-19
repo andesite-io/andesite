@@ -24,6 +24,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("PingPacket")
 @ProtocolPacket(0x01)
-object PingPacket : JavaPacket {
+public object PingPacket : JavaPacket {
   override fun toString(): String = "PingPacket"
 }

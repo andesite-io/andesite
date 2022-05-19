@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("DimensionCodec")
-data class DimensionCodec(
+public data class DimensionCodec(
   @SerialName("minecraft:dimension_type")
   val dimension: Registry<Dimension>,
 
@@ -37,9 +37,9 @@ data class DimensionCodec(
 
 @Serializable
 @SerialName("Registry")
-data class Registry<T : Any>(@SerialName("type") val kind: String, val value: List<Entry<T>>) {
+public data class Registry<T : Any>(@SerialName("type") val kind: String, val value: List<Entry<T>>) {
   @Serializable
   @SerialName("Registry.Entry")
-  data class Entry<T : Any>(val name: Identifier, val id: Int, val element: T)
+  public data class Entry<T : Any>(val name: Identifier, val id: Int, val element: T)
 }
 

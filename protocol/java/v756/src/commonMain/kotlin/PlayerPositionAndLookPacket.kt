@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
 @ProtocolPacket(0x38)
 @SerialName("PlayerPositionAndLookPacket")
 @Serializable
-data class PlayerPositionAndLookPacket(
+public data class PlayerPositionAndLookPacket(
   val x: Double,
   val y: Double,
   val z: Double,

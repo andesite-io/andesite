@@ -16,4 +16,4 @@
 
 package andesite.protocol
 
-expect fun currentTimeMillis(): Long
+public expect fun currentTimeMillis(): Long

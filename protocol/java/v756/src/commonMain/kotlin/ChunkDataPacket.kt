@@ -28,7 +28,7 @@ import net.benwoodworth.knbt.NbtTag
 @Serializable
 @SerialName("ChunkDataPacket")
 @ProtocolPacket(0x22)
-data class ChunkDataPacket(
+public data class ChunkDataPacket(
   val chunkX: Int,
   val chunkZ: Int,
   val primaryBitmask: LongArray,

@@ -18,17 +18,17 @@ package andesite.protocol.serializers
 
 import com.benasher44.uuid.Uuid
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-object UuidSerializer : KSerializer<Uuid> {
-  override val descriptor =
-    buildClassSerialDescriptor("andesite.protocol.serializers.Uuid") {
-      element<Long>("mostSignificantBits")
-      element<Long>("leastSignificantBits")
-    }
+public object UuidSerializer : KSerializer<Uuid> {
+  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("andesite.protocol.serializers.Uuid") {
+    element<Long>("mostSignificantBits")
+    element<Long>("leastSignificantBits")
+  }
 
   override fun serialize(encoder: Encoder, value: Uuid) {
     encoder.encodeLong(value.mostSignificantBits)

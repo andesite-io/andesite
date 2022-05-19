@@ -46,16 +46,16 @@ import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.OkioApi
 
-interface ProtocolDecoder : Decoder, CompositeDecoder {
-  val nbt: Nbt
-  val json: Json
+public interface ProtocolDecoder : Decoder, CompositeDecoder {
+  public val nbt: Nbt
+  public val json: Json
 
-  fun <T : Any> decodeNbt(deserializer: DeserializationStrategy<T>): T
+  public fun <T : Any> decodeNbt(deserializer: DeserializationStrategy<T>): T
 
-  fun <T> decodeJson(deserializer: DeserializationStrategy<T>): T
+  public fun <T> decodeJson(deserializer: DeserializationStrategy<T>): T
 }
 
-fun Decoder.asProtocolDecoder(): ProtocolDecoder {
+public fun Decoder.asProtocolDecoder(): ProtocolDecoder {
   return this as? ProtocolDecoder
     ?: error("This deserializer can be used only with Protocol format. Expected Decoder to be ProtocolDecoder, got ${this::class}")
 }

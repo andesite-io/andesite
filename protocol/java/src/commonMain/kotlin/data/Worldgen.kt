@@ -25,7 +25,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("Worldgen")
-data class Worldgen(
+public data class Worldgen(
   val depth: Float,
   val temperature: Float,
   val scale: Float,
@@ -52,7 +52,7 @@ data class Worldgen(
 
   @Serializable
   @SerialName("Worldgen.Effect")
-  data class Effects(
+  public data class Effects(
     val music: Music? = null,
 
     @SerialName("sky_color")
@@ -88,7 +88,7 @@ data class Worldgen(
 
   @Serializable
   @SerialName("Worldgen.AdditionsSound")
-  data class AdditionsSound(
+  public data class AdditionsSound(
     val sound: String,
 
     @SerialName("tick_chance")
@@ -97,7 +97,7 @@ data class Worldgen(
 
   @Serializable
   @SerialName("Worldgen.MoodSound")
-  data class MoodSound(
+  public data class MoodSound(
     val sound: String,
     val offset: Float,
 
@@ -110,7 +110,7 @@ data class Worldgen(
 
   @Serializable
   @SerialName("Worldgen.Music")
-  data class Music(
+  public data class Music(
     val sound: String,
 
     @SerialName("replace_current_music")
@@ -125,12 +125,12 @@ data class Worldgen(
 
   @Serializable
   @SerialName("Worldgen.Particle")
-  data class Particle(
+  public data class Particle(
     val probability: Float,
     val options: ParticleOptions,
   )
 
   @Serializable
   @SerialName("Worldgen.ParticleOptions")
-  data class ParticleOptions(@SerialName("type") val kind: String)
+  public data class ParticleOptions(@SerialName("type") val kind: String)
 }

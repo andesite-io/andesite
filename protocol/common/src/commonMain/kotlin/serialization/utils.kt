@@ -21,10 +21,10 @@ package andesite.protocol.serialization
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.descriptors.SerialDescriptor
 
-inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
+public inline fun <reified T> SerialDescriptor.hasAnnotation(): Boolean {
   return annotations.filterIsInstance<T>().isNotEmpty()
 }
 
-inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
+public inline fun <reified T> SerialDescriptor.findAnnotation(): T? {
   return annotations.filterIsInstance<T>().singleOrNull()
 }

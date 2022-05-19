@@ -30,7 +30,7 @@ import kotlin.reflect.KType
 /**
  * Configuration for the serialization of the protocol.
  */
-class ProtocolConfiguration(
+public data class ProtocolConfiguration(
   val protocolVersion: Int,
   val protocolVariant: ProtocolVariant = ProtocolVariant.Java,
   val serializersModule: SerializersModule = EmptySerializersModule,
@@ -44,11 +44,11 @@ class ProtocolConfiguration(
   var encodeDefaults: Boolean = false,
 )
 
-enum class ProtocolVariant {
+public enum class ProtocolVariant {
   Java, Bedrock;
 }
 
-fun extractMinecraftVersion(protocolVersion: Int): String = when (protocolVersion) {
+public fun extractMinecraftVersion(protocolVersion: Int): String = when (protocolVersion) {
   758 -> "1.18.1"
   757 -> "1.18"
   756 -> "1.17.1"

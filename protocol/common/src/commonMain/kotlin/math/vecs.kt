@@ -16,10 +16,10 @@
 
 package andesite.protocol.math
 
-data class Vector3i(val x: Int, val y: Int, val z: Int)
+public data class Vector3i(val x: Int, val y: Int, val z: Int)
 
-data class Vector2i(val x: Int, val y: Int)
+public data class Vector2i(val x: Int, val y: Int)
 
-data class Vector3f(val x: Float, val y: Float, val z: Float)
+public data class Vector3f(val x: Float, val y: Float, val z: Float)
 
-data class Vector2f(val x: Float, val y: Float)
+public data class Vector2f(val x: Float, val y: Float)

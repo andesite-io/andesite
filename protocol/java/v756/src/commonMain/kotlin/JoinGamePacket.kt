@@ -33,7 +33,7 @@ import kotlinx.serialization.Serializable
 @ProtocolPacket(0x26)
 @SerialName("JoinGamePacket")
 @Serializable
-class JoinGamePacket(
+public data class JoinGamePacket(
   val entityId: Int,
   val isHardcore: Boolean,
   val gameMode: GameMode,
@@ -57,7 +57,7 @@ class JoinGamePacket(
 @SerialName("PreviousGameMode")
 @ProtocolEnum
 @ProtocolVariant(Variant.Byte)
-enum class PreviousGameMode {
+public enum class PreviousGameMode {
   @ProtocolValue(-1)
   Unknown,
 
@@ -73,7 +73,7 @@ enum class PreviousGameMode {
   @ProtocolValue(3)
   Spectator;
 
-  fun toGameMode(): GameMode? {
+  public fun toGameMode(): GameMode? {
     return when (this) {
       Unknown -> null
       else -> GameMode.values()[ordinal]
@@ -85,7 +85,7 @@ enum class PreviousGameMode {
 @SerialName("GameMode")
 @ProtocolEnum
 @ProtocolVariant(Variant.UByte)
-enum class GameMode {
+public enum class GameMode {
   @ProtocolValue(0)
   Survival,
 

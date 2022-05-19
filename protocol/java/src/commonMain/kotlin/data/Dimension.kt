@@ -22,7 +22,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 @SerialName("Dimension")
-data class Dimension(
+public data class Dimension(
   val effects: Identifier,
   val infiniburn: Identifier,
   val natural: Boolean,

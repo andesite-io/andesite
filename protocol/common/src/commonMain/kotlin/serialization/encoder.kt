@@ -24,26 +24,26 @@ import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.LongArraySerializer
 import kotlinx.serialization.serializer
 
-fun ProtocolEncoder.encodeLongArray(array: LongArray) {
+public fun ProtocolEncoder.encodeLongArray(array: LongArray) {
   encodeSerializableValue(LongArraySerializer(), array)
 }
 
-fun ProtocolEncoder.encodeIntArray(array: IntArray) {
+public fun ProtocolEncoder.encodeIntArray(array: IntArray) {
   encodeSerializableValue(IntArraySerializer(), array)
 }
 
-fun ProtocolEncoder.encodeFloatArray(array: FloatArray) {
+public fun ProtocolEncoder.encodeFloatArray(array: FloatArray) {
   encodeSerializableValue(FloatArraySerializer(), array)
 }
 
-fun ProtocolEncoder.encodeDoubleArray(array: DoubleArray) {
+public fun ProtocolEncoder.encodeDoubleArray(array: DoubleArray) {
   encodeSerializableValue(DoubleArraySerializer(), array)
 }
 
-fun ProtocolEncoder.encodeByteArray(array: ByteArray) {
+public fun ProtocolEncoder.encodeByteArray(array: ByteArray) {
   encodeSerializableValue(ByteArraySerializer(), array)
 }
 
-inline fun <reified T : Any> ProtocolEncoder.encodeList(list: List<T>) {
+public inline fun <reified T : Any> ProtocolEncoder.encodeList(list: List<T>) {
   encodeSerializableValue(ListSerializer(serializer()), list)
 }

@@ -24,30 +24,30 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Response(
-    val version: Version,
-    val players: Players,
-    val description: Chat,
-    val favicon: String? = null,
+public data class Response(
+  val version: Version,
+  val players: Players,
+  val description: Chat,
+  val favicon: String? = null,
 )
 
 @Serializable
-data class Version(
+public data class Version(
   val name: String,
   val protocol: Int,
 )
 
 @Serializable
-data class Players(
+public data class Players(
   val max: Int,
   val online: Int,
   val sample: List<Sample> = emptyList(),
 )
 
 @Serializable
-data class Sample(val name: String, val id: String)
+public data class Sample(val name: String, val id: String)
 
 @Serializable
 @SerialName("ResponsePacket")
 @ProtocolPacket(0x00)
-data class ResponsePacket(@ProtocolJson val response: Response) : JavaPacket
+public data class ResponsePacket(@ProtocolJson val response: Response) : JavaPacket

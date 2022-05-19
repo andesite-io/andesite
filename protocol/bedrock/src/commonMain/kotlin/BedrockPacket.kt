@@ -24,8 +24,8 @@ import kotlinx.serialization.PolymorphicSerializer
  * Minecraft Bedrock Edition packet.
  */
 @Polymorphic
-interface BedrockPacket {
-  companion object {
-    fun serializer(): KSerializer<BedrockPacket> = PolymorphicSerializer(BedrockPacket::class)
+public interface BedrockPacket {
+  public companion object {
+    public fun serializer(): KSerializer<BedrockPacket> = PolymorphicSerializer(BedrockPacket::class)
   }
 }

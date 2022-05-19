@@ -29,7 +29,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("HandshakePacket")
 @ProtocolPacket(0x00)
-data class HandshakePacket(
+public data class HandshakePacket(
   val protocolVersion: VarInt,
   val serverAddress: String,
   val serverPort: UShort,
@@ -40,7 +40,7 @@ data class HandshakePacket(
 @SerialName("NextState")
 @ProtocolEnum
 @ProtocolVariant(kind = Variant.VarInt)
-enum class NextState {
+public enum class NextState {
   @ProtocolValue(1)
   Status,
 

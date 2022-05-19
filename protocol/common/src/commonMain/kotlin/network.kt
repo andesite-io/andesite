@@ -27,19 +27,19 @@ import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeLong
 import kotlin.experimental.and
 
-fun BytePacketBuilder.writeVarInt(varint: Int): Unit = writeVarInt(VarInt(varint))
+public fun BytePacketBuilder.writeVarInt(varint: Int): Unit = writeVarInt(VarInt(varint))
 
-fun BytePacketBuilder.writeVarInt(varint: VarInt): Unit = writeVarInt(varint) { writeByte(it) }
+public fun BytePacketBuilder.writeVarInt(varint: VarInt): Unit = writeVarInt(varint) { writeByte(it) }
 
-fun ByteReadPacket.readVarInt(): VarInt = readVarInt { readByte() }
+public fun ByteReadPacket.readVarInt(): VarInt = readVarInt { readByte() }
 
-fun VarInt.countVarInt(): Int {
+public fun VarInt.countVarInt(): Int {
   var count = 0
   writeVarInt(this) { count++ }
   return count
 }
 
-fun Int.countVarInt(): Int {
+public fun Int.countVarInt(): Int {
   var count = 0
   writeVarInt(VarInt(this)) { count++ }
   return count
@@ -76,25 +76,25 @@ internal inline fun readVarInt(readByte: () -> Byte): VarInt {
   return VarInt(value.toInt())
 }
 
-fun BytePacketBuilder.writeUuid(uuid: Uuid) {
+public fun BytePacketBuilder.writeUuid(uuid: Uuid) {
   writeLong(uuid.mostSignificantBits)
   writeLong(uuid.leastSignificantBits)
 }
 
-fun ByteReadPacket.readUuid(): Uuid {
+public fun ByteReadPacket.readUuid(): Uuid {
   val mostSignificantBits = readLong()
   val leastSignificantBits = readLong()
 
   return Uuid(mostSignificantBits, leastSignificantBits)
 }
 
-fun BytePacketBuilder.writeString(string: String) {
+public fun BytePacketBuilder.writeString(string: String) {
   val bytes = string.toByteArray()
   writeVarInt(bytes.size)
   writeFully(bytes)
 }
 
-fun ByteReadPacket.readString(max: Int = -1): String {
+public fun ByteReadPacket.readString(max: Int = -1): String {
   val size = readVarInt().toInt()
   return when {
     max == -1 -> readBytes(size).decodeToString()

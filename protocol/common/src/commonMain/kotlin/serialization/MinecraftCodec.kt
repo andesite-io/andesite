@@ -64,8 +64,8 @@ import kotlin.reflect.typeOf
  * println(packet)
  * ```
  */
-class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
-  override val serializersModule = configuration.serializersModule
+public class MinecraftCodec(public val configuration: ProtocolConfiguration) : BinaryFormat {
+  override val serializersModule: SerializersModule = configuration.serializersModule
 
   /**
    * Decodes a packet from a byte array.
@@ -74,10 +74,7 @@ class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
    * @param bytes The byte array to decode.
    * @return The decoded packet.
    */
-  override fun <T> decodeFromByteArray(
-    deserializer: DeserializationStrategy<T>,
-    bytes: ByteArray
-  ): T {
+  override fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, bytes: ByteArray): T {
     return ProtocolDecoderImpl(ByteReadPacket(bytes), configuration)
       .decodeSerializableValue(deserializer)
   }
@@ -95,42 +92,45 @@ class MinecraftCodec(val configuration: ProtocolConfiguration) : BinaryFormat {
     }.readBytes()
   }
 
-  companion object Versions
+  public companion object Versions
 }
 
-typealias CodecBuilder = MinecraftCodecBuilder.() -> Unit
+public typealias CodecBuilder = MinecraftCodecBuilder.() -> Unit
 
-val DefaultProtocolConfiguration = ProtocolConfiguration(protocolVersion = -1)
+public val DefaultProtocolConfiguration: ProtocolConfiguration = ProtocolConfiguration(protocolVersion = -1)
 
-fun MinecraftCodec(from: ProtocolConfiguration = DefaultProtocolConfiguration, builder: CodecBuilder): MinecraftCodec {
+public fun MinecraftCodec(
+  from: ProtocolConfiguration = DefaultProtocolConfiguration,
+  builder: CodecBuilder,
+): MinecraftCodec {
   return MinecraftCodecBuilder(from).apply(builder).build()
 }
 
-class RegistryBuilder(val serializersModule: SerializersModule) {
+public class RegistryBuilder(@PublishedApi internal val serializersModule: SerializersModule) {
   @PublishedApi
-  internal val value = mutableMapOf<Int, KType>()
+  internal val value: MutableMap<Int, KType> = mutableMapOf()
 
-  fun <A : Any> register(id: Int, type: KType) {
+  public fun <A : Any> register(id: Int, type: KType) {
     value[id] = type
   }
 
-  inline fun <reified A : Any> register() {
+  public inline fun <reified A : Any> register() {
     val serializer = serializersModule.serializer(typeOf<A>())
     value[extractPacketId(serializer.descriptor)] = typeOf<A>()
   }
 }
 
-class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
-  var protocolVersion: Int = configuration.protocolVersion
-  var protocolVariant: ProtocolVariant = configuration.protocolVariant
-  var json: Json = configuration.json
-  var nbt: Nbt = configuration.nbt
-  var serializersModule: SerializersModule = configuration.serializersModule
-  var encryption: Boolean = configuration.encryption
-  var encodeDefaults: Boolean = configuration.encodeDefaults
-  var packetRegistry: Map<Int, KType> = configuration.packetRegistry
+public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
+  public var protocolVersion: Int = configuration.protocolVersion
+  public var protocolVariant: ProtocolVariant = configuration.protocolVariant
+  public var json: Json = configuration.json
+  public var nbt: Nbt = configuration.nbt
+  public var serializersModule: SerializersModule = configuration.serializersModule
+  public var encryption: Boolean = configuration.encryption
+  public var encodeDefaults: Boolean = configuration.encodeDefaults
+  public var packetRegistry: Map<Int, KType> = configuration.packetRegistry
 
-  fun packetRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
+  public fun createPacketRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
     val registry = RegistryBuilder(serializersModule).apply(builder)
 
     return registry.value

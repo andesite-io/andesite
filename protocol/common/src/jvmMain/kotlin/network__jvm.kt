@@ -20,8 +20,8 @@ import andesite.protocol.types.VarInt
 import io.ktor.utils.io.ByteReadChannel
 import io.ktor.utils.io.ByteWriteChannel
 
-suspend fun ByteWriteChannel.writeVarInt(varInt: VarInt): Unit = writeVarInt(varInt) {
+public suspend fun ByteWriteChannel.writeVarInt(varInt: VarInt): Unit = writeVarInt(varInt) {
   writeByte(it)
 }
 
-suspend fun ByteReadChannel.readVarInt(): VarInt = readVarInt { readByte() }
+public suspend fun ByteReadChannel.readVarInt(): VarInt = readVarInt { readByte() }

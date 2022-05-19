@@ -23,7 +23,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("LoginPacket")
 @ProtocolPacket(0x01)
-data class LoginPacket(
+public data class LoginPacket(
   val protocolVersion: Int,
   val chainData: String, // TODO: decode chain data
   val skinData: String,

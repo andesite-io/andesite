@@ -24,4 +24,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("KeepAlivePacket")
 @ProtocolPacket(0x21)
-data class KeepAlivePacket(val keepAliveId: Long) : JavaPacket
+public data class KeepAlivePacket(val keepAliveId: Long) : JavaPacket
