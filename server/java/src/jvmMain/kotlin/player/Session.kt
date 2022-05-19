@@ -14,7 +14,9 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class)
+@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class,
+  ExperimentalSerializationApi::class
+)
 
 package andesite.server.java.player
 
@@ -92,7 +94,7 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
 
   suspend fun <T : JavaPacket> sendPacket(serializer: SerializationStrategy<T>, packet: T) {
     val packetName = serializer.descriptor.serialName
-    val packetId = extractPacketId(packet::class)
+    val packetId = extractPacketId(serializer.descriptor)
 
     output.writePacket {
       val data = buildPacket {

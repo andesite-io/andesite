@@ -26,7 +26,7 @@ import kotlinx.serialization.Serializable
  * Determines packet id.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 annotation class ProtocolPacket(val id: Int)
 
@@ -34,7 +34,7 @@ annotation class ProtocolPacket(val id: Int)
  * Sets packet's field to decode with Json format.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolJson
 
@@ -42,7 +42,7 @@ annotation class ProtocolJson
  * Sets packet's field to decode with Nbt format.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolNbt
 
@@ -50,7 +50,7 @@ annotation class ProtocolNbt
  * Sets packet's field to decode string with [max] size.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.PROPERTY, AnnotationTarget.TYPE)
 annotation class ProtocolString(val max: Int)
 
@@ -58,7 +58,7 @@ annotation class ProtocolString(val max: Int)
  * Determines a number enum.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
 annotation class ProtocolEnum
 
@@ -66,7 +66,7 @@ annotation class ProtocolEnum
  * Determines a number value.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FIELD)
 annotation class ProtocolValue(val value: Int)
 
@@ -74,7 +74,7 @@ annotation class ProtocolValue(val value: Int)
  * Determines the int variant to the List or Enum.
  */
 @SerialInfo
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.PROPERTY)
 annotation class ProtocolVariant(val kind: Variant)
 
