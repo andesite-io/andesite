@@ -17,6 +17,7 @@
 package andesite.world.anvil
 
 import andesite.world.anvil.block.BlockRegistry
+import java.io.File
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -27,14 +28,6 @@ import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import net.benwoodworth.knbt.detect
 import org.apache.logging.log4j.kotlin.logger
-import java.io.File
-
-@Serializable
-@SerialName("")
-internal data class RegionChunk(
-  @SerialName("Level") val level: AnvilChunk,
-  @SerialName("DataVersion") val dataVersion: Int,
-)
 
 private val logger = logger("andesite.AnvilWorld")
 
@@ -82,7 +75,7 @@ fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
   val regions = fileRegions.mapIndexed { i, file ->
     val percentage = (i.toFloat() / fileRegions.size * 100).toInt()
     logger.info("Preparing region [$percentage%]")
-    
+
     val bytes = file.readBytes()
 
     if (bytes.isEmpty()) {
@@ -96,3 +89,10 @@ fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
 
   return AnvilWorld(regions.filterNotNull().toTypedArray())
 }
+
+@Serializable
+@SerialName("")
+internal data class RegionChunk(
+  @SerialName("Level") val level: AnvilChunk,
+  @SerialName("DataVersion") val dataVersion: Int,
+)

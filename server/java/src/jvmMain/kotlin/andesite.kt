@@ -26,14 +26,15 @@ import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.protocol.serializers.UuidSerializer
+import andesite.server.java.player.Session
+import andesite.server.java.player.receivePacket
 import andesite.world.anvil.AnvilWorld
 import andesite.world.anvil.block.BlockRegistry
 import andesite.world.anvil.block.readBlockRegistry
 import andesite.world.anvil.readAnvilWorld
-import andesite.server.java.player.Session
-import andesite.server.java.player.receivePacket
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
+import java.net.InetSocketAddress
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -46,7 +47,6 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import org.apache.logging.log4j.kotlin.logger
-import java.net.InetSocketAddress
 
 private val logger = logger("andesite.Main")
 
@@ -83,7 +83,10 @@ suspend fun startAndesite(): Unit = coroutineScope {
   val protocolVersion = codec.configuration.protocolVersion
   val minecraftVersion = extractMinecraftVersion(codec.configuration.protocolVersion)
 
-  logger.info("Set up minecraft codec with protocol version $protocolVersion and version $minecraftVersion")
+  logger.info(
+    "Set up minecraft codec with protocol version $protocolVersion " +
+      "and version $minecraftVersion",
+  )
   logger.info("Loaded ${blockRegistry.size} blocks")
   logger.info("Server listening connections at $address")
 

@@ -16,9 +16,9 @@
 
 package andesite.protocol.java.v756
 
-import andesite.protocol.ProtocolPacket
 import andesite.protocol.ProtocolEnum
 import andesite.protocol.ProtocolNbt
+import andesite.protocol.ProtocolPacket
 import andesite.protocol.ProtocolValue
 import andesite.protocol.ProtocolVariant
 import andesite.protocol.Variant
@@ -98,4 +98,3 @@ public enum class GameMode {
   @ProtocolValue(3)
   Spectator;
 }
-

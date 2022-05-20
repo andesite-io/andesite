@@ -30,10 +30,10 @@ import io.ktor.utils.io.core.isNotEmpty
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeShort
 import io.ktor.utils.io.core.writeUByte
-import net.benwoodworth.knbt.NbtCompound
 import kotlin.math.ceil
 import kotlin.math.log2
 import kotlin.math.max
+import net.benwoodworth.knbt.NbtCompound
 
 class PalettedContainer(val palette: Palette, val storage: BitStorage) {
   val bitsPerBlock = palette.bitsPerBlock
@@ -41,7 +41,8 @@ class PalettedContainer(val palette: Palette, val storage: BitStorage) {
   var nonEmptyBlockCount: Short = 0
     private set
 
-  val serializedSize: Int get() = 1 + palette.serializedSize + storage.size.countVarInt() + storage.data.size * 8
+  val serializedSize: Int
+    get() = 1 + palette.serializedSize + storage.size.countVarInt() + storage.data.size * 8
 
   fun blockOf(x: Int, y: Int, z: Int): Block {
     return blocks[(y and 0xF) * 256 + (z and 0xF) * 16 + (x and 0xF)]
@@ -76,7 +77,7 @@ internal fun readBlockPalette(
   blockPalette: List<NbtCompound>,
 ): PalettedContainer {
   val bits = max(4.0, log2(ceil(blockPalette.size.toDouble()))).toInt()
-  
+
   val size = 1 shl 4 * 3
 
   val palette = when {
@@ -109,6 +110,6 @@ internal fun readBlockPalette(
     }
     else -> error("Can not get palette from $bits bits")
   }
-  
+
   return palette.apply { recount() }
 }

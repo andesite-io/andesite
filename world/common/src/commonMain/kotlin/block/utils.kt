@@ -49,7 +49,7 @@ fun NbtTag.toJsonElement(): JsonElement {
     is NbtCompound -> buildJsonObject {
       forEach { (key, value) -> put(key, value.toJsonElement()) }
     }
-    is NbtList<*> -> buildJsonArray { 
+    is NbtList<*> -> buildJsonArray {
       forEach { add(it.toJsonElement()) }
     }
     is NbtFloat -> JsonPrimitive(value)

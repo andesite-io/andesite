@@ -16,8 +16,8 @@
 
 package andesite.player
 
-import com.benasher44.uuid.Uuid
 import andesite.protocol.java.JavaPacket
+import com.benasher44.uuid.Uuid
 
 sealed interface GamePlayer {
   val id: Uuid

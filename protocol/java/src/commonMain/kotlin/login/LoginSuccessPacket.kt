@@ -16,9 +16,9 @@
 
 package andesite.protocol.java.login
 
-import com.benasher44.uuid.Uuid
 import andesite.protocol.ProtocolPacket
 import andesite.protocol.java.JavaPacket
+import com.benasher44.uuid.Uuid
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -26,4 +26,4 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("LoginSuccessPacket")
 @ProtocolPacket(0x02)
-public data class LoginSuccessPacket(val id: @Contextual Uuid, val username: String) : JavaPacket 
+public data class LoginSuccessPacket(val id: @Contextual Uuid, val username: String) : JavaPacket

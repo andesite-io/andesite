@@ -16,9 +16,9 @@
 
 package andesite.server.java.player
 
-import com.benasher44.uuid.Uuid
 import andesite.player.JavaPlayer
 import andesite.protocol.java.JavaPacket
+import com.benasher44.uuid.Uuid
 
 internal class JavaPlayerImpl(
   override val id: Uuid,

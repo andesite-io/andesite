@@ -98,7 +98,7 @@ class AnvilChunkSectionSerializer(
           else -> error("Unexpected index: $index")
         }
       }
-      
+
       val blocks = when {
         blockStates == null -> directPalette(registry)
         palette == null -> directPalette(registry)

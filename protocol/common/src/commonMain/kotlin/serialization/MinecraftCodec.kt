@@ -20,6 +20,8 @@ import andesite.protocol.extractPacketId
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
@@ -27,8 +29,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import net.benwoodworth.knbt.Nbt
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 
 /**
  * Minecraft's protocol codec.
@@ -74,7 +74,10 @@ public class MinecraftCodec(public val configuration: ProtocolConfiguration) : B
    * @param bytes The byte array to decode.
    * @return The decoded packet.
    */
-  override fun <T> decodeFromByteArray(deserializer: DeserializationStrategy<T>, bytes: ByteArray): T {
+  override fun <T> decodeFromByteArray(
+    deserializer: DeserializationStrategy<T>,
+    bytes: ByteArray
+  ): T {
     return ProtocolDecoderImpl(ByteReadPacket(bytes), configuration)
       .decodeSerializableValue(deserializer)
   }
@@ -97,7 +100,8 @@ public class MinecraftCodec(public val configuration: ProtocolConfiguration) : B
 
 public typealias CodecBuilder = MinecraftCodecBuilder.() -> Unit
 
-public val DefaultProtocolConfiguration: ProtocolConfiguration = ProtocolConfiguration(protocolVersion = -1)
+public val DefaultProtocolConfiguration: ProtocolConfiguration =
+  ProtocolConfiguration(protocolVersion = -1)
 
 public fun MinecraftCodec(
   from: ProtocolConfiguration = DefaultProtocolConfiguration,

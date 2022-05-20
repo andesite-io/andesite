@@ -16,8 +16,8 @@
 
 package andesite.protocol.java.v756
 
-import andesite.protocol.ProtocolPacket
 import andesite.protocol.ProtocolNbt
+import andesite.protocol.ProtocolPacket
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.types.VarInt
 import kotlinx.serialization.SerialName

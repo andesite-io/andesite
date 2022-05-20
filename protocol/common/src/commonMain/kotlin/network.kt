@@ -16,8 +16,8 @@
 
 package andesite.protocol
 
-import com.benasher44.uuid.Uuid
 import andesite.protocol.types.VarInt
+import com.benasher44.uuid.Uuid
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readBytes
@@ -29,7 +29,8 @@ import kotlin.experimental.and
 
 public fun BytePacketBuilder.writeVarInt(varint: Int): Unit = writeVarInt(VarInt(varint))
 
-public fun BytePacketBuilder.writeVarInt(varint: VarInt): Unit = writeVarInt(varint) { writeByte(it) }
+public fun BytePacketBuilder.writeVarInt(varint: VarInt): Unit =
+  writeVarInt(varint) { writeByte(it) }
 
 public fun ByteReadPacket.readVarInt(): VarInt = readVarInt { readByte() }
 

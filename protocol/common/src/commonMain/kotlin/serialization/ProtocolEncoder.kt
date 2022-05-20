@@ -49,15 +49,18 @@ import net.benwoodworth.knbt.Nbt
 public interface ProtocolEncoder : Encoder, CompositeEncoder {
   public val nbt: Nbt
   public val json: Json
-  
+
   public fun <T : Any> encodeNbt(serializer: SerializationStrategy<T>, value: T)
-  
+
   public fun <T> encodeJson(serializer: SerializationStrategy<T>, value: T)
 }
 
 public fun Encoder.asProtocolEncoder(): ProtocolEncoder {
   return this as? ProtocolEncoder
-    ?: error("This serializer can be used only with Protocol format. Expected Encoder to be ProtocolEncoder, got ${this::class}")
+    ?: error(
+      "This serializer can be used only with Protocol format. " +
+        "Expected Encoder to be ProtocolEncoder, got ${this::class}",
+    )
 }
 
 internal class ProtocolEncoderImpl(
@@ -92,7 +95,10 @@ internal class ProtocolEncoderImpl(
         .filterIsInstance<ProtocolValue>()
         .singleOrNull()
         ?.value
-        ?: error("Can not encode enum ${enumDescriptor.serialName} index: 0 cause it does not have the @ProtocolValue annotation")
+        ?: error(
+          "Can not encode enum ${enumDescriptor.serialName} index: 0" +
+            " cause it does not have the @ProtocolValue annotation",
+        )
 
       encodeType(variant, value)
     } else {
@@ -143,7 +149,9 @@ internal class ProtocolEncoderImpl(
           .filterIsInstance<ProtocolString>()
           .first()
 
-        require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
+        require(value.length <= string.max) {
+          "String length ${value.length} is greater than max length ${string.max}"
+        }
       }
       else -> encodeString(value)
     }
@@ -209,7 +217,8 @@ internal class ProtocolEncoderImpl(
       }
     } catch (exception: SerializationException) {
       throw SerializationException(
-        "${exception::class.simpleName} while encoding ${serializer.descriptor.serialName} and index $index",
+        "${exception::class.simpleName} while encoding ${serializer.descriptor.serialName}" +
+          " and index $index",
         exception,
       )
     }
@@ -227,6 +236,7 @@ internal class ProtocolEncoderImpl(
   }
 
   override fun endStructure(descriptor: SerialDescriptor) {
+    // Nothing to do
   }
 
   private fun encodeType(variant: Variant, value: Int) {

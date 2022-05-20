@@ -37,9 +37,11 @@ public data class DimensionCodec(
 
 @Serializable
 @SerialName("Registry")
-public data class Registry<T : Any>(@SerialName("type") val kind: String, val value: List<Entry<T>>) {
+public data class Registry<T : Any>(
+  @SerialName("type") val kind: String,
+  val value: List<Entry<T>>
+) {
   @Serializable
   @SerialName("Registry.Entry")
   public data class Entry<T : Any>(val name: Identifier, val id: Int, val element: T)
 }
-

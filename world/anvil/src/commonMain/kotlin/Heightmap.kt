@@ -52,7 +52,7 @@ object HeightmapKeySerializer : KSerializer<HeightmapKind> {
 
   override fun deserialize(decoder: Decoder): HeightmapKind {
     val kind = decoder.decodeString()
-    
+
     return HeightmapKind.values().find { it.kind == kind } ?: error("Unknown heightmap kind $kind")
   }
 

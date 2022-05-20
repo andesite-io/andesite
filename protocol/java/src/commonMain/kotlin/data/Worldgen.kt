@@ -33,7 +33,7 @@ public data class Worldgen(
   val category: String,
   val effects: Effects,
   val particle: Particle? = null,
-  
+
   @EncodeDefault
   val precipitation: String = "none",
 

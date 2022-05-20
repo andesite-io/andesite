@@ -18,7 +18,6 @@
 
 package andesite.server.java
 
-import com.benasher44.uuid.uuid4
 import andesite.player.JavaPlayer
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.handshake.HandshakePacket
@@ -39,20 +38,21 @@ import andesite.protocol.java.v756.ServerKeepAlivePacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
-import andesite.world.Location
 import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.awaitPacket
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
+import andesite.world.Location
+import com.benasher44.uuid.uuid4
 import io.ktor.network.sockets.isClosed
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.logger
-import kotlin.time.Duration.Companion.seconds
-import kotlin.time.ExperimentalTime
 
 private val logger = logger("andesite.Handlers")
 

@@ -25,14 +25,14 @@ import net.benwoodworth.knbt.buildNbtCompound
 
 data class Block(
   val id: Identifier,
-  val properties: JsonObject = buildJsonObject {  },
+  val properties: JsonObject = buildJsonObject { },
 ) {
   val isAir: Boolean get() = id.equals("minecraft:air")
 }
 
 fun NbtCompound.toBlock(): Block {
   val id = get("Name") as NbtString? ?: NbtString("minecraft:air")
-  val properties = get("Properties") as NbtCompound? ?: buildNbtCompound {  }
-  
+  val properties = get("Properties") as NbtCompound? ?: buildNbtCompound { }
+
   return Block(Identifier(id.value), properties.toJsonObject())
 }

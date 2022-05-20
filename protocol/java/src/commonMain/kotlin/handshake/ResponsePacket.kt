@@ -16,10 +16,10 @@
 
 package andesite.protocol.java.handshake
 
-import andesite.protocol.ProtocolPacket
 import andesite.protocol.ProtocolJson
-import andesite.protocol.misc.Chat
+import andesite.protocol.ProtocolPacket
 import andesite.protocol.java.JavaPacket
+import andesite.protocol.misc.Chat
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

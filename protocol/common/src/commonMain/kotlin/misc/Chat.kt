@@ -24,10 +24,10 @@ import kotlinx.serialization.Serializable
 public class Chat(public val text: String) {
   public companion object {
     public const val ColorCode: String = "\u00A7"
-    
+
     /**
      * Gets a [Chat] object from a string converting color codes
-     * 
+     *
      * TODO: convert color codes
      */
     public fun of(text: String): Chat {

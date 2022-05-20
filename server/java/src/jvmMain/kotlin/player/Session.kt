@@ -14,7 +14,8 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class, ExperimentalSerializationApi::class,
+@file:OptIn(
+  ExperimentalSerializationApi::class, ExperimentalSerializationApi::class,
   ExperimentalSerializationApi::class
 )
 
@@ -74,7 +75,10 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
       ?: andesiteError("Decoded packet `$name` is null")
 
     return javaPacket as? JavaPacket
-      ?: andesiteError("Packet `$name` must be a JavaPacket, received ${javaPacket::class.simpleName}")
+      ?: andesiteError(
+        "Packet `$name` must be a JavaPacket, " +
+          "received ${javaPacket::class.simpleName}",
+      )
   }
 
   suspend fun <T : JavaPacket> receivePacket(deserializer: DeserializationStrategy<T>): T {

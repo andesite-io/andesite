@@ -20,6 +20,8 @@ package andesite.world.anvil.block
 
 import andesite.protocol.misc.Identifier
 import andesite.world.block.Block
+import kotlin.math.ceil
+import kotlin.math.log2
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -32,8 +34,6 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.serializer
-import kotlin.math.ceil
-import kotlin.math.log2
 
 typealias StateId = Int
 
@@ -61,7 +61,7 @@ class BlockRegistry(private val map: Map<Identifier, BlockPaletteEntry>) :
 
   val totalStates: Int =
     flatMap { it.value.states }.maxOfOrNull { it.id } ?: error("No states found")
-  
+
   fun blockById(stateId: StateId): Block? {
     for ((blockId, entry) in map) {
       for (state in entry.states) {

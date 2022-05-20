@@ -25,10 +25,11 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 public object UuidSerializer : KSerializer<Uuid> {
-  override val descriptor: SerialDescriptor = buildClassSerialDescriptor("andesite.protocol.serializers.Uuid") {
-    element<Long>("mostSignificantBits")
-    element<Long>("leastSignificantBits")
-  }
+  override val descriptor: SerialDescriptor =
+    buildClassSerialDescriptor("andesite.protocol.serializers.Uuid") {
+      element<Long>("mostSignificantBits")
+      element<Long>("leastSignificantBits")
+    }
 
   override fun serialize(encoder: Encoder, value: Uuid) {
     encoder.encodeLong(value.mostSignificantBits)

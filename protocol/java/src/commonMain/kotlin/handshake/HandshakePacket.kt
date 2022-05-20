@@ -16,8 +16,8 @@
 
 package andesite.protocol.java.handshake
 
-import andesite.protocol.ProtocolPacket
 import andesite.protocol.ProtocolEnum
+import andesite.protocol.ProtocolPacket
 import andesite.protocol.ProtocolValue
 import andesite.protocol.ProtocolVariant
 import andesite.protocol.Variant

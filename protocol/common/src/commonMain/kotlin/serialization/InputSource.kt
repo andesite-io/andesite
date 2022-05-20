@@ -28,7 +28,7 @@ internal class InputSource(val input: ByteReadPacket) : Source {
 
     return byteCount
   }
-  
+
   override fun close(): Unit = input.close()
 
   override fun timeout(): Timeout = Timeout.NONE

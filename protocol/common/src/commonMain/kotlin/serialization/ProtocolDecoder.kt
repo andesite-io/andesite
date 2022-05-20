@@ -57,7 +57,10 @@ public interface ProtocolDecoder : Decoder, CompositeDecoder {
 
 public fun Decoder.asProtocolDecoder(): ProtocolDecoder {
   return this as? ProtocolDecoder
-    ?: error("This deserializer can be used only with Protocol format. Expected Decoder to be ProtocolDecoder, got ${this::class}")
+    ?: error(
+      "This deserializer can be used only with Protocol format. " +
+        "Expected Decoder to be ProtocolDecoder, got ${this::class}",
+    )
 }
 
 internal class ProtocolDecoderImpl(
@@ -101,7 +104,10 @@ internal class ProtocolDecoderImpl(
             ?.value
         }
         ?.index
-        ?: error("Can not decode ${enumDescriptor.serialName} cause value index: $value does not exist")
+        ?: error(
+          "Can not decode ${enumDescriptor.serialName} cause value index: " +
+            "$value does not exist",
+        )
     } else {
       enumDescriptor.getElementIndex(packet.readString())
     }
@@ -119,13 +125,14 @@ internal class ProtocolDecoderImpl(
 
       val value = decodeString()
 
-      require(value.length <= string.max) { "String length ${value.length} is greater than max length ${string.max}" }
+      require(value.length <= string.max) {
+        "String length ${value.length} is greater than max length ${string.max}"
+      }
 
       value
     }
     else -> decodeString()
   }
-
 
   override fun decodeBooleanElement(descriptor: SerialDescriptor, index: Int): Boolean =
     decodeBoolean()

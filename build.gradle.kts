@@ -14,9 +14,14 @@
  *    limitations under the License.
  */
 
+import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+
 plugins {
   kotlin("multiplatform") version "1.6.21"
   kotlin("plugin.serialization") version "1.6.21"
+  id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+  id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
 group = "com.gabrielleeg1"
@@ -25,9 +30,23 @@ version = "1.0-SNAPSHOT"
 allprojects {
   apply(plugin = "org.jetbrains.kotlin.multiplatform")
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+  apply(plugin = "org.jlleitschuh.gradle.ktlint")
+  apply(plugin = "io.gitlab.arturbosch.detekt")
 
   repositories {
     mavenCentral()
+  }
+  configure<KtlintExtension> {
+    android.set(false)
+    additionalEditorconfigFile.set(rootProject.file(".editorconfig"))
+  }
+
+  configure<DetektExtension> {
+    buildUponDefaultConfig = true
+    allRules = false
+
+    config = files("${rootProject.projectDir}/config/detekt.yml")
+    baseline = file("${rootProject.projectDir}/config/baseline.xml")
   }
 
   kotlin {
