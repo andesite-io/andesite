@@ -37,7 +37,6 @@ import net.benwoodworth.knbt.Nbt
  *
  * Example:
  * ```kotlin
- *
  * @ProtocolPacket(0x00)
  * @Serializable
  * data class HandshakePacket(
