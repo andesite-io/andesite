@@ -19,8 +19,8 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-  kotlin("multiplatform") version "1.6.21" apply false
-  kotlin("plugin.serialization") version "1.6.21" apply false
+  kotlin("multiplatform") version "1.7.0-Beta" apply false
+  kotlin("plugin.serialization") version "1.7.0-Beta" apply false
   id("org.jlleitschuh.gradle.ktlint") version "10.2.1" apply false
   id("io.gitlab.arturbosch.detekt") version "1.19.0" apply false
 }
