@@ -15,29 +15,27 @@
  */
 
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
 plugins {
-  kotlin("multiplatform") version "1.7.0-Beta" apply false
-  kotlin("plugin.serialization") version "1.7.0-Beta" apply false
-  id("org.jlleitschuh.gradle.ktlint") version "10.2.1" apply false
-  id("io.gitlab.arturbosch.detekt") version "1.19.0" apply false
+  kotlin("multiplatform") version "1.6.21"
+  kotlin("plugin.serialization") version "1.6.21"
+  id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
+  id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
-subprojects {
+group = "com.gabrielleeg1"
+version = "1.0-SNAPSHOT"
+
+allprojects {
   apply(plugin = "org.jetbrains.kotlin.multiplatform")
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
   apply(plugin = "io.gitlab.arturbosch.detekt")
 
-  group = "com.gabrielleeg1"
-  version = "0.0.1-dev"
-
   repositories {
     mavenCentral()
   }
-
   configure<KtlintExtension> {
     android.set(false)
     additionalEditorconfigFile.set(rootProject.file(".editorconfig"))
@@ -51,7 +49,7 @@ subprojects {
     baseline = file("${rootProject.projectDir}/config/baseline.xml")
   }
 
-  configure<KotlinMultiplatformExtension> {
+  kotlin {
     jvm {
       compilations.all {
         kotlinOptions.jvmTarget = "16"
