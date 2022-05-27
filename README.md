@@ -9,12 +9,14 @@ Simple library for building [Minecraft Protocol](https://wiki.vg/Main_Page) for 
 Edition.
 
 ### Implemented versions
+
 The following versions of Minecraft are supported:
 
 - [Java](protocol/java)
   - [v756](protocol/java/v756)
 
 ### Installation
+
 You can use the gradle groovy with the following code:
 
 ```groovy
@@ -42,9 +44,11 @@ dependencies {
 ```
 
 ### Samples
+
 Samples to use with andesite
 
 #### Java protocol
+
 This is a simple example of using `andesite:protocol`:
 
 - PS: The example is for [v756 protocol](https://wiki.vg/index.php?title=Protocol&oldid=16918)
@@ -77,6 +81,7 @@ println(packet)
 ```
 
 #### Anvil world
+
 This is a simple example of loading an anvil world with `andesite:world:anvil`:
 
 - PS: The example is for [v756 protocol](https://wiki.vg/index.php?title=Protocol&oldid=16918)
@@ -97,6 +102,7 @@ println(anvilWorld)
 ```
 
 ### Licensing
+
 This project is using the [Apache 2 License](LICENSE).
 
 ```

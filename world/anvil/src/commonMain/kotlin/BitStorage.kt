@@ -98,7 +98,9 @@ private class BitStorageImpl(
 
     val dataSize = (size + valuesPerLong - 1) / valuesPerLong
     when {
-      data != null && data.size != dataSize -> error("Invalid data length, expecting $dataSize, but got ${data.size}")
+      data != null && data.size != dataSize -> {
+        error("Invalid data length, expecting $dataSize, but got ${data.size}")
+      }
       data != null -> this.data = data
       else -> this.data = LongArray(dataSize)
     }
