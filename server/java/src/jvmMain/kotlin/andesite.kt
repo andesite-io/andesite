@@ -34,9 +34,13 @@ import andesite.world.anvil.block.readBlockRegistry
 import andesite.world.anvil.readAnvilWorld
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
+import io.ktor.network.sockets.isClosed
+import io.ktor.utils.io.ClosedWriteChannelException
 import java.net.InetSocketAddress
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -98,6 +102,9 @@ suspend fun startAndesite(): Unit = coroutineScope {
     val exceptionHandler = CoroutineExceptionHandler { _, error ->
       when (error) {
         is AndesiteError -> logger.error(error::message)
+        is ClosedReceiveChannelException, is ClosedWriteChannelException -> {
+          // the connection just ended, no error to handle.
+        }
         else -> logger.error(error) {
           "Error thrown while handling connection ${session.socket.remoteAddress}"
         }
@@ -118,6 +125,10 @@ suspend fun startAndesite(): Unit = coroutineScope {
         }
       } catch (error: AndesiteError) {
         logger.error(error::message)
+      } catch (error: Throwable) {
+        if (session.socket.isClosed) {
+          cancel("Connection closed", AndesiteError("Connection closed", error))
+        }
       }
     }
   }

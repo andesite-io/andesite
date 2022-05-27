@@ -16,7 +16,8 @@
 
 package andesite
 
-class AndesiteError(override val message: String) : Exception()
+class AndesiteError(override val message: String, cause: Throwable? = null) :
+  Exception(message, cause)
 
 fun andesiteError(message: String, vararg args: Any?): Nothing {
   throw AndesiteError(message.format(args = args))

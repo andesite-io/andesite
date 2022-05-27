@@ -14,16 +14,33 @@
  *    limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package andesite.server.java.player
 
 import andesite.protocol.java.JavaPacket
-import kotlinx.coroutines.flow.collect
+import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.serializer
 
-internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket() {
-  return inboundPacketChannel.consumeAsFlow().filterIsInstance<T>().collect()
+internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket(timeout: Duration): T? {
+  return try {
+    withTimeoutOrNull(timeout) {
+      inboundPacketChannel
+        .consumeAsFlow()
+        .filterIsInstance<T>()
+        .toList()
+        .firstOrNull()
+    }
+  } catch (_: TimeoutCancellationException) {
+    null // temp workaround
+  }
 }
 
 internal suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T {

@@ -127,13 +127,14 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
   }
 
   launch(Job()) {
-    while (!session.socket.isClosed) {
+    while (session.socket.socketContext.isActive) {
       delay(20.seconds)
 
       try {
         session.sendPacket(KeepAlivePacket(currentTimeMillis()))
-        session.awaitPacket<ServerKeepAlivePacket>()
+        session.awaitPacket<ServerKeepAlivePacket>(1.seconds)
       } catch (error: Throwable) {
+        if (!session.socket.socketContext.isActive) break
         logger.error(error) { "Player [$player] keep alive thread thrown an error" }
       }
     }
