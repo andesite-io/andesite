@@ -26,6 +26,7 @@ import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.protocol.serializers.UuidSerializer
+import andesite.server.java.game.handlePlay
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.world.anvil.AnvilWorld
