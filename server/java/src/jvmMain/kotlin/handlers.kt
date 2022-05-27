@@ -34,6 +34,7 @@ import andesite.protocol.java.v756.JoinGamePacket
 import andesite.protocol.java.v756.KeepAlivePacket
 import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
+import andesite.protocol.java.v756.ServerChatMessagePacket
 import andesite.protocol.java.v756.ServerKeepAlivePacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.Identifier
@@ -48,9 +49,14 @@ import com.benasher44.uuid.uuid4
 import io.ktor.network.sockets.isClosed
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.logger
 
@@ -116,8 +122,13 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
     ),
   )
 
-  val spawn = Location(0.0, 10.0, 0.0, 0.0f, 0.0f)
+  listenPackets(session)
+  handleKeepAlive(session, player)
+  handleChunkMovement(session)
+  handleChat(session, player)
+}
 
+internal fun CoroutineScope.listenPackets(session: Session) {
   launch(Job()) {
     while (!session.socket.isClosed) {
       val packet = session.acceptPacket() ?: continue
@@ -125,7 +136,9 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
       session.inboundPacketChannel.send(packet)
     }
   }
+}
 
+internal fun CoroutineScope.handleKeepAlive(session: Session, player: JavaPlayer) {
   launch(Job()) {
     while (session.socket.socketContext.isActive) {
       delay(20.seconds)
@@ -139,6 +152,10 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
       }
     }
   }
+}
+
+internal fun CoroutineScope.handleChunkMovement(session: Session) {
+  val spawn = Location(0.0, 10.0, 0.0, 0.0f, 0.0f)
 
   launch(Job()) {
     for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
@@ -148,5 +165,15 @@ internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = co
         session.sendPacket(chunk.toPacket())
       }
     }
+  }
+}
+
+internal fun CoroutineScope.handleChat(session: Session, player: JavaPlayer) {
+  launch(Job()) {
+    session.inboundPacketChannel
+      .consumeAsFlow()
+      .filterIsInstance<ServerChatMessagePacket>()
+      .onEach { packet -> player.sendMessage(packet.message) }
+      .collect()
   }
 }

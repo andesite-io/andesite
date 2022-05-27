@@ -18,6 +18,9 @@ package andesite.server.java.player
 
 import andesite.player.JavaPlayer
 import andesite.protocol.java.JavaPacket
+import andesite.protocol.java.v756.ChatMessagePacket
+import andesite.protocol.java.v756.ChatPosition
+import andesite.protocol.misc.Chat
 import com.benasher44.uuid.Uuid
 
 internal class JavaPlayerImpl(
@@ -26,6 +29,10 @@ internal class JavaPlayerImpl(
   override val username: String,
   val session: Session,
 ) : JavaPlayer {
+  override suspend fun sendMessage(chat: Chat) {
+    session.sendPacket(ChatMessagePacket(chat, ChatPosition.Chat, Uuid.randomUUID()))
+  }
+
   override suspend fun sendPacket(packet: JavaPacket, queue: Boolean) {
     session.sendPacket(JavaPacket.serializer(), packet)
   }

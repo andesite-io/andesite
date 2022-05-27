@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,24 +14,14 @@
  *    limitations under the License.
  */
 
-package andesite.player
+package andesite.protocol.java.v756
 
+import andesite.protocol.ProtocolPacket
 import andesite.protocol.java.JavaPacket
-import andesite.protocol.misc.Chat
-import com.benasher44.uuid.Uuid
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-sealed interface GamePlayer {
-  val id: Uuid
-  val protocol: Int
-  val username: String
-
-  suspend fun sendMessage(chat: Chat)
-
-  suspend fun sendMessage(message: String): Unit = sendMessage(Chat.of(message))
-}
-
-interface JavaPlayer : GamePlayer {
-  suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
-}
-
-interface BedrockPlayer : GamePlayer
+@Serializable
+@SerialName("ChatMessagePacket")
+@ProtocolPacket(0x03)
+public data class ServerChatMessagePacket(val message: String) : JavaPacket

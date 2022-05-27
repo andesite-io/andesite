@@ -34,6 +34,7 @@ public fun Versions.v756(
       register<KeepAlivePacket>()
       register<PlayerPositionAndLookPacket>()
       register<ServerKeepAlivePacket>()
+      register<ServerChatMessagePacket>()
     }
 
     builder()
