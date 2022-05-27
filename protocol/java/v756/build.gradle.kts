@@ -24,8 +24,6 @@ kotlin {
     else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
   }
 
-  js()
-
   explicitApi()
 
   sourceSets {
