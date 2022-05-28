@@ -19,25 +19,13 @@
 package andesite.java.player
 
 import andesite.protocol.java.JavaPacket
-import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
-import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.withTimeoutOrNull
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.serializer
 
-internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket(timeout: Duration): T? {
-  return try {
-    withTimeoutOrNull(timeout) {
-      inboundPacketFlow
-        .filterIsInstance<T>()
-        .toList()
-        .firstOrNull()
-    }
-  } catch (_: TimeoutCancellationException) {
-    null // temp workaround
-  }
+internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket(): T? {
+  return inboundPacketFlow.filterIsInstance<T>().firstOrNull()
 }
 
 internal suspend inline fun <reified T : JavaPacket> Session.receivePacket(): T {
