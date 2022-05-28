@@ -90,7 +90,7 @@ suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob())
         val player by placeholder(player.username) {
           hoverEvent = ShowText("@${player.username}")
 
-          hex("#32a852")
+          hex("32a852")
         }
       }
     }
@@ -102,7 +102,7 @@ suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob())
         val player by placeholder(player.username) {
           hoverEvent = ShowText("@${player.username}")
 
-          hex("#32a852")
+          hex("32a852")
         }
       }
     }

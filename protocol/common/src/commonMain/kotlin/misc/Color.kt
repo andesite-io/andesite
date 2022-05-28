@@ -61,7 +61,10 @@ internal object ColorSerializer : KSerializer<Color> {
     PrimitiveSerialDescriptor("Color", PrimitiveKind.STRING)
 
   override fun serialize(encoder: Encoder, value: Color) {
-    encoder.encodeString(value.text)
+    when (value) {
+      is MinecraftColor -> encoder.encodeString(value.text)
+      is HexColor -> encoder.encodeString("#${value.text}")
+    }
   }
 
   override fun deserialize(decoder: Decoder): Color {
