@@ -51,10 +51,10 @@ public sealed class Color {
 }
 
 @Serializable
-public class MinecraftColor(override val text: String) : Color()
+public data class MinecraftColor(override val text: String) : Color()
 
 @Serializable
-public class HexColor(override val text: String) : Color()
+public data class HexColor(override val text: String) : Color()
 
 internal object ColorSerializer : KSerializer<Color> {
   override val descriptor: SerialDescriptor =
