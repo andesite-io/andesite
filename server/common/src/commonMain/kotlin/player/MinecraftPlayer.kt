@@ -20,7 +20,7 @@ import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
 import com.benasher44.uuid.Uuid
 
-public sealed interface GamePlayer {
+public sealed interface MinecraftPlayer {
   public val id: Uuid
   public val protocol: Int
   public val username: String
@@ -30,8 +30,8 @@ public sealed interface GamePlayer {
   public suspend fun sendMessage(message: String): Unit = sendMessage(Chat.of(message))
 }
 
-public interface JavaPlayer : GamePlayer {
+public interface JavaPlayer : MinecraftPlayer {
   public suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
 }
 
-public interface BedrockPlayer : GamePlayer
+public interface BedrockPlayer : MinecraftPlayer

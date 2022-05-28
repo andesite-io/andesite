@@ -26,9 +26,12 @@ import andesite.protocol.java.handshake.Version
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
-import andesite.server.java.server.JavaGameServer
+import andesite.server.java.server.JavaMinecraftServer
 
-internal suspend fun JavaGameServer.handleStatus(session: Session, handshake: HandshakePacket) {
+internal suspend fun JavaMinecraftServer.handleStatus(
+  session: Session,
+  handshake: HandshakePacket,
+) {
   session.sendPacket(
     ResponsePacket(
       Response(

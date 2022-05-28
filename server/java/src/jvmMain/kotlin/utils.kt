@@ -20,7 +20,7 @@ package andesite.server.java
 
 import andesite.protocol.java.v756.ChunkDataPacket
 import andesite.protocol.types.VarInt
-import andesite.server.GameServer
+import andesite.server.MinecraftServer
 import andesite.world.Chunk
 import andesite.world.anvil.AnvilChunk
 import andesite.world.anvil.HeightmapUsage
@@ -53,7 +53,7 @@ inline fun <reified T : Any> Nbt.decodeRootTag(file: File): T {
   )
 }
 
-internal suspend fun GameServer.convertChunk(chunk: Chunk): ChunkDataPacket {
+internal suspend fun MinecraftServer.convertChunk(chunk: Chunk): ChunkDataPacket {
   require(chunk is AnvilChunk)
 
   val heightmaps = chunk.heightmaps

@@ -22,7 +22,7 @@
 package andesite.server.java.player
 
 import andesite.andesiteError
-import andesite.player.GamePlayer
+import andesite.player.MinecraftPlayer
 import andesite.protocol.ProtocolPacket
 import andesite.protocol.extractPacketId
 import andesite.protocol.java.JavaPacket
@@ -48,7 +48,7 @@ import org.apache.logging.log4j.kotlin.Logging
 internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
   companion object : Logging
 
-  var player: GamePlayer? = null
+  var player: MinecraftPlayer? = null
 
   val input = socket.openReadChannel()
   val output = socket.openWriteChannel()

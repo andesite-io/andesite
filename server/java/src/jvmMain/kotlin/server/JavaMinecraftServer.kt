@@ -25,7 +25,7 @@ import andesite.protocol.java.handshake.NextState
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
-import andesite.server.GameServer
+import andesite.server.MinecraftServer
 import andesite.server.Motd
 import andesite.server.java.decodeRootTag
 import andesite.server.java.handlers.handleLogin
@@ -51,7 +51,7 @@ import kotlinx.coroutines.runBlocking
 import net.benwoodworth.knbt.Nbt
 import org.apache.logging.log4j.kotlin.Logging
 
-internal class JavaGameServer(
+internal class JavaMinecraftServer(
   scope: CoroutineScope,
   hostname: String,
   port: Int,
@@ -59,7 +59,7 @@ internal class JavaGameServer(
   override val motd: Motd,
   override val codec: MinecraftCodec,
   override val blockRegistry: BlockRegistry,
-) : GameServer, CoroutineScope by scope {
+) : MinecraftServer, CoroutineScope by scope {
   companion object : Logging
 
   override val players: MutableList<JavaPlayer> = mutableListOf()

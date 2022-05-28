@@ -19,7 +19,7 @@ package andesite.server.java.handlers
 import andesite.server.java.convertChunk
 import andesite.server.java.player.Session
 import andesite.server.java.player.sendPacket
-import andesite.server.java.server.JavaGameServer
+import andesite.server.java.server.JavaMinecraftServer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -27,14 +27,15 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Chunk")
 
-internal suspend fun JavaGameServer.handleChunkMovement(session: Session): Unit = coroutineScope {
-  launch(Job()) {
-    for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
-      for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
-        val chunk = spawn.world.getChunkAt(x, z) ?: continue
+internal suspend fun JavaMinecraftServer.handleChunkMovement(session: Session): Unit =
+  coroutineScope {
+    launch(Job()) {
+      for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
+        for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
+          val chunk = spawn.world.getChunkAt(x, z) ?: continue
 
-        session.sendPacket(convertChunk(chunk))
+          session.sendPacket(convertChunk(chunk))
+        }
       }
     }
   }
-}

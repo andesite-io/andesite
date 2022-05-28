@@ -18,8 +18,8 @@ package andesite.server.java.server
 
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec
-import andesite.server.GameServer
-import andesite.server.GameServerBuilder
+import andesite.server.MinecraftServer
+import andesite.server.MinecraftServerBuilder
 import andesite.server.Motd
 import andesite.server.MotdBuilder
 import andesite.world.Location
@@ -28,8 +28,11 @@ import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlinx.coroutines.CoroutineScope
 
-fun createJavaServer(scope: CoroutineScope, builder: GameServerBuilder.() -> Unit): GameServer {
-  return GameServerBuilderImpl(scope).apply(builder).build()
+fun createJavaServer(
+  scope: CoroutineScope,
+  builder: MinecraftServerBuilder.() -> Unit,
+): MinecraftServer {
+  return MinecraftServerBuilderImpl(scope).apply(builder).build()
 }
 
 private class MotdBuilderImpl : MotdBuilder {
@@ -42,7 +45,7 @@ private class MotdBuilderImpl : MotdBuilder {
   }
 }
 
-private class GameServerBuilderImpl(val scope: CoroutineScope) : GameServerBuilder {
+private class MinecraftServerBuilderImpl(val scope: CoroutineScope) : MinecraftServerBuilder {
   override var hostname: String by BuilderProperty()
   override var port: Int by BuilderProperty()
   override var spawn: Location by BuilderProperty()
@@ -54,8 +57,8 @@ private class GameServerBuilderImpl(val scope: CoroutineScope) : GameServerBuild
     motd = MotdBuilderImpl().apply(builder).build()
   }
 
-  fun build(): GameServer {
-    return JavaGameServer(scope, hostname, port, spawn, motd, codec, blockRegistry)
+  fun build(): MinecraftServer {
+    return JavaMinecraftServer(scope, hostname, port, spawn, motd, codec, blockRegistry)
   }
 }
 

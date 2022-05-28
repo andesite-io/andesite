@@ -25,13 +25,13 @@ import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
 import andesite.server.java.player.Session
 import andesite.server.java.player.sendPacket
-import andesite.server.java.server.JavaGameServer
+import andesite.server.java.server.JavaMinecraftServer
 import kotlinx.coroutines.coroutineScope
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
-internal suspend fun JavaGameServer.handlePlay(session: Session, player: JavaPlayer): Unit =
+internal suspend fun JavaMinecraftServer.handlePlay(session: Session, player: JavaPlayer): Unit =
   coroutineScope {
     players.add(player)
 

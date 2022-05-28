@@ -16,7 +16,7 @@
 
 package andesite.server
 
-import andesite.player.GamePlayer
+import andesite.player.MinecraftPlayer
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.world.Location
@@ -24,11 +24,11 @@ import andesite.world.block.BlockRegistry
 import kotlinx.coroutines.CoroutineScope
 import net.benwoodworth.knbt.Nbt
 
-public interface GameServer : CoroutineScope {
+public interface MinecraftServer : CoroutineScope {
   public val codec: MinecraftCodec
   public val protocolVersion: Int
   public val minecraftVersion: String
-  public val players: List<GamePlayer>
+  public val players: List<MinecraftPlayer>
   public val motd: Motd
   public val spawn: Location
   public val blockRegistry: BlockRegistry
@@ -43,7 +43,7 @@ public interface MotdBuilder {
   public var text: Chat
 }
 
-public interface GameServerBuilder {
+public interface MinecraftServerBuilder {
   public var hostname: String
   public var port: Int
   public var spawn: Location
