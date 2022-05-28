@@ -16,27 +16,38 @@
 
 package andesite.protocol.misc
 
+import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
 
-class ChatTest {
+class QuoteTest {
   @Test
   fun `test parse placeholder empty`() {
-    println(quoteString("{} doing"))
+    val expected = listOf(Quote("{} doing", false))
+    val actual = quoteString("{} doing")
+
+    assertEquals(expected, actual)
+  }
+
+  @Test
+  fun `test parse placeholder with text behind placeholder`() {
+    val expected = listOf(
+      Quote("hello ", false),
+      Quote("player", true, "{player}"),
+      Quote(" doing", false),
+    )
+    val actual = quoteString("hello {player} doing")
+
+    assertEquals(expected, actual)
   }
 
   @Test
   fun `test parse placeholder`() {
-    println(quoteString("{player} doing"))
-  }
+    val expected = listOf(
+      Quote("player", true, "{player}"),
+      Quote(" doing", false),
+    )
+    val actual = quoteString("{player} doing")
 
-  @Test
-  fun `test build chat`() {
-    Chat.build("{player} joined the server") {
-      val player by placeholder("Carlos") {
-        brightGreen()
-      }
-
-      yellow()
-    }
+    assertEquals(expected, actual)
   }
 }
