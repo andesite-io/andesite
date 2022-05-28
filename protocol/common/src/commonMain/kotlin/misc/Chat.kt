@@ -47,7 +47,11 @@ public data class Chat(
     }
 
     public fun build(text: String, builder: ChatBuilder.() -> Unit): Chat {
-      return ChatBuilderImpl(of(text)).apply(builder).build()
+      return ChatBuilder(of(text)).apply(builder).build()
+    }
+
+    public fun build(chat: Chat, builder: ChatBuilder.() -> Unit): Chat {
+      return ChatBuilder(chat).apply(builder).build()
     }
   }
 
@@ -75,32 +79,48 @@ public data class Chat(
   }
 }
 
-public interface ChatBuilder {
-  public var clickEvent: ClickEvent?
-  public var hoverEvent: HoverEvent?
-  public var color: Color?
-  public var font: Identifier?
-  public var insertion: String?
-  public var italic: Boolean
-  public var bold: Boolean
+public typealias PlaceholderProvider =
+  PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, Chat>>
 
-  public fun placeholder(key: String, chat: Chat): Chat
+public class ChatBuilder internal constructor(private val initial: Chat) {
+  private val components: MutableList<Chat> = mutableListOf()
+  private val placeholders: MutableMap<String, Chat> = mutableMapOf()
 
-  public fun placeholder(
-    text: String,
-    builder: ChatBuilder.() -> Unit,
-  ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, Chat>> =
+  public var clickEvent: ClickEvent? = initial.clickEvent
+  public var hoverEvent: HoverEvent? = initial.hoverEvent
+  public var insertion: String? = initial.insertion
+  public var font: Identifier = initial.font
+  public var color: Color = initial.color
+  public var italic: Boolean = initial.italic
+  public var bold: Boolean = initial.bold
+
+  public fun append(text: String, builder: ChatBuilder.() -> Unit) {
+    components += Chat.build(text, builder)
+  }
+
+  public fun append(chat: Chat, builder: ChatBuilder.() -> Unit) {
+    components += ChatBuilder(chat).apply(builder).build()
+  }
+
+  public fun placeholder(key: String, chat: Chat): Chat {
+    placeholders[key] = chat
+    return chat
+  }
+
+  public fun placeholder(key: String, text: String, builder: ChatBuilder.() -> Unit = {}): Chat {
+    val chat = Chat.build(text, builder)
+    placeholders[key] = chat
+    return chat
+  }
+
+  public fun placeholder(text: String, builder: ChatBuilder.() -> Unit): PlaceholderProvider =
     PropertyDelegateProvider { _, property ->
       val chat = Chat.build(text, builder)
 
-      placeholder(property.name, chat)
+      placeholders[property.name] = chat
 
       ReadOnlyProperty { _, _ -> chat }
     }
-
-  public fun append(text: String, builder: ChatBuilder.() -> Unit = {})
-
-  public fun append(chat: Chat, builder: ChatBuilder.() -> Unit = {})
 
   public fun hex(hex: String) {
     color = HexColor(hex)
@@ -177,39 +197,14 @@ public interface ChatBuilder {
   public fun white() {
     color = Color.White
   }
-}
-
-private class ChatBuilderImpl(private val initial: Chat) : ChatBuilder {
-  private val components: MutableList<Chat> = mutableListOf()
-  private val placeholders: MutableMap<String, Chat> = mutableMapOf()
-
-  override var clickEvent: ClickEvent? = null
-  override var hoverEvent: HoverEvent? = null
-  override var color: Color? = null
-  override var font: Identifier? = null
-  override var insertion: String? = null
-  override var italic: Boolean = initial.italic
-  override var bold: Boolean = initial.bold
-
-  override fun placeholder(key: String, chat: Chat): Chat {
-    placeholders[key] = chat
-    return chat
-  }
-
-  override fun append(text: String, builder: ChatBuilder.() -> Unit) {
-    components += Chat.build(text, builder)
-  }
-
-  override fun append(chat: Chat, builder: ChatBuilder.() -> Unit) {
-    components += ChatBuilderImpl(chat).apply(builder).build()
-  }
 
   // TODO: optimize
-  fun build(): Chat {
+  public fun build(): Chat {
     val chat = initial
-      .copy(hoverEvent = hoverEvent ?: initial.hoverEvent)
-      .copy(clickEvent = clickEvent ?: initial.clickEvent)
-      .copy(color = color ?: initial.color)
+      .copy(hoverEvent = hoverEvent)
+      .copy(clickEvent = clickEvent)
+      .copy(font = font)
+      .copy(color = color)
       .copy(italic = italic)
       .copy(bold = bold)
       .copy(insertion = insertion)
