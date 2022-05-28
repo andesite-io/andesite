@@ -20,18 +20,18 @@ import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
 import com.benasher44.uuid.Uuid
 
-sealed interface GamePlayer {
-  val id: Uuid
-  val protocol: Int
-  val username: String
+public sealed interface GamePlayer {
+  public val id: Uuid
+  public val protocol: Int
+  public val username: String
 
-  suspend fun sendMessage(chat: Chat)
+  public suspend fun sendMessage(chat: Chat)
 
-  suspend fun sendMessage(message: String): Unit = sendMessage(Chat.of(message))
+  public suspend fun sendMessage(message: String): Unit = sendMessage(Chat.of(message))
 }
 
-interface JavaPlayer : GamePlayer {
-  suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
+public interface JavaPlayer : GamePlayer {
+  public suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
 }
 
-interface BedrockPlayer : GamePlayer
+public interface BedrockPlayer : GamePlayer

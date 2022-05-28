@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.game
+package andesite.server.java.handlers
 
 import andesite.player.JavaPlayer
 import andesite.protocol.java.v756.GameMode
@@ -23,18 +23,17 @@ import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
-import andesite.server.java.dimension
-import andesite.server.java.dimensionCodec
 import andesite.server.java.player.Session
 import andesite.server.java.player.sendPacket
+import andesite.server.java.server.JavaGameServer
 import kotlinx.coroutines.coroutineScope
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
-internal suspend fun GameServer.handlePlay(session: Session, player: JavaPlayer): Unit =
+internal suspend fun JavaGameServer.handlePlay(session: Session, player: JavaPlayer): Unit =
   coroutineScope {
-    playersMut.add(player)
+    players.add(player)
 
     session.sendPacket(
       JoinGamePacket(

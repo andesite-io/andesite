@@ -14,19 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.server.java
+package andesite.server.java.handlers
 
 import andesite.player.JavaPlayer
 import andesite.protocol.java.handshake.HandshakePacket
-import andesite.protocol.java.handshake.PingPacket
-import andesite.protocol.java.handshake.Players
-import andesite.protocol.java.handshake.PongPacket
-import andesite.protocol.java.handshake.Response
-import andesite.protocol.java.handshake.ResponsePacket
-import andesite.protocol.java.handshake.Version
 import andesite.protocol.java.login.LoginStartPacket
 import andesite.protocol.java.login.LoginSuccessPacket
-import andesite.protocol.misc.Chat
 import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
@@ -41,20 +34,4 @@ internal suspend fun handleLogin(session: Session, handshake: HandshakePacket): 
   session.sendPacket(LoginSuccessPacket(id, username))
 
   return JavaPlayerImpl(id, protocol, username, session)
-}
-
-internal suspend fun handleStatus(session: Session, handshake: HandshakePacket) {
-  session.sendPacket(
-    ResponsePacket(
-      Response(
-        version = Version(name = "Andesite for 1.17", protocol = handshake.protocolVersion.toInt()),
-        players = Players(max = 20, online = 0),
-        description = Chat.of("&eHello, world"),
-      ),
-    ),
-  )
-
-  session.receivePacket<PingPacket>()
-
-  session.sendPacket(PongPacket())
 }

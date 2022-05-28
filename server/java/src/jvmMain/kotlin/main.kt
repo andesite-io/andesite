@@ -16,6 +16,15 @@
 
 package andesite.server.java
 
+import andesite.protocol.java.v756.v756
+import andesite.protocol.misc.Chat
+import andesite.protocol.resource
+import andesite.protocol.serialization.MinecraftCodec
+import andesite.protocol.serializers.UuidSerializer
+import andesite.server.java.server.createJavaServer
+import andesite.world.Location
+import andesite.world.anvil.block.readBlockRegistry
+import andesite.world.anvil.readAnvilWorld
 import java.lang.System.getSecurityManager
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
@@ -24,9 +33,48 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
+import net.benwoodworth.knbt.Nbt
+import net.benwoodworth.knbt.NbtCompression
+import net.benwoodworth.knbt.NbtVariant
 
 suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob()) {
-  startAndesite()
+  val server = createJavaServer(this) {
+    blockRegistry = resource("v756")
+      .resolve("blocks.json")
+      .readText()
+      .let(::readBlockRegistry)
+
+    codec = MinecraftCodec.v756 {
+      nbt = Nbt {
+        variant = NbtVariant.Java
+        compression = NbtCompression.None
+        ignoreUnknownKeys = true
+      }
+
+      json = Json {
+        prettyPrint = true
+      }
+
+      serializersModule = SerializersModule {
+        contextual(UuidSerializer)
+      }
+    }
+
+    hostname = "127.0.0.1"
+    port = 25565
+    spawn = Location(0.0, 10.0, 0.0, 0f, 0f, readAnvilWorld(blockRegistry, resource("world")))
+
+    motd {
+      maxPlayers = 20
+      version = "Andesite for 1.17.1"
+      text = Chat.of("&7A Minecraft Server")
+    }
+  }
+
+  server.listen()
 }
 
 private val context = Executors

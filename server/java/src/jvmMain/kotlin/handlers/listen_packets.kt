@@ -14,30 +14,20 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.game
+package andesite.server.java.handlers
 
 import andesite.server.java.player.Session
-import andesite.server.java.player.sendPacket
-import andesite.server.java.toPacket
-import andesite.server.java.world
-import andesite.world.Location
+import io.ktor.network.sockets.isClosed
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.apache.logging.log4j.kotlin.logger
 
-private val logger = logger("andesite.handlers.Chunk")
-
-internal suspend fun handleChunkMovement(session: Session): Unit = coroutineScope {
-  val spawn = Location(0.0, 10.0, 0.0, 0.0f, 0.0f)
-
+internal suspend fun listenPackets(session: Session): Unit = coroutineScope {
   launch(Job()) {
-    for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
-      for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
-        val chunk = world.getChunkAt(x, z) ?: continue
+    while (!session.socket.isClosed) {
+      val packet = session.acceptPacket() ?: continue
 
-        session.sendPacket(chunk.toPacket())
-      }
+      session.inboundPacketChannel.send(packet)
     }
   }
 }

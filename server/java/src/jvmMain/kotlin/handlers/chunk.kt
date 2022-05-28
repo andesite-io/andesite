@@ -14,20 +14,27 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.game
+package andesite.server.java.handlers
 
+import andesite.server.java.convertChunk
 import andesite.server.java.player.Session
-import io.ktor.network.sockets.isClosed
+import andesite.server.java.player.sendPacket
+import andesite.server.java.server.JavaGameServer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun listenPackets(session: Session): Unit = coroutineScope {
+private val logger = logger("andesite.handlers.Chunk")
+
+internal suspend fun JavaGameServer.handleChunkMovement(session: Session): Unit = coroutineScope {
   launch(Job()) {
-    while (!session.socket.isClosed) {
-      val packet = session.acceptPacket() ?: continue
+    for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
+      for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
+        val chunk = spawn.world.getChunkAt(x, z) ?: continue
 
-      session.inboundPacketChannel.send(packet)
+        session.sendPacket(convertChunk(chunk))
+      }
     }
   }
 }

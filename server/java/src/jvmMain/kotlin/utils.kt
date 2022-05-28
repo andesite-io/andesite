@@ -20,6 +20,8 @@ package andesite.server.java
 
 import andesite.protocol.java.v756.ChunkDataPacket
 import andesite.protocol.types.VarInt
+import andesite.server.GameServer
+import andesite.world.Chunk
 import andesite.world.anvil.AnvilChunk
 import andesite.world.anvil.HeightmapUsage
 import io.ktor.utils.io.core.BytePacketBuilder
@@ -47,25 +49,28 @@ inline fun <reified T : Any> Nbt.decodeRootTag(file: File): T {
       val content = root[""]?.nbtCompound ?: error("Could not find content for nbt file $file")
 
       put(descriptor.serialName, content)
-    }
+    },
   )
 }
 
-internal suspend fun AnvilChunk.toPacket(): ChunkDataPacket {
-  val heightmaps = heightmaps
+internal suspend fun GameServer.convertChunk(chunk: Chunk): ChunkDataPacket {
+  require(chunk is AnvilChunk)
+
+  val heightmaps = chunk.heightmaps
     .filterKeys { it.usage == HeightmapUsage.Client }
     .mapKeys { it.key.kind }
     .let { nbt.encodeToNbtTag(it) }
 
   val buf = BytePacketBuilder()
-  val primaryBitmask = extractChunkData(buf)
+  val primaryBitmask = chunk.extractChunkData(buf)
   val data = buf.build().readBytes()
 
   return ChunkDataPacket(
-    x, z,
+    chunk.x,
+    chunk.z,
     primaryBitmask.toLongArray(),
     buildNbtCompound { put("", heightmaps) },
-    biomes.map(::VarInt),
+    chunk.biomes.map(::VarInt),
     data,
     emptyList(), // TODO
   )

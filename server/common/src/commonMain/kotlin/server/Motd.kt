@@ -14,12 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.game
+package andesite.server
 
-import andesite.player.JavaPlayer
+import andesite.protocol.misc.Chat
 
-class GameServer {
-  internal val playersMut: MutableList<JavaPlayer> = mutableListOf()
-
-  val players: List<JavaPlayer> get() = playersMut
-}
+public data class Motd(
+  val version: String,
+  val maxPlayers: Int,
+  val text: Chat,
+)

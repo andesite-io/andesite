@@ -14,11 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.game
+package andesite.server.java.handlers
 
 import andesite.player.JavaPlayer
 import andesite.protocol.java.v756.ServerChatMessagePacket
 import andesite.server.java.player.Session
+import andesite.server.java.server.JavaGameServer
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
@@ -30,7 +31,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Chat")
 
-internal suspend fun GameServer.handleChat(session: Session, player: JavaPlayer): Unit =
+internal suspend fun JavaGameServer.handleChat(session: Session, player: JavaPlayer): Unit =
   coroutineScope {
     launch(Job()) {
       session.inboundPacketChannel

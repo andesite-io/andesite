@@ -15,12 +15,19 @@
  */
 
 kotlin {
+  explicitApi()
+
   sourceSets {
     val commonMain by getting {
       dependencies {
         implementation(project(":protocol:common"))
         implementation(project(":protocol:bedrock"))
         implementation(project(":protocol:java"))
+
+        implementation(project(":world:common"))
+        implementation(project(":world:anvil"))
+
+        implementation("net.benwoodworth.knbt:knbt:0.11.1")
       }
     }
   }

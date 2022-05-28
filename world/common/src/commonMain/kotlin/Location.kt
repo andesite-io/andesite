@@ -25,24 +25,49 @@ data class Location(
   val z: Double,
   val yaw: Float,
   val pitch: Float,
+  val world: World,
 ) {
   operator fun div(other: Location): Location {
-    return Location(x / other.x, y / other.y, z / other.z, yaw / other.yaw, pitch / other.pitch)
+    return Location(
+      x / other.x,
+      y / other.y,
+      z / other.z,
+      yaw / other.yaw,
+      pitch / other.pitch,
+      world,
+    )
   }
 
   operator fun times(other: Location): Location {
-    return Location(x * other.x, y * other.y, z * other.z, yaw * other.yaw, pitch * other.pitch)
+    return Location(
+      x * other.x,
+      y * other.y,
+      z * other.z,
+      yaw * other.yaw,
+      pitch * other.pitch,
+      world,
+    )
   }
 
   operator fun minus(other: Location): Location {
-    return Location(x - other.x, y - other.y, z - other.z, yaw - other.yaw, pitch - other.pitch)
+    return Location(
+      x - other.x,
+      y - other.y,
+      z - other.z,
+      yaw - other.yaw,
+      pitch - other.pitch,
+      world,
+    )
   }
 
   operator fun plus(other: Location): Location {
-    return Location(x + other.x, y + other.y, z + other.z, yaw + other.yaw, pitch + other.pitch)
-  }
-
-  companion object {
-    val Empty = Location(0.0, 0.0, 0.0, 0.0f, 0.0f)
+    return Location(
+      x + other.x,
+      y + other.y,
+      z + other.z,
+      yaw + other.yaw,
+      pitch + other.pitch,
+      world,
+    )
   }
 }
