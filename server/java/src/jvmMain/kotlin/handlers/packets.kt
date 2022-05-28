@@ -22,7 +22,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
-internal suspend fun listenPackets(session: Session): Unit = coroutineScope {
+internal suspend fun handlePackets(session: Session): Unit = coroutineScope {
   launch(Job()) {
     while (!session.socket.isClosed) {
       val packet = session.acceptPacket() ?: continue

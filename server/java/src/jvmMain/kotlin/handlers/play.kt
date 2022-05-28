@@ -70,7 +70,7 @@ internal suspend fun JavaMinecraftServer.handlePlay(session: Session, player: Ja
       ),
     )
 
-    listenPackets(session)
+    handlePackets(session)
     handleKeepAlive(session)
     handleChunkMovement(session)
     handleChat(session, player)
