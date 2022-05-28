@@ -22,6 +22,7 @@ import andesite.player.PlayerJoinEvent
 import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.v756.v756
 import andesite.protocol.misc.Chat
+import andesite.protocol.misc.ShowText
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serializers.UuidSerializer
@@ -85,13 +86,29 @@ suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob())
 
   server.on<PlayerJoinEvent>(scope) {
     server.players.forEach {
-      it.sendMessage("&e${player.username} joined the game")
+      it.sendMessage {
+        append(player.username) {
+          hoverEvent = ShowText("@${player.username}")
+
+          bold()
+          hex("#32a852")
+        }
+        append(" joined the server")
+      }
     }
   }
 
   server.on<PlayerQuitEvent>(scope) {
     server.players.forEach {
-      it.sendMessage("&e${player.username} left the game")
+      it.sendMessage {
+        append(player.username) {
+          hoverEvent = ShowText("@${player.username}")
+
+          bold()
+          hex("#32a852")
+        }
+        append(" left the server")
+      }
     }
   }
 

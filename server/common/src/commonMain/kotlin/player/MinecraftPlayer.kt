@@ -19,6 +19,7 @@ package andesite.player
 import andesite.EventHolder
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
+import andesite.protocol.misc.ChatBuilder
 import com.benasher44.uuid.Uuid
 
 public sealed interface MinecraftPlayer : EventHolder<PlayerEvent> {
@@ -28,7 +29,13 @@ public sealed interface MinecraftPlayer : EventHolder<PlayerEvent> {
 
   public suspend fun sendMessage(chat: Chat)
 
-  public suspend fun sendMessage(message: String): Unit = sendMessage(Chat.of(message))
+  public suspend fun sendMessage(text: String = "", builder: ChatBuilder.() -> Unit) {
+    sendMessage(Chat.build(text, builder))
+  }
+
+  public suspend fun sendMessage(text: String) {
+    sendMessage(Chat.of(text))
+  }
 }
 
 public interface JavaPlayer : MinecraftPlayer {
