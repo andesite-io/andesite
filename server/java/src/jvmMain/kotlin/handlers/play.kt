@@ -56,7 +56,7 @@ internal fun JavaMinecraftServer.handlePlay(session: Session, player: JavaPlayer
       ),
     )
 
-    players.add(player)
+    addPlayer(player)
 
     session.sendPacket(
       PlayerPositionAndLookPacket(

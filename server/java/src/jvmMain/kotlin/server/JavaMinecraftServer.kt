@@ -51,6 +51,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import net.benwoodworth.knbt.Nbt
 import org.apache.logging.log4j.kotlin.Logging
@@ -67,7 +69,9 @@ internal class JavaMinecraftServer(
   CoroutineScope by CoroutineScope(context + CoroutineName("java-minecraft-server")) {
   companion object : Logging
 
-  override val players: MutableList<JavaPlayer> = mutableListOf()
+  private val playersMutex = Mutex()
+  private val playersMut: MutableList<JavaPlayer> = mutableListOf()
+  override val players: List<JavaPlayer> get() = playersMut
 
   private val selector = ActorSelectorManager(Dispatchers.IO)
   private val address = InetSocketAddress(hostname, port)
@@ -88,6 +92,14 @@ internal class JavaMinecraftServer(
   internal val dimension = nbt.decodeRootTag<Dimension>(resource("dimension.nbt"))
 
   private val sessionId = atomic(0)
+
+  internal suspend fun addPlayer(player: JavaPlayer) {
+    playersMutex.withLock { playersMut.add(player) }
+  }
+
+  internal suspend fun removePlayer(player: JavaPlayer) {
+    playersMutex.withLock { playersMut.remove(player) }
+  }
 
   internal suspend fun publish(event: MinecraftEvent) {
     eventFlow.emit(event)
@@ -120,7 +132,7 @@ internal class JavaMinecraftServer(
 
               runCatching { handlePlay(session, player).join() }
 
-              players.remove(player)
+              removePlayer(player)
               publish(PlayerQuitEvent(player))
             }
           }
