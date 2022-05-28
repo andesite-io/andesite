@@ -26,6 +26,7 @@ import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.protocol.serializers.UuidSerializer
+import andesite.server.java.game.GameServer
 import andesite.server.java.game.handlePlay
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
@@ -97,6 +98,8 @@ suspend fun startAndesite(): Unit = coroutineScope {
 
   world = readAnvilWorld(blockRegistry, resource("world"))
 
+  val gameServer = GameServer()
+
   while (true) {
     val session = Session(codec, server.accept())
 
@@ -122,7 +125,7 @@ suspend fun startAndesite(): Unit = coroutineScope {
 
         when (handshake.nextState) {
           NextState.Status -> handleStatus(session, handshake)
-          NextState.Login -> handlePlay(session, handleLogin(session, handshake))
+          NextState.Login -> gameServer.handlePlay(session, handleLogin(session, handshake))
         }
       } catch (error: AndesiteError) {
         logger.error(error::message)

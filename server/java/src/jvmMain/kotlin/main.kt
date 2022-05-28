@@ -21,15 +21,16 @@ import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-suspend fun main(): Unit = withContext(scope.coroutineContext) {
+suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob()) {
   startAndesite()
 }
 
 private val context = Executors
-  .newCachedThreadPool(AndesiteThreadFactory)
+  .newFixedThreadPool(4, AndesiteThreadFactory)
   .asCoroutineDispatcher()
 
 private val scope = CoroutineScope(context)

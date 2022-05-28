@@ -28,43 +28,49 @@ import andesite.server.java.dimensionCodec
 import andesite.server.java.player.Session
 import andesite.server.java.player.sendPacket
 import kotlinx.coroutines.coroutineScope
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun handlePlay(session: Session, player: JavaPlayer): Unit = coroutineScope {
-  session.sendPacket(
-    JoinGamePacket(
-      entityId = 0,
-      isHardcore = false,
-      gameMode = GameMode.Adventure,
-      previousGameMode = PreviousGameMode.Unknown,
-      worlds = listOf(Identifier("world")),
-      dimensionCodec = dimensionCodec,
-      dimension = dimension,
-      world = Identifier("world"),
-      hashedSeed = 0,
-      maxPlayers = VarInt(20),
-      viewDistance = VarInt(32),
-      reducedDebugInfo = false,
-      enableRespawnScreen = false,
-      isDebug = false,
-      isFlat = true,
-    ),
-  )
+private val logger = logger("andesite.handlers.Play")
 
-  session.sendPacket(
-    PlayerPositionAndLookPacket(
-      x = 0.0,
-      y = 50.0,
-      z = 0.0,
-      yaw = 0f,
-      pitch = 0f,
-      flags = 0x00,
-      teleportId = VarInt(0),
-      dismountVehicle = false,
-    ),
-  )
+internal suspend fun GameServer.handlePlay(session: Session, player: JavaPlayer): Unit =
+  coroutineScope {
+    playersMut.add(player)
 
-  listenPackets(session)
-  handleKeepAlive(session, player)
-  handleChunkMovement(session)
-  handleChat(session, player)
-}
+    session.sendPacket(
+      JoinGamePacket(
+        entityId = 0,
+        isHardcore = false,
+        gameMode = GameMode.Adventure,
+        previousGameMode = PreviousGameMode.Unknown,
+        worlds = listOf(Identifier("world")),
+        dimensionCodec = dimensionCodec,
+        dimension = dimension,
+        world = Identifier("world"),
+        hashedSeed = 0,
+        maxPlayers = VarInt(20),
+        viewDistance = VarInt(32),
+        reducedDebugInfo = false,
+        enableRespawnScreen = false,
+        isDebug = false,
+        isFlat = true,
+      ),
+    )
+
+    session.sendPacket(
+      PlayerPositionAndLookPacket(
+        x = 0.0,
+        y = 50.0,
+        z = 0.0,
+        yaw = 0f,
+        pitch = 0f,
+        flags = 0x00,
+        teleportId = VarInt(0),
+        dismountVehicle = false,
+      ),
+    )
+
+    listenPackets(session)
+    handleKeepAlive(session)
+    handleChunkMovement(session)
+    handleChat(session, player)
+  }

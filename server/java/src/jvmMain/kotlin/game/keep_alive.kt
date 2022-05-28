@@ -18,7 +18,6 @@
 
 package andesite.server.java.game
 
-import andesite.player.JavaPlayer
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.v756.KeepAlivePacket
 import andesite.protocol.java.v756.ServerKeepAlivePacket
@@ -35,7 +34,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.KeepAlive")
 
-internal suspend fun handleKeepAlive(session: Session, player: JavaPlayer): Unit = coroutineScope {
+internal suspend fun handleKeepAlive(session: Session): Unit = coroutineScope {
   launch(Job()) {
     while (session.socket.socketContext.isActive) {
       delay(20.seconds)
@@ -43,9 +42,8 @@ internal suspend fun handleKeepAlive(session: Session, player: JavaPlayer): Unit
       try {
         session.sendPacket(KeepAlivePacket(currentTimeMillis()))
         session.awaitPacket<ServerKeepAlivePacket>(1.seconds)
-      } catch (error: Throwable) {
-        if (!session.socket.socketContext.isActive) break
-        logger.error(error) { "Player [$player] keep alive thread thrown an error" }
+      } catch (_: Throwable) {
+        break
       }
     }
   }

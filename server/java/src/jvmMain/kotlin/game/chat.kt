@@ -22,17 +22,25 @@ import andesite.server.java.player.Session
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun handleChat(session: Session, player: JavaPlayer): Unit = coroutineScope {
-  launch(Job()) {
-    session.inboundPacketChannel
-      .consumeAsFlow()
-      .filterIsInstance<ServerChatMessagePacket>()
-      .onEach { packet -> player.sendMessage(packet.message) }
-      .collect()
+private val logger = logger("andesite.handlers.Chat")
+
+internal suspend fun GameServer.handleChat(session: Session, player: JavaPlayer): Unit =
+  coroutineScope {
+    launch(Job()) {
+      session.inboundPacketChannel
+        .receiveAsFlow()
+        .filterIsInstance<ServerChatMessagePacket>()
+        .onEach { packet ->
+          players.forEach {
+            it.sendMessage("<${player.username}> ${packet.message}")
+          }
+        }
+        .collect()
+    }
   }
-}
