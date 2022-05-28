@@ -54,7 +54,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import net.benwoodworth.knbt.Nbt
-import org.apache.logging.log4j.kotlin.Logging
 
 internal class JavaMinecraftServer(
   context: CoroutineContext,
@@ -66,8 +65,6 @@ internal class JavaMinecraftServer(
   override val blockRegistry: BlockRegistry,
 ) : MinecraftServer,
   CoroutineScope by CoroutineScope(context + CoroutineName("java-minecraft-server")) {
-  companion object : Logging
-
   private val playersMutex = Mutex()
   private val playersMut: MutableList<JavaPlayer> = mutableListOf()
   override val players: List<JavaPlayer> get() = playersMut

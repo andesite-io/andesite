@@ -21,8 +21,9 @@ import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
 import andesite.protocol.misc.Uuid
+import org.apache.logging.log4j.kotlin.Logging
 
-public sealed interface MinecraftPlayer : EventHolder<PlayerEvent> {
+public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging {
   public val id: Uuid
   public val protocol: Int
   public val username: String

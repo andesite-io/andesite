@@ -25,8 +25,9 @@ import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import kotlinx.coroutines.CoroutineScope
 import net.benwoodworth.knbt.Nbt
+import org.apache.logging.log4j.kotlin.Logging
 
-public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent> {
+public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent>, Logging {
   public val codec: MinecraftCodec
   public val protocolVersion: Int
   public val minecraftVersion: String
