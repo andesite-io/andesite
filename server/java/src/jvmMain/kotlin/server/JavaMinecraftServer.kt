@@ -30,11 +30,11 @@ import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.server.MinecraftServer
 import andesite.server.Motd
 import andesite.server.java.decodeRootTag
-import andesite.server.java.handlers.handleLogin
-import andesite.server.java.handlers.handlePlay
-import andesite.server.java.handlers.handleStatus
+import andesite.server.java.play.processPlay
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
+import andesite.server.java.processLogin
+import andesite.server.java.processStatus
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager
@@ -122,11 +122,11 @@ internal class JavaMinecraftServer(
           val handshake = session.receivePacket<HandshakePacket>()
 
           when (handshake.nextState) {
-            NextState.Status -> handleStatus(session, handshake)
+            NextState.Status -> processStatus(session, handshake)
             NextState.Login -> {
-              val player = handleLogin(session, handshake)
+              val player = processLogin(session, handshake)
 
-              runCatching { handlePlay(session, player).join() }
+              runCatching { processPlay(session, player).join() }
 
               removePlayer(player)
               publish(PlayerQuitEvent(player))

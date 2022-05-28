@@ -14,8 +14,9 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.handlers
+package andesite.server.java
 
+import andesite.player.JavaPlayer
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.PingPacket
 import andesite.protocol.java.handshake.Players
@@ -23,12 +24,16 @@ import andesite.protocol.java.handshake.PongPacket
 import andesite.protocol.java.handshake.Response
 import andesite.protocol.java.handshake.ResponsePacket
 import andesite.protocol.java.handshake.Version
+import andesite.protocol.java.login.LoginStartPacket
+import andesite.protocol.java.login.LoginSuccessPacket
+import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
 import andesite.server.java.server.JavaMinecraftServer
+import com.benasher44.uuid.uuid4
 
-internal suspend fun JavaMinecraftServer.handleStatus(
+internal suspend fun JavaMinecraftServer.processStatus(
   session: Session,
   handshake: HandshakePacket,
 ) {
@@ -44,4 +49,17 @@ internal suspend fun JavaMinecraftServer.handleStatus(
 
   session.receivePacket<PingPacket>()
   session.sendPacket(PongPacket())
+}
+
+internal suspend fun JavaMinecraftServer.processLogin(
+  session: Session,
+  handshake: HandshakePacket,
+): JavaPlayer {
+  val id = uuid4()
+  val protocol = handshake.protocolVersion.toInt()
+  val (username) = session.receivePacket<LoginStartPacket>()
+
+  session.sendPacket(LoginSuccessPacket(id, username))
+
+  return JavaPlayerImpl(id, protocol, username, session, this)
 }

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.handlers
+package andesite.server.java.play
 
 import andesite.player.JavaPlayer
 import andesite.player.PlayerJoinEvent
@@ -34,7 +34,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
-internal fun JavaMinecraftServer.handlePlay(session: Session, player: JavaPlayer): Job =
+internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlayer): Job =
   session.launch(CoroutineName("handlePlay")) {
     session.sendPacket(
       JoinGamePacket(

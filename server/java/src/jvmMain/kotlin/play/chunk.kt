@@ -14,18 +14,22 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.handlers
+package andesite.server.java.play
 
+import andesite.server.java.convertChunk
 import andesite.server.java.player.Session
+import andesite.server.java.player.sendPacket
+import andesite.server.java.server.JavaMinecraftServer
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun handlePackets(session: Session) {
-  while (true) {
-    try {
-      val packet = session.acceptPacket() ?: continue
+private val logger = logger("andesite.handlers.Chunk")
 
-      session.inboundPacketFlow.emit(packet)
-    } catch (_: Throwable) {
-      break
+internal suspend fun JavaMinecraftServer.handleChunkMovement(session: Session) {
+  for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
+    for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
+      val chunk = spawn.world.getChunkAt(x, z) ?: continue
+
+      session.sendPacket(convertChunk(chunk))
     }
   }
 }

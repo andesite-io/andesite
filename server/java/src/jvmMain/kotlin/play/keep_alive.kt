@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalTime::class)
 
-package andesite.server.java.handlers
+package andesite.server.java.play
 
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.v756.KeepAlivePacket

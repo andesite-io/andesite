@@ -14,28 +14,26 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.handlers
+package andesite.server.java.play
 
 import andesite.player.JavaPlayer
-import andesite.protocol.java.handshake.HandshakePacket
-import andesite.protocol.java.login.LoginStartPacket
-import andesite.protocol.java.login.LoginSuccessPacket
-import andesite.server.java.player.JavaPlayerImpl
+import andesite.player.PlayerChatEvent
+import andesite.protocol.java.v756.ServerChatMessagePacket
+import andesite.protocol.misc.Chat
 import andesite.server.java.player.Session
-import andesite.server.java.player.receivePacket
-import andesite.server.java.player.sendPacket
 import andesite.server.java.server.JavaMinecraftServer
-import com.benasher44.uuid.uuid4
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.onEach
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun JavaMinecraftServer.handleLogin(
-  session: Session,
-  handshake: HandshakePacket,
-): JavaPlayer {
-  val id = uuid4()
-  val protocol = handshake.protocolVersion.toInt()
-  val (username) = session.receivePacket<LoginStartPacket>()
+private val logger = logger("andesite.handlers.Chat")
 
-  session.sendPacket(LoginSuccessPacket(id, username))
-
-  return JavaPlayerImpl(id, protocol, username, session, this)
+internal suspend fun JavaMinecraftServer.handleChat(session: Session, player: JavaPlayer) {
+  session.inboundPacketFlow
+    .filterIsInstance<ServerChatMessagePacket>()
+    .onEach { packet ->
+      publish(PlayerChatEvent(Chat.of(packet.message), player))
+    }
+    .collect()
 }
