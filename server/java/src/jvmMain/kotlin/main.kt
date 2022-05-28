@@ -23,8 +23,8 @@ import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serializers.UuidSerializer
 import andesite.server.java.server.createJavaServer
 import andesite.world.Location
-import andesite.world.anvil.block.readBlockRegistry
 import andesite.world.anvil.readAnvilWorld
+import andesite.world.block.readBlockRegistry
 import java.lang.System.getSecurityManager
 import java.util.concurrent.Executors
 import java.util.concurrent.ThreadFactory

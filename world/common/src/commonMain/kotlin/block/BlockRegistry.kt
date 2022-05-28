@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package andesite.world.anvil.block
+package andesite.world.block
 
 import andesite.protocol.misc.Identifier
-import andesite.world.block.Block
 import kotlin.math.ceil
 import kotlin.math.log2
 import kotlinx.serialization.ExperimentalSerializationApi

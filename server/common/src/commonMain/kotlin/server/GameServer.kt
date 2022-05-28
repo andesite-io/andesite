@@ -20,7 +20,7 @@ import andesite.player.GamePlayer
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.world.Location
-import andesite.world.anvil.block.BlockRegistry
+import andesite.world.block.BlockRegistry
 import kotlinx.coroutines.CoroutineScope
 import net.benwoodworth.knbt.Nbt
 

@@ -34,7 +34,7 @@ import andesite.server.java.handlers.handleStatus
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.world.Location
-import andesite.world.anvil.block.BlockRegistry
+import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
 import io.ktor.network.sockets.isClosed

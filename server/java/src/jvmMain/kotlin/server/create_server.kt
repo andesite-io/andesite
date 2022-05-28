@@ -23,7 +23,7 @@ import andesite.server.GameServerBuilder
 import andesite.server.Motd
 import andesite.server.MotdBuilder
 import andesite.world.Location
-import andesite.world.anvil.block.BlockRegistry
+import andesite.world.block.BlockRegistry
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 import kotlinx.coroutines.CoroutineScope

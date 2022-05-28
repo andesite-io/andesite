@@ -17,10 +17,10 @@
 package andesite.world.anvil
 
 import andesite.world.ChunkSection
-import andesite.world.anvil.block.BlockRegistry
 import andesite.world.anvil.block.PalettedContainer
 import andesite.world.anvil.block.directPalette
 import andesite.world.anvil.block.readBlockPalette
+import andesite.world.block.BlockRegistry
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes

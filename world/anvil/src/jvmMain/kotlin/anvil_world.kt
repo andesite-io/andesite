@@ -16,7 +16,7 @@
 
 package andesite.world.anvil
 
-import andesite.world.anvil.block.BlockRegistry
+import andesite.world.block.BlockRegistry
 import java.io.File
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

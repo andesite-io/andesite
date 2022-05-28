@@ -23,6 +23,7 @@ import andesite.protocol.types.VarInt
 import andesite.protocol.writeVarInt
 import andesite.world.anvil.BitStorage
 import andesite.world.block.Block
+import andesite.world.block.BlockRegistry
 import andesite.world.block.toBlock
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
