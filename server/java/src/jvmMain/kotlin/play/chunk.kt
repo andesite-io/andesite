@@ -24,7 +24,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Chunk")
 
-internal suspend fun JavaMinecraftServer.handleChunkMovement(session: Session) {
+internal suspend fun JavaMinecraftServer.handleChunks(session: Session) {
   for (x in -1 until ((spawn.x * 2) / 16 + 1).toInt()) {
     for (z in -1 until ((spawn.z * 2) / 16 + 1).toInt()) {
       val chunk = spawn.world.getChunkAt(x, z) ?: continue

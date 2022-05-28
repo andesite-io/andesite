@@ -73,8 +73,8 @@ internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlaye
 
     publish(PlayerJoinEvent(player))
 
-    launch(CoroutineName("handlePackets")) { handlePackets(session) }
-    launch(CoroutineName("handleKeepAlive")) { handleKeepAlive(session) }
-    launch(CoroutineName("handleChunkMovement")) { handleChunkMovement(session) }
-    launch(CoroutineName("handleChat")) { handleChat(session, player) }
+    launch(CoroutineName("in/listenPackets")) { handlePackets(session) }
+    launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
+    launch(CoroutineName("out/sendChunk")) { handleChunks(session) }
+    launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
   }
