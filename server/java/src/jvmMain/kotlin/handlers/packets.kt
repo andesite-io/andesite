@@ -17,17 +17,15 @@
 package andesite.server.java.handlers
 
 import andesite.server.java.player.Session
-import io.ktor.network.sockets.isClosed
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 
-internal suspend fun handlePackets(session: Session): Unit = coroutineScope {
-  launch(Job()) {
-    while (!session.socket.isClosed) {
+internal suspend fun handlePackets(session: Session) {
+  while (true) {
+    try {
       val packet = session.acceptPacket() ?: continue
 
-      session.inboundPacketChannel.send(packet)
+      session.inboundPacketFlow.emit(packet)
+    } catch (_: Throwable) {
+      break
     }
   }
 }

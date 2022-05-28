@@ -23,7 +23,6 @@ import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlinx.serialization.serializer
@@ -31,8 +30,7 @@ import kotlinx.serialization.serializer
 internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket(timeout: Duration): T? {
   return try {
     withTimeoutOrNull(timeout) {
-      inboundPacketChannel
-        .receiveAsFlow()
+      inboundPacketFlow
         .filterIsInstance<T>()
         .toList()
         .firstOrNull()

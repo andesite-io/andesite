@@ -31,13 +31,12 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 
 internal class JavaPlayerImpl(
-  scope: CoroutineScope,
   override val id: Uuid,
   override val protocol: Int,
   override val username: String,
-  val server: MinecraftServer,
   val session: Session,
-) : JavaPlayer, CoroutineScope by scope {
+  val server: MinecraftServer,
+) : JavaPlayer, CoroutineScope by session {
   override fun eventFlow(): Flow<PlayerEvent> {
     return server
       .eventFlow()

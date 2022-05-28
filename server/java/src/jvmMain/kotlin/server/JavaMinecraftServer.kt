@@ -39,30 +39,32 @@ import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.aSocket
-import io.ktor.network.sockets.isClosed
 import io.ktor.utils.io.ClosedWriteChannelException
 import java.net.InetSocketAddress
-import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlin.coroutines.CoroutineContext
+import kotlinx.atomicfu.atomic
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import net.benwoodworth.knbt.Nbt
 import org.apache.logging.log4j.kotlin.Logging
 
 internal class JavaMinecraftServer(
-  scope: CoroutineScope,
+  context: CoroutineContext,
   hostname: String,
   port: Int,
   override val spawn: Location,
   override val motd: Motd,
   override val codec: MinecraftCodec,
   override val blockRegistry: BlockRegistry,
-) : MinecraftServer, CoroutineScope by scope {
+) : MinecraftServer,
+  CoroutineScope by CoroutineScope(context + CoroutineName("java-minecraft-server")) {
   companion object : Logging
 
   override val players: MutableList<JavaPlayer> = mutableListOf()
@@ -70,7 +72,11 @@ internal class JavaMinecraftServer(
   private val selector = ActorSelectorManager(Dispatchers.IO)
   private val address = InetSocketAddress(hostname, port)
 
-  override val eventChannel: Channel<MinecraftEvent> = Channel(Channel.BUFFERED)
+  private val eventFlow = MutableSharedFlow<MinecraftEvent>()
+
+  override fun eventFlow(): Flow<MinecraftEvent> {
+    return eventFlow
+  }
 
   override val nbt: Nbt get() = codec.configuration.nbt
 
@@ -81,11 +87,13 @@ internal class JavaMinecraftServer(
 
   internal val dimension = nbt.decodeRootTag<Dimension>(resource("dimension.nbt"))
 
+  private val sessionId = atomic(0)
+
   internal suspend fun publish(event: MinecraftEvent) {
-    eventChannel.send(event)
+    eventFlow.emit(event)
   }
 
-  override suspend fun listen(): Unit = coroutineScope {
+  override fun listen(): Unit = runBlocking(coroutineContext) {
     logger.info("Starting andesite...")
 
     val server = aSocket(selector).tcp().bind(address)
@@ -98,57 +106,38 @@ internal class JavaMinecraftServer(
     logger.info("Server listening connections at $address")
 
     while (true) {
-      val session = Session(codec, server.accept())
+      val nextId = sessionId.incrementAndGet()
+      val session = Session(nextId, codec, server.accept())
 
-      launch(createExceptionHandler(session)) {
+      launch(CoroutineName("session-$nextId")) {
         try {
           val handshake = session.receivePacket<HandshakePacket>()
 
           when (handshake.nextState) {
             NextState.Status -> handleStatus(session, handshake)
             NextState.Login -> {
-              handleLogin(session, handshake)
-                .also { player -> session.player = player }
-                .let { player -> handlePlay(session, player) }
+              val player = handleLogin(session, handshake)
+
+              runCatching { handlePlay(session, player).join() }
+
+              players.remove(player)
+              publish(PlayerQuitEvent(player))
             }
           }
-        } catch (error: AndesiteError) {
-          logger.error(error::message)
         } catch (error: Throwable) {
-          if (session.socket.isClosed) {
-            cancel("Connection closed", PlayerQuitException(error))
+          when (error) {
+            is AndesiteError -> logger.error(error::message)
+            is ClosedReceiveChannelException, is ClosedWriteChannelException -> {}
+            else -> logger.error(error) {
+              "Error thrown while handling connection ${session.socket.remoteAddress}"
+            }
+          }
+
+          withContext(Dispatchers.IO) {
+            session.socket.close()
           }
         }
       }
     }
   }
-
-  private class PlayerQuitException(override val cause: Throwable) : RuntimeException()
-
-  private fun createExceptionHandler(session: Session): CoroutineExceptionHandler =
-    CoroutineExceptionHandler { ctx, error ->
-      when (error) {
-        is AndesiteError -> logger.error(error::message)
-        is ClosedReceiveChannelException,
-        is ClosedWriteChannelException,
-        is PlayerQuitException,
-        -> {
-          val player = session.player
-          if (player != null) {
-            players.remove(player)
-
-            launch(ctx) {
-              publish(PlayerQuitEvent(player))
-            }
-          }
-        }
-        else -> logger.error(error) {
-          "Error thrown while handling connection ${session.socket.remoteAddress}"
-        }
-      }
-
-      runBlocking(Dispatchers.IO) {
-        session.socket.close()
-      }
-    }
 }

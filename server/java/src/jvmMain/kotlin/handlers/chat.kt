@@ -14,6 +14,8 @@
  *    limitations under the License.
  */
 
+@file:OptIn(ExperimentalTime::class)
+
 package andesite.server.java.handlers
 
 import andesite.player.JavaPlayer
@@ -22,26 +24,19 @@ import andesite.protocol.java.v756.ServerChatMessagePacket
 import andesite.protocol.misc.Chat
 import andesite.server.java.player.Session
 import andesite.server.java.server.JavaMinecraftServer
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Chat")
 
-internal suspend fun JavaMinecraftServer.handleChat(session: Session, player: JavaPlayer): Unit =
-  coroutineScope {
-    launch(Job()) {
-      session.inboundPacketChannel
-        .receiveAsFlow()
-        .filterIsInstance<ServerChatMessagePacket>()
-        .onEach { packet ->
-          publish(PlayerChatEvent(Chat.of(packet.message), player))
-        }
-        .collect()
+internal suspend fun JavaMinecraftServer.handleChat(session: Session, player: JavaPlayer) {
+  session.inboundPacketFlow
+    .filterIsInstance<ServerChatMessagePacket>()
+    .onEach { packet ->
+      publish(PlayerChatEvent(Chat.of(packet.message), player))
     }
-  }
+    .collect()
+}

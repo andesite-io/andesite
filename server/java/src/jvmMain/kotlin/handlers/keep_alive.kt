@@ -20,31 +20,23 @@ package andesite.server.java.handlers
 
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.v756.KeepAlivePacket
-import andesite.protocol.java.v756.ServerKeepAlivePacket
 import andesite.server.java.player.Session
-import andesite.server.java.player.awaitPacket
 import andesite.server.java.player.sendPacket
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.KeepAlive")
 
-internal suspend fun handleKeepAlive(session: Session): Unit = coroutineScope {
-  launch(Job()) {
-    while (session.socket.socketContext.isActive) {
-      delay(20.seconds)
+internal suspend fun handleKeepAlive(session: Session) {
+  while (true) {
+    delay(20.seconds)
 
-      try {
-        session.sendPacket(KeepAlivePacket(currentTimeMillis()))
-        session.awaitPacket<ServerKeepAlivePacket>(1.seconds)
-      } catch (_: Throwable) {
-        break
-      }
+    try {
+      session.sendPacket(KeepAlivePacket(currentTimeMillis()))
+    } catch (_: Throwable) {
+      break
     }
   }
 }

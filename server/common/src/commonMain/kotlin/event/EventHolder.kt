@@ -16,8 +16,9 @@
 
 package andesite.event
 
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterIsInstance
@@ -29,10 +30,9 @@ public interface EventHolder<E : MinecraftEvent> : CoroutineScope {
 }
 
 public inline fun <reified E : MinecraftEvent> EventHolder<out MinecraftEvent>.on(
-  scope: CoroutineScope = this,
   crossinline handle: suspend E.() -> Unit,
 ) {
-  scope.launch(Job()) {
+  launch(Dispatchers.IO + CoroutineName("event-${E::class.simpleName}")) {
     eventFlow()
       .filterIsInstance<E>()
       .onEach { handle(it) }

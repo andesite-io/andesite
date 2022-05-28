@@ -27,16 +27,15 @@ import andesite.protocol.types.VarInt
 import andesite.server.java.player.Session
 import andesite.server.java.player.sendPacket
 import andesite.server.java.server.JavaMinecraftServer
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
-internal suspend fun JavaMinecraftServer.handlePlay(session: Session, player: JavaPlayer): Unit =
-  coroutineScope {
-    players.add(player)
-    publish(PlayerJoinEvent(player))
-
+internal fun JavaMinecraftServer.handlePlay(session: Session, player: JavaPlayer): Job =
+  session.launch(CoroutineName("handlePlay")) {
     session.sendPacket(
       JoinGamePacket(
         entityId = 0,
@@ -57,6 +56,8 @@ internal suspend fun JavaMinecraftServer.handlePlay(session: Session, player: Ja
       ),
     )
 
+    players.add(player)
+
     session.sendPacket(
       PlayerPositionAndLookPacket(
         x = 0.0,
@@ -70,8 +71,10 @@ internal suspend fun JavaMinecraftServer.handlePlay(session: Session, player: Ja
       ),
     )
 
-    handlePackets(session)
-    handleKeepAlive(session)
-    handleChunkMovement(session)
-    handleChat(session, player)
+    publish(PlayerJoinEvent(player))
+
+    launch(CoroutineName("handlePackets")) { handlePackets(session) }
+    launch(CoroutineName("handleKeepAlive")) { handleKeepAlive(session) }
+    launch(CoroutineName("handleChunkMovement")) { handleChunkMovement(session) }
+    launch(CoroutineName("handleChat")) { handleChat(session, player) }
   }

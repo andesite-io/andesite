@@ -26,18 +26,14 @@ import andesite.protocol.misc.ShowText
 import andesite.protocol.misc.UuidSerializer
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
+import andesite.server.MinecraftServer
 import andesite.server.java.server.createJavaServer
 import andesite.world.Location
 import andesite.world.anvil.readAnvilWorld
 import andesite.world.block.readBlockRegistry
-import java.lang.System.getSecurityManager
-import java.util.concurrent.Executors
-import java.util.concurrent.ThreadFactory
-import java.util.concurrent.atomic.AtomicInteger
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.DEBUG_PROPERTY_NAME
+import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.asCoroutineDispatcher
-import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.contextual
@@ -45,8 +41,46 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 
-suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob()) {
-  val server = createJavaServer(this) {
+fun main() {
+  System.setProperty(DEBUG_PROPERTY_NAME, DEBUG_PROPERTY_VALUE_ON)
+
+  val server = createServer()
+
+  server.on<PlayerJoinEvent> {
+    server.players.forEach {
+      it.sendMessage("{player} joined the server") {
+        val player by placeholder(player.username) {
+          hoverEvent = ShowText("@${player.username}")
+
+          hex("32a852")
+        }
+      }
+    }
+  }
+
+  server.on<PlayerQuitEvent> {
+    server.players.forEach {
+      it.sendMessage("{player} left the server") {
+        val player by placeholder(player.username) {
+          hoverEvent = ShowText("@${player.username}")
+
+          hex("32a852")
+        }
+      }
+    }
+  }
+
+  server.on<PlayerChatEvent> {
+    server.players.forEach {
+      it.sendMessage("<${player.username}> ${message.text}")
+    }
+  }
+
+  server.listen()
+}
+
+private fun createServer(): MinecraftServer {
+  return createJavaServer(SupervisorJob()) {
     blockRegistry = resource("v756")
       .resolve("blocks.json")
       .readText()
@@ -76,62 +110,6 @@ suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob())
       maxPlayers = 20
       version = "Andesite for 1.17.1"
       text = Chat.of("&7A Minecraft Server")
-    }
-  }
-
-  val scope = Executors
-    .newFixedThreadPool(8)
-    .asCoroutineDispatcher()
-    .let { CoroutineScope(it + SupervisorJob()) }
-
-  server.on<PlayerJoinEvent>(scope) {
-    server.players.forEach {
-      it.sendMessage("{player} joined the server") {
-        val player by placeholder(player.username) {
-          hoverEvent = ShowText("@${player.username}")
-
-          hex("32a852")
-        }
-      }
-    }
-  }
-
-  server.on<PlayerQuitEvent>(scope) {
-    server.players.forEach {
-      it.sendMessage("{player} left the server") {
-        val player by placeholder(player.username) {
-          hoverEvent = ShowText("@${player.username}")
-
-          hex("32a852")
-        }
-      }
-    }
-  }
-
-  server.on<PlayerChatEvent>(scope) {
-    server.players.forEach {
-      it.sendMessage("<${player.username}> ${message.text}")
-    }
-  }
-
-  server.listen()
-}
-
-private val context = Executors
-  .newFixedThreadPool(4, AndesiteThreadFactory)
-  .asCoroutineDispatcher()
-
-private val scope = CoroutineScope(context)
-
-private object AndesiteThreadFactory : ThreadFactory {
-  const val NAME_PREFIX = "andesite-pool-"
-  val threadNumber = AtomicInteger(0)
-  val group: ThreadGroup = getSecurityManager()?.threadGroup ?: Thread.currentThread().threadGroup
-
-  override fun newThread(runnable: Runnable): Thread {
-    return Thread(group, runnable, NAME_PREFIX + threadNumber.incrementAndGet(), 0).apply {
-      isDaemon = false
-      priority = Thread.NORM_PRIORITY
     }
   }
 }

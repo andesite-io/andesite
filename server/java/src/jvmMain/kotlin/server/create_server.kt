@@ -24,15 +24,15 @@ import andesite.server.Motd
 import andesite.server.MotdBuilder
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
+import kotlin.coroutines.CoroutineContext
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
-import kotlinx.coroutines.CoroutineScope
 
 fun createJavaServer(
-  scope: CoroutineScope,
+  context: CoroutineContext,
   builder: MinecraftServerBuilder.() -> Unit,
 ): MinecraftServer {
-  return MinecraftServerBuilderImpl(scope).apply(builder).build()
+  return MinecraftServerBuilderImpl(context).apply(builder).build()
 }
 
 private class MotdBuilderImpl : MotdBuilder {
@@ -45,7 +45,7 @@ private class MotdBuilderImpl : MotdBuilder {
   }
 }
 
-private class MinecraftServerBuilderImpl(val scope: CoroutineScope) : MinecraftServerBuilder {
+private class MinecraftServerBuilderImpl(val context: CoroutineContext) : MinecraftServerBuilder {
   override var hostname: String by BuilderProperty()
   override var port: Int by BuilderProperty()
   override var spawn: Location by BuilderProperty()
@@ -58,7 +58,7 @@ private class MinecraftServerBuilderImpl(val scope: CoroutineScope) : MinecraftS
   }
 
   fun build(): MinecraftServer {
-    return JavaMinecraftServer(scope, hostname, port, spawn, motd, codec, blockRegistry)
+    return JavaMinecraftServer(context, hostname, port, spawn, motd, codec, blockRegistry)
   }
 }
 

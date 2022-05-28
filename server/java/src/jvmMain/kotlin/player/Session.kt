@@ -38,14 +38,20 @@ import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.readPacket
 import io.ktor.utils.io.writePacket
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer
 import org.apache.logging.log4j.kotlin.Logging
 
-internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
+internal data class Session(val id: Int, val codec: MinecraftCodec, val socket: Socket) :
+  CoroutineScope by CoroutineScope(CoroutineName("session-${socket.remoteAddress}")) {
+
   companion object : Logging
 
   var player: MinecraftPlayer? = null
@@ -53,7 +59,7 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
   val input = socket.openReadChannel()
   val output = socket.openWriteChannel()
 
-  val inboundPacketChannel = Channel<JavaPacket>()
+  val inboundPacketFlow = MutableSharedFlow<JavaPacket>()
 
   suspend fun acceptPacket(): JavaPacket? {
     val size = input.readVarInt()
@@ -99,6 +105,7 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
     return codec.decodeFromByteArray(deserializer, packet.readBytes())
   }
 
+  @Suppress("BlockingMethodInNonBlockingContext")
   suspend fun <T : JavaPacket> sendPacket(serializer: SerializationStrategy<T>, packet: T) {
     val packetName = serializer.descriptor.serialName
     val packetId = extractPacketId(serializer.descriptor)
@@ -116,7 +123,13 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) {
       writeVarInt(data.remaining.toInt())
       writePacket(data)
     }
+
     output.flush()
+  }
+
+  fun close(cause: CancellationException? = null) {
+    socket.close()
+    cancel(cause)
   }
 
   override fun equals(other: Any?): Boolean {

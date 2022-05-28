@@ -37,5 +37,5 @@ internal suspend fun JavaMinecraftServer.handleLogin(
 
   session.sendPacket(LoginSuccessPacket(id, username))
 
-  return JavaPlayerImpl(this, id, protocol, username, this, session)
+  return JavaPlayerImpl(id, protocol, username, session, this)
 }

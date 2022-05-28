@@ -24,9 +24,6 @@ import andesite.protocol.serialization.MinecraftCodec
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.consumeAsFlow
 import net.benwoodworth.knbt.Nbt
 
 public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent> {
@@ -39,13 +36,7 @@ public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent> {
   public val blockRegistry: BlockRegistry
   public val nbt: Nbt
 
-  public val eventChannel: Channel<MinecraftEvent>
-
-  override fun eventFlow(): Flow<MinecraftEvent> {
-    return eventChannel.consumeAsFlow()
-  }
-
-  public suspend fun listen()
+  public fun listen()
 }
 
 public interface MotdBuilder {
