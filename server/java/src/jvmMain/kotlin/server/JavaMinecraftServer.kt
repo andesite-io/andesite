@@ -17,7 +17,7 @@
 package andesite.server.java.server
 
 import andesite.AndesiteError
-import andesite.MinecraftEvent
+import andesite.event.MinecraftEvent
 import andesite.player.JavaPlayer
 import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.data.Dimension

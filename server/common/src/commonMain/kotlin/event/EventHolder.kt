@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package andesite
+package andesite.event
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

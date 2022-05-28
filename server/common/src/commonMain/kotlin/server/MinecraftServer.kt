@@ -16,8 +16,8 @@
 
 package andesite.server
 
-import andesite.EventHolder
-import andesite.MinecraftEvent
+import andesite.event.EventHolder
+import andesite.event.MinecraftEvent
 import andesite.player.MinecraftPlayer
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec

@@ -16,7 +16,7 @@
 
 package andesite.player
 
-import andesite.EventHolder
+import andesite.event.EventHolder
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder

@@ -16,7 +16,7 @@
 
 package andesite.player
 
-import andesite.MinecraftEvent
+import andesite.event.MinecraftEvent
 
 public interface PlayerEvent : MinecraftEvent {
   public val player: MinecraftPlayer

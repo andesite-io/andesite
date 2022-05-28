@@ -16,7 +16,7 @@
 
 package andesite.server.java
 
-import andesite.on
+import andesite.event.on
 import andesite.player.PlayerChatEvent
 import andesite.player.PlayerJoinEvent
 import andesite.player.PlayerQuitEvent
