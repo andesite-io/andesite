@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.player
+package andesite.java.player
 
 import andesite.player.JavaPlayer
 import andesite.player.PlayerEvent

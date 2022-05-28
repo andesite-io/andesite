@@ -14,10 +14,16 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.server
+package andesite.java.server
 
 import andesite.AndesiteError
 import andesite.event.MinecraftEvent
+import andesite.java.decodeRootTag
+import andesite.java.play.processPlay
+import andesite.java.player.Session
+import andesite.java.player.receivePacket
+import andesite.java.processLogin
+import andesite.java.processStatus
 import andesite.player.JavaPlayer
 import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.data.Dimension
@@ -29,12 +35,6 @@ import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.server.MinecraftServer
 import andesite.server.Motd
-import andesite.server.java.decodeRootTag
-import andesite.server.java.play.processPlay
-import andesite.server.java.player.Session
-import andesite.server.java.player.receivePacket
-import andesite.server.java.processLogin
-import andesite.server.java.processStatus
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager

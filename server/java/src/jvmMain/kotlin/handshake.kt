@@ -14,8 +14,13 @@
  *    limitations under the License.
  */
 
-package andesite.server.java
+package andesite.java
 
+import andesite.java.player.JavaPlayerImpl
+import andesite.java.player.Session
+import andesite.java.player.receivePacket
+import andesite.java.player.sendPacket
+import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.PingPacket
@@ -26,11 +31,6 @@ import andesite.protocol.java.handshake.ResponsePacket
 import andesite.protocol.java.handshake.Version
 import andesite.protocol.java.login.LoginStartPacket
 import andesite.protocol.java.login.LoginSuccessPacket
-import andesite.server.java.player.JavaPlayerImpl
-import andesite.server.java.player.Session
-import andesite.server.java.player.receivePacket
-import andesite.server.java.player.sendPacket
-import andesite.server.java.server.JavaMinecraftServer
 import com.benasher44.uuid.uuid4
 
 internal suspend fun JavaMinecraftServer.processStatus(

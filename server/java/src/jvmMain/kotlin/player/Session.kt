@@ -19,7 +19,7 @@
   ExperimentalSerializationApi::class,
 )
 
-package andesite.server.java.player
+package andesite.java.player
 
 import andesite.andesiteError
 import andesite.protocol.ProtocolPacket

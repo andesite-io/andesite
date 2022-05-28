@@ -14,14 +14,14 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.play
+package andesite.java.play
 
+import andesite.java.player.Session
+import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
 import andesite.player.PlayerChatEvent
 import andesite.protocol.java.v756.ServerChatMessagePacket
 import andesite.protocol.misc.Chat
-import andesite.server.java.player.Session
-import andesite.server.java.server.JavaMinecraftServer
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach

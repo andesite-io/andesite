@@ -14,8 +14,11 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.play
+package andesite.java.play
 
+import andesite.java.player.Session
+import andesite.java.player.sendPacket
+import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
 import andesite.player.PlayerJoinEvent
 import andesite.protocol.java.v756.GameMode
@@ -24,9 +27,6 @@ import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
-import andesite.server.java.player.Session
-import andesite.server.java.player.sendPacket
-import andesite.server.java.server.JavaMinecraftServer
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

@@ -14,12 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.play
+package andesite.java.play
 
-import andesite.server.java.convertChunk
-import andesite.server.java.player.Session
-import andesite.server.java.player.sendPacket
-import andesite.server.java.server.JavaMinecraftServer
+import andesite.java.convertChunk
+import andesite.java.player.Session
+import andesite.java.player.sendPacket
+import andesite.java.server.JavaMinecraftServer
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Chunk")

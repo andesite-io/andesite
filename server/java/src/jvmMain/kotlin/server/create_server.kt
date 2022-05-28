@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.server
+package andesite.java.server
 
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec

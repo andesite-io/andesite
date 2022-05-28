@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalTime::class)
 
-package andesite.server.java.player
+package andesite.java.player
 
 import andesite.protocol.java.JavaPacket
 import kotlin.time.Duration

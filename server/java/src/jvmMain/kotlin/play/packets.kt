@@ -14,9 +14,9 @@
  *    limitations under the License.
  */
 
-package andesite.server.java.play
+package andesite.java.play
 
-import andesite.server.java.player.Session
+import andesite.java.player.Session
 
 internal suspend fun handlePackets(session: Session) {
   while (true) {

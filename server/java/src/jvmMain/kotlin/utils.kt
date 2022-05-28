@@ -16,7 +16,7 @@
 
 @file:OptIn(ExperimentalSerializationApi::class)
 
-package andesite.server.java
+package andesite.java
 
 import andesite.protocol.java.v756.ChunkDataPacket
 import andesite.protocol.types.VarInt

@@ -14,9 +14,10 @@
  *    limitations under the License.
  */
 
-package andesite.server.java
+package andesite.java
 
 import andesite.event.on
+import andesite.java.server.createJavaServer
 import andesite.player.PlayerChatEvent
 import andesite.player.PlayerJoinEvent
 import andesite.player.PlayerQuitEvent
@@ -27,7 +28,6 @@ import andesite.protocol.misc.UuidSerializer
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.server.MinecraftServer
-import andesite.server.java.server.createJavaServer
 import andesite.world.Location
 import andesite.world.anvil.readAnvilWorld
 import andesite.world.block.readBlockRegistry

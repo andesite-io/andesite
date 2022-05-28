@@ -16,12 +16,12 @@
 
 @file:OptIn(ExperimentalTime::class)
 
-package andesite.server.java.play
+package andesite.java.play
 
+import andesite.java.player.Session
+import andesite.java.player.sendPacket
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.v756.KeepAlivePacket
-import andesite.server.java.player.Session
-import andesite.server.java.player.sendPacket
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.delay
