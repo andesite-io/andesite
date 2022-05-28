@@ -22,8 +22,9 @@ import andesite.protocol.java.JavaPacket
 import andesite.protocol.java.v756.ChatMessagePacket
 import andesite.protocol.java.v756.ChatPosition
 import andesite.protocol.misc.Chat
+import andesite.protocol.misc.Uuid
 import andesite.server.MinecraftServer
-import com.benasher44.uuid.Uuid
+import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
@@ -45,7 +46,7 @@ internal class JavaPlayerImpl(
   }
 
   override suspend fun sendMessage(chat: Chat) {
-    session.sendPacket(ChatMessagePacket(chat, ChatPosition.Chat, Uuid.randomUUID()))
+    session.sendPacket(ChatMessagePacket(chat, ChatPosition.Chat, uuid4()))
   }
 
   override suspend fun sendPacket(packet: JavaPacket, queue: Boolean) {

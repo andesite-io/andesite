@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,19 +14,21 @@
  *    limitations under the License.
  */
 
-package andesite.protocol.serializers
+package andesite.protocol.misc
 
-import com.benasher44.uuid.Uuid
 import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.descriptors.buildClassSerialDescriptor
 import kotlinx.serialization.descriptors.element
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+public typealias Uuid = @Serializable(UuidSerializer::class) com.benasher44.uuid.Uuid
+
 public object UuidSerializer : KSerializer<Uuid> {
   override val descriptor: SerialDescriptor =
-    buildClassSerialDescriptor("andesite.protocol.serializers.Uuid") {
+    buildClassSerialDescriptor("Uuid") {
       element<Long>("mostSignificantBits")
       element<Long>("leastSignificantBits")
     }

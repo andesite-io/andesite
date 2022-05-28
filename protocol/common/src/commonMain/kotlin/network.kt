@@ -16,8 +16,8 @@
 
 package andesite.protocol
 
+import andesite.protocol.misc.Uuid
 import andesite.protocol.types.VarInt
-import com.benasher44.uuid.Uuid
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.readBytes

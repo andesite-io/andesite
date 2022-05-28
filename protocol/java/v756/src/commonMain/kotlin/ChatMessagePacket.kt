@@ -24,7 +24,7 @@ import andesite.protocol.ProtocolVariant
 import andesite.protocol.Variant
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
-import com.benasher44.uuid.Uuid
+import andesite.protocol.misc.Uuid
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

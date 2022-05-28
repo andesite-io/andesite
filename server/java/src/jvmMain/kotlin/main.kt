@@ -23,9 +23,9 @@ import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.v756.v756
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ShowText
+import andesite.protocol.misc.UuidSerializer
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
-import andesite.protocol.serializers.UuidSerializer
 import andesite.server.java.server.createJavaServer
 import andesite.world.Location
 import andesite.world.anvil.readAnvilWorld

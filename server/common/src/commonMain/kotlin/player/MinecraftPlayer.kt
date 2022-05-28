@@ -20,7 +20,7 @@ import andesite.EventHolder
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
-import com.benasher44.uuid.Uuid
+import andesite.protocol.misc.Uuid
 
 public sealed interface MinecraftPlayer : EventHolder<PlayerEvent> {
   public val id: Uuid
