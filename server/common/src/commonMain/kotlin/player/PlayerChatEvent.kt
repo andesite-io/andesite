@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -16,23 +16,9 @@
 
 package andesite.player
 
-import andesite.EventHolder
-import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Chat
-import com.benasher44.uuid.Uuid
 
-public sealed interface MinecraftPlayer : EventHolder<PlayerEvent> {
-  public val id: Uuid
-  public val protocol: Int
-  public val username: String
-
-  public suspend fun sendMessage(chat: Chat)
-
-  public suspend fun sendMessage(message: String): Unit = sendMessage(Chat.of(message))
-}
-
-public interface JavaPlayer : MinecraftPlayer {
-  public suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
-}
-
-public interface BedrockPlayer : MinecraftPlayer
+public data class PlayerChatEvent(
+  val message: Chat,
+  override val player: MinecraftPlayer
+) : PlayerEvent

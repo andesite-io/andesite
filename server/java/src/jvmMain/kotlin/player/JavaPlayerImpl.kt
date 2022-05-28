@@ -17,18 +17,33 @@
 package andesite.server.java.player
 
 import andesite.player.JavaPlayer
+import andesite.player.PlayerEvent
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.java.v756.ChatMessagePacket
 import andesite.protocol.java.v756.ChatPosition
 import andesite.protocol.misc.Chat
+import andesite.server.MinecraftServer
 import com.benasher44.uuid.Uuid
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
 
 internal class JavaPlayerImpl(
+  scope: CoroutineScope,
   override val id: Uuid,
   override val protocol: Int,
   override val username: String,
+  val server: MinecraftServer,
   val session: Session,
-) : JavaPlayer {
+) : JavaPlayer, CoroutineScope by scope {
+  override fun eventFlow(): Flow<PlayerEvent> {
+    return server
+      .eventFlow()
+      .filterIsInstance<PlayerEvent>()
+      .filter { it.player == this }
+  }
+
   override suspend fun sendMessage(chat: Chat) {
     session.sendPacket(ChatMessagePacket(chat, ChatPosition.Chat, Uuid.randomUUID()))
   }

@@ -17,7 +17,9 @@
 package andesite.server.java.handlers
 
 import andesite.player.JavaPlayer
+import andesite.player.PlayerChatEvent
 import andesite.protocol.java.v756.ServerChatMessagePacket
+import andesite.protocol.misc.Chat
 import andesite.server.java.player.Session
 import andesite.server.java.server.JavaMinecraftServer
 import kotlinx.coroutines.Job
@@ -38,9 +40,7 @@ internal suspend fun JavaMinecraftServer.handleChat(session: Session, player: Ja
         .receiveAsFlow()
         .filterIsInstance<ServerChatMessagePacket>()
         .onEach { packet ->
-          players.forEach {
-            it.sendMessage("<${player.username}> ${packet.message}")
-          }
+          publish(PlayerChatEvent(Chat.of(packet.message), player))
         }
         .collect()
     }

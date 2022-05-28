@@ -16,6 +16,10 @@
 
 package andesite.server.java
 
+import andesite.on
+import andesite.player.PlayerChatEvent
+import andesite.player.PlayerJoinEvent
+import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.v756.v756
 import andesite.protocol.misc.Chat
 import andesite.protocol.resource
@@ -71,6 +75,29 @@ suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob())
       maxPlayers = 20
       version = "Andesite for 1.17.1"
       text = Chat.of("&7A Minecraft Server")
+    }
+  }
+
+  val scope = Executors
+    .newFixedThreadPool(8)
+    .asCoroutineDispatcher()
+    .let { CoroutineScope(it + SupervisorJob()) }
+
+  server.on<PlayerJoinEvent>(scope) {
+    server.players.forEach {
+      it.sendMessage("&e${player.username} joined the game")
+    }
+  }
+
+  server.on<PlayerQuitEvent>(scope) {
+    server.players.forEach {
+      it.sendMessage("&e${player.username} left the game")
+    }
+  }
+
+  server.on<PlayerChatEvent>(scope) {
+    server.players.forEach {
+      it.sendMessage("<${player.username}> ${message.text}")
     }
   }
 

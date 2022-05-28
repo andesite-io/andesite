@@ -17,6 +17,7 @@
 package andesite.server.java.handlers
 
 import andesite.player.JavaPlayer
+import andesite.player.PlayerJoinEvent
 import andesite.protocol.java.v756.GameMode
 import andesite.protocol.java.v756.JoinGamePacket
 import andesite.protocol.java.v756.PlayerPositionAndLookPacket
@@ -34,6 +35,7 @@ private val logger = logger("andesite.handlers.Play")
 internal suspend fun JavaMinecraftServer.handlePlay(session: Session, player: JavaPlayer): Unit =
   coroutineScope {
     players.add(player)
+    publish(PlayerJoinEvent(player))
 
     session.sendPacket(
       JoinGamePacket(

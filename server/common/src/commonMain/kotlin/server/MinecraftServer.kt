@@ -16,15 +16,20 @@
 
 package andesite.server
 
+import andesite.EventHolder
+import andesite.MinecraftEvent
 import andesite.player.MinecraftPlayer
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.consumeAsFlow
 import net.benwoodworth.knbt.Nbt
 
-public interface MinecraftServer : CoroutineScope {
+public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent> {
   public val codec: MinecraftCodec
   public val protocolVersion: Int
   public val minecraftVersion: String
@@ -33,6 +38,12 @@ public interface MinecraftServer : CoroutineScope {
   public val spawn: Location
   public val blockRegistry: BlockRegistry
   public val nbt: Nbt
+
+  public val eventChannel: Channel<MinecraftEvent>
+
+  override fun eventFlow(): Flow<MinecraftEvent> {
+    return eventChannel.consumeAsFlow()
+  }
 
   public suspend fun listen()
 }

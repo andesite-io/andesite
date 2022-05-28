@@ -17,7 +17,9 @@
 package andesite.server.java.server
 
 import andesite.AndesiteError
+import andesite.MinecraftEvent
 import andesite.player.JavaPlayer
+import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.data.Dimension
 import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.java.handshake.HandshakePacket
@@ -44,6 +46,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -67,6 +70,8 @@ internal class JavaMinecraftServer(
   private val selector = ActorSelectorManager(Dispatchers.IO)
   private val address = InetSocketAddress(hostname, port)
 
+  override val eventChannel: Channel<MinecraftEvent> = Channel(Channel.BUFFERED)
+
   override val nbt: Nbt get() = codec.configuration.nbt
 
   override val protocolVersion = codec.configuration.protocolVersion
@@ -75,6 +80,10 @@ internal class JavaMinecraftServer(
   internal val dimensionCodec = nbt.decodeRootTag<DimensionCodec>(resource("dimension_codec.nbt"))
 
   internal val dimension = nbt.decodeRootTag<Dimension>(resource("dimension.nbt"))
+
+  internal suspend fun publish(event: MinecraftEvent) {
+    eventChannel.send(event)
+  }
 
   override suspend fun listen(): Unit = coroutineScope {
     logger.info("Starting andesite...")
@@ -117,7 +126,7 @@ internal class JavaMinecraftServer(
   private class PlayerQuitException(override val cause: Throwable) : RuntimeException()
 
   private fun createExceptionHandler(session: Session): CoroutineExceptionHandler =
-    CoroutineExceptionHandler { _, error ->
+    CoroutineExceptionHandler { ctx, error ->
       when (error) {
         is AndesiteError -> logger.error(error::message)
         is ClosedReceiveChannelException,
@@ -127,6 +136,10 @@ internal class JavaMinecraftServer(
           val player = session.player
           if (player != null) {
             players.remove(player)
+
+            launch(ctx) {
+              publish(PlayerQuitEvent(player))
+            }
           }
         }
         else -> logger.error(error) {

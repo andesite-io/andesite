@@ -24,14 +24,18 @@ import andesite.server.java.player.JavaPlayerImpl
 import andesite.server.java.player.Session
 import andesite.server.java.player.receivePacket
 import andesite.server.java.player.sendPacket
+import andesite.server.java.server.JavaMinecraftServer
 import com.benasher44.uuid.uuid4
 
-internal suspend fun handleLogin(session: Session, handshake: HandshakePacket): JavaPlayer {
+internal suspend fun JavaMinecraftServer.handleLogin(
+  session: Session,
+  handshake: HandshakePacket,
+): JavaPlayer {
   val id = uuid4()
   val protocol = handshake.protocolVersion.toInt()
   val (username) = session.receivePacket<LoginStartPacket>()
 
   session.sendPacket(LoginSuccessPacket(id, username))
 
-  return JavaPlayerImpl(id, protocol, username, session)
+  return JavaPlayerImpl(this, id, protocol, username, this, session)
 }
