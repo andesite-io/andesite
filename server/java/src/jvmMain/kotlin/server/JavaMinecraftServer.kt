@@ -42,7 +42,6 @@ import io.ktor.network.sockets.aSocket
 import io.ktor.utils.io.ClosedWriteChannelException
 import java.net.InetSocketAddress
 import kotlin.coroutines.CoroutineContext
-import kotlinx.atomicfu.atomic
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -91,8 +90,6 @@ internal class JavaMinecraftServer(
 
   internal val dimension = nbt.decodeRootTag<Dimension>(resource("dimension.nbt"))
 
-  private val sessionId = atomic(0)
-
   internal suspend fun addPlayer(player: JavaPlayer) {
     playersMutex.withLock { playersMut.add(player) }
   }
@@ -118,10 +115,9 @@ internal class JavaMinecraftServer(
     logger.info("Server listening connections at $address")
 
     while (true) {
-      val nextId = sessionId.incrementAndGet()
-      val session = Session(nextId, codec, server.accept())
+      val session = Session(codec, server.accept())
 
-      launch(CoroutineName("session-$nextId")) {
+      launch(CoroutineName("session-${session.socket.remoteAddress}")) {
         try {
           val handshake = session.receivePacket<HandshakePacket>()
 

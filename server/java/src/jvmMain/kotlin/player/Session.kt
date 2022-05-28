@@ -22,7 +22,6 @@
 package andesite.server.java.player
 
 import andesite.andesiteError
-import andesite.player.MinecraftPlayer
 import andesite.protocol.ProtocolPacket
 import andesite.protocol.extractPacketId
 import andesite.protocol.java.JavaPacket
@@ -49,12 +48,10 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer
 import org.apache.logging.log4j.kotlin.Logging
 
-internal data class Session(val id: Int, val codec: MinecraftCodec, val socket: Socket) :
+internal data class Session(val codec: MinecraftCodec, val socket: Socket) :
   CoroutineScope by CoroutineScope(CoroutineName("session-${socket.remoteAddress}")) {
 
   companion object : Logging
-
-  var player: MinecraftPlayer? = null
 
   val input = socket.openReadChannel()
   val output = socket.openWriteChannel()
