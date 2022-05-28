@@ -86,28 +86,24 @@ suspend fun main(): Unit = withContext(scope.coroutineContext + SupervisorJob())
 
   server.on<PlayerJoinEvent>(scope) {
     server.players.forEach {
-      it.sendMessage {
-        append(player.username) {
+      it.sendMessage("{player} joined the server") {
+        val player by placeholder(player.username) {
           hoverEvent = ShowText("@${player.username}")
 
-          bold()
           hex("#32a852")
         }
-        append(" joined the server")
       }
     }
   }
 
   server.on<PlayerQuitEvent>(scope) {
     server.players.forEach {
-      it.sendMessage {
-        append(player.username) {
+      it.sendMessage("{player} left the server") {
+        val player by placeholder(player.username) {
           hoverEvent = ShowText("@${player.username}")
 
-          bold()
           hex("#32a852")
         }
-        append(" left the server")
       }
     }
   }

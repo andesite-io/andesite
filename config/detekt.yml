@@ -697,7 +697,7 @@ style:
   UnusedPrivateClass:
     active: true
   UnusedPrivateMember:
-    active: true
+    active: false
     allowedNames: '(_|ignored|expected|serialVersionUID)'
     excludes: [ '**/build.gradle.kts' ]
   UseArrayLiteralsInAnnotations:

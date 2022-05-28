@@ -16,6 +16,8 @@
 
 package andesite.protocol.misc
 
+import kotlin.properties.PropertyDelegateProvider
+import kotlin.properties.ReadOnlyProperty
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -81,6 +83,20 @@ public interface ChatBuilder {
   public var insertion: String?
   public var italic: Boolean
   public var bold: Boolean
+
+  public fun placeholder(key: String, chat: Chat): Chat
+
+  public fun placeholder(
+    text: String,
+    builder: ChatBuilder.() -> Unit,
+  ): PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, Chat>> =
+    PropertyDelegateProvider { _, property ->
+      val chat = Chat.build(text, builder)
+
+      placeholder(property.name, chat)
+
+      ReadOnlyProperty { _, _ -> chat }
+    }
 
   public fun append(text: String, builder: ChatBuilder.() -> Unit = {})
 
@@ -165,14 +181,20 @@ public interface ChatBuilder {
 
 private class ChatBuilderImpl(private val initial: Chat) : ChatBuilder {
   private val components: MutableList<Chat> = mutableListOf()
+  private val placeholders: MutableMap<String, Chat> = mutableMapOf()
 
   override var clickEvent: ClickEvent? = null
   override var hoverEvent: HoverEvent? = null
   override var color: Color? = null
   override var font: Identifier? = null
   override var insertion: String? = null
-  override var italic: Boolean = false
-  override var bold: Boolean = false
+  override var italic: Boolean = initial.italic
+  override var bold: Boolean = initial.bold
+
+  override fun placeholder(key: String, chat: Chat): Chat {
+    placeholders[key] = chat
+    return chat
+  }
 
   override fun append(text: String, builder: ChatBuilder.() -> Unit) {
     components += Chat.build(text, builder)
@@ -182,11 +204,72 @@ private class ChatBuilderImpl(private val initial: Chat) : ChatBuilder {
     components += ChatBuilderImpl(chat).apply(builder).build()
   }
 
+  // TODO: optimize
   fun build(): Chat {
-    return initial
+    val chat = initial
       .copy(hoverEvent = hoverEvent ?: initial.hoverEvent)
       .copy(clickEvent = clickEvent ?: initial.clickEvent)
       .copy(color = color ?: initial.color)
+      .copy(italic = italic)
+      .copy(bold = bold)
+      .copy(insertion = insertion)
       .with(components)
+
+    val components = quoteString(chat.text).map { quote ->
+      when (quote.placeholder) {
+        true -> placeholders[quote.value] ?: chat.copy(text = quote.fullText, extra = null)
+        false -> chat.copy(text = quote.fullText, extra = null)
+      }
+    }
+
+    return chat.copy(text = "").with(components)
   }
+}
+
+internal data class Quote(val value: String, val fullText: String, val placeholder: Boolean)
+
+internal fun quoteString(string: String): List<Quote> = buildList {
+  fun addIfNotEmpty(i: Int, j: Int, placeholder: Boolean = false) {
+    val text = string.substring(i, j)
+    if (text.isEmpty()) return
+
+    add(Quote(text, text, placeholder))
+  }
+
+  var i = 0
+  var j = 0
+  var escaping = false
+
+  while (j < string.length) {
+    val c = string[i]
+
+    if (!escaping && c == '{') {
+      addIfNotEmpty(i, j)
+
+      var k = i + 1
+      while (string[k] != '}') {
+        k++
+      }
+      k++
+
+      val placeholder = string.substring(j + 1, k - 1)
+      if (placeholder.isNotEmpty()) {
+        add(Quote(placeholder, string.substring(j, k), true))
+      } else {
+        add(Quote("", string.substring(j, k), false))
+      }
+
+      i = k
+    }
+
+    escaping = false
+
+    if (c == '\\') {
+      escaping = true
+    }
+
+    j++
+  }
+
+  addIfNotEmpty(i, j)
 }
