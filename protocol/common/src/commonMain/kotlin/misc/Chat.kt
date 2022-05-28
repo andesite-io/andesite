@@ -212,7 +212,7 @@ public class ChatBuilder internal constructor(private val initial: Chat) {
 
     val components = quoteString(chat.text).map { quote ->
       when (quote.placeholder) {
-        true -> placeholders[quote.value] ?: chat.copy(text = quote.fullText, extra = null)
+        true -> placeholders[quote.text] ?: chat.copy(text = quote.fullText, extra = null)
         false -> chat.copy(text = quote.fullText, extra = null)
       }
     }

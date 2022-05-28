@@ -16,7 +16,13 @@
 
 package andesite.protocol.misc
 
-internal data class Quote(val value: String, val placeholder: Boolean, val fullText: String = value)
+internal data class Quote(val text: String, val placeholder: Boolean, val fullText: String = text) {
+  override fun toString(): String =
+    "Quote(" +
+      "text=\"$text\"," +
+      " placeholder=$placeholder," +
+      " fullText=\"$fullText\")"
+}
 
 internal fun quoteString(string: String): List<Quote> = buildList {
   fun addIfNotEmpty(i: Int, j: Int, placeholder: Boolean = false) {
