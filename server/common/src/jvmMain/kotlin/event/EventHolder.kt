@@ -29,7 +29,7 @@ public interface EventHolder<E : MinecraftEvent> : CoroutineScope {
 }
 
 public inline fun <reified E : MinecraftEvent> EventHolder<out MinecraftEvent>.on(
-  crossinline handle: suspend E.() -> Unit,
+  noinline handle: suspend E.() -> Unit,
 ) {
   launch(CoroutineName("listen-${E::class.simpleName}")) {
     eventFlow()

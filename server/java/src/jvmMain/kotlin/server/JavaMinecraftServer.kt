@@ -65,7 +65,7 @@ internal class JavaMinecraftServer(
   override val codec: MinecraftCodec,
   override val blockRegistry: BlockRegistry,
 ) : MinecraftServer,
-  CoroutineScope by CoroutineScope(context + CoroutineName("java-minecraft-server")) {
+  CoroutineScope by CoroutineScope(context + CoroutineName("andesite")) {
   private val playersMutex = Mutex()
   private val playersMut: MutableList<JavaPlayer> = mutableListOf()
   override val players: List<JavaPlayer> get() = playersMut
