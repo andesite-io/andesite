@@ -16,6 +16,8 @@
 
 package andesite.protocol.misc
 
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextStyle
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -29,32 +31,39 @@ import kotlinx.serialization.encoding.Encoder
 @SerialName("Color")
 public sealed class Color {
   public abstract val text: String
+  public abstract val style: TextStyle
 
   public companion object {
-    public val Black: Color = MinecraftColor("0")
-    public val DarkBlue: Color = MinecraftColor("1")
-    public val DarkGreen: Color = MinecraftColor("2")
-    public val DarkCyan: Color = MinecraftColor("3")
-    public val DarkRed: Color = MinecraftColor("4")
-    public val Purple: Color = MinecraftColor("5")
-    public val Gold: Color = MinecraftColor("6")
-    public val Gray: Color = MinecraftColor("7")
-    public val DarkGray: Color = MinecraftColor("8")
-    public val Blue: Color = MinecraftColor("9")
-    public val BrightGreen: Color = MinecraftColor("a")
-    public val Cyan: Color = MinecraftColor("b")
-    public val Red: Color = MinecraftColor("c")
-    public val Pink: Color = MinecraftColor("d")
-    public val Yellow: Color = MinecraftColor("e")
-    public val White: Color = MinecraftColor("f")
+    public val Black: Color = MinecraftColor("0", rgb("#000000"))
+    public val DarkBlue: Color = MinecraftColor("1", rgb("#0000aa"))
+    public val DarkGreen: Color = MinecraftColor("2", rgb("#00aa00"))
+    public val DarkCyan: Color = MinecraftColor("3", rgb("#00aaaa"))
+    public val DarkRed: Color = MinecraftColor("4", rgb("#aa0000"))
+    public val Purple: Color = MinecraftColor("5", rgb("#aa00aa"))
+    public val Gold: Color = MinecraftColor("6", rgb("#ffaa00"))
+    public val Gray: Color = MinecraftColor("7", rgb("#aaaaaa"))
+    public val DarkGray: Color = MinecraftColor("8", rgb("#555555"))
+    public val Blue: Color = MinecraftColor("9", rgb("#5555ff"))
+    public val BrightGreen: Color = MinecraftColor("a", rgb("#55ff55"))
+    public val Cyan: Color = MinecraftColor("b", rgb("#55ffff"))
+    public val Red: Color = MinecraftColor("c", rgb("#ff5555"))
+    public val Pink: Color = MinecraftColor("d", rgb("#ff55ff"))
+    public val Yellow: Color = MinecraftColor("e", rgb("#ffff55"))
+    public val White: Color = MinecraftColor("f", rgb("#ffffff"))
   }
 }
 
 @Serializable
-public data class MinecraftColor(override val text: String) : Color()
+public data class MinecraftColor(override val text: String, override val style: TextStyle) : Color()
 
 @Serializable
-public data class HexColor(override val text: String) : Color()
+public data class HexColor(override val text: String) : Color() {
+  init {
+    require(!text.startsWith("#")) { "The hex color must not start with `#`" }
+  }
+
+  override val style: TextStyle = rgb("#$text")
+}
 
 internal object ColorSerializer : KSerializer<Color> {
   override val descriptor: SerialDescriptor =
@@ -69,10 +78,25 @@ internal object ColorSerializer : KSerializer<Color> {
 
   override fun deserialize(decoder: Decoder): Color {
     val string = decoder.decodeString()
+    if (string.startsWith("#")) return HexColor(string)
 
-    return when (string.startsWith("#")) {
-      true -> HexColor(string)
-      false -> MinecraftColor(string)
+    return when (string) {
+      "1" -> Color.Black
+      "2" -> Color.DarkBlue
+      "3" -> Color.DarkCyan
+      "4" -> Color.DarkRed
+      "5" -> Color.Purple
+      "6" -> Color.Gold
+      "7" -> Color.Gray
+      "8" -> Color.DarkGray
+      "9" -> Color.Blue
+      "a" -> Color.BrightGreen
+      "b" -> Color.Cyan
+      "c" -> Color.Red
+      "d" -> Color.Pink
+      "e" -> Color.Yellow
+      "f" -> Color.White
+      else -> error("Unsupported minecraft color: $string")
     }
   }
 }

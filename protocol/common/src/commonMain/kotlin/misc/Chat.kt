@@ -27,6 +27,9 @@ public data class Chat(
   public val text: String,
   public val bold: Boolean = false,
   public val italic: Boolean = false,
+  public val underlined: Boolean = false,
+  public val strikethrough: Boolean = false,
+  public val obfuscated: Boolean = false,
   public val font: Identifier = Identifier("minecraft:default"),
   public val color: Color = Color.White,
   public val insertion: String? = null,
@@ -92,13 +95,16 @@ public class ChatBuilder internal constructor(private val initial: Chat) {
   public var font: Identifier = initial.font
   public var color: Color = initial.color
   public var italic: Boolean = initial.italic
+  public var strikethrough: Boolean = initial.strikethrough
+  public var underlined: Boolean = initial.underlined
+  public var obfuscated: Boolean = initial.obfuscated
   public var bold: Boolean = initial.bold
 
-  public fun append(text: String, builder: ChatBuilder.() -> Unit) {
+  public fun append(text: String, builder: ChatBuilder.() -> Unit = {}) {
     components += Chat.build(text, builder)
   }
 
-  public fun append(chat: Chat, builder: ChatBuilder.() -> Unit) {
+  public fun append(chat: Chat, builder: ChatBuilder.() -> Unit = {}) {
     components += ChatBuilder(chat).apply(builder).build()
   }
 
@@ -128,6 +134,18 @@ public class ChatBuilder internal constructor(private val initial: Chat) {
 
   public fun italic() {
     italic = true
+  }
+
+  public fun strikethrough() {
+    strikethrough = true
+  }
+
+  public fun underlined() {
+    underlined = true
+  }
+
+  public fun obfuscated() {
+    obfuscated = true
   }
 
   public fun bold() {
@@ -198,25 +216,27 @@ public class ChatBuilder internal constructor(private val initial: Chat) {
     color = Color.White
   }
 
-  // TODO: optimize
   public fun build(): Chat {
-    val chat = initial
-      .copy(hoverEvent = hoverEvent)
-      .copy(clickEvent = clickEvent)
-      .copy(font = font)
-      .copy(color = color)
-      .copy(italic = italic)
-      .copy(bold = bold)
-      .copy(insertion = insertion)
-      .with(components)
+    val chat = initial.copy(
+      hoverEvent = hoverEvent,
+      clickEvent = clickEvent,
+      font = font,
+      color = color,
+      italic = italic,
+      bold = bold,
+      strikethrough = strikethrough,
+      underlined = underlined,
+      obfuscated = obfuscated,
+      insertion = insertion,
+    )
 
-    val components = quoteString(chat.text).map { quote ->
+    val texts = quoteString(chat.text).map { quote ->
       when (quote.placeholder) {
         true -> placeholders[quote.text] ?: chat.copy(text = quote.fullText, extra = null)
         false -> chat.copy(text = quote.fullText, extra = null)
       }
     }
 
-    return chat.copy(text = "").with(components)
+    return chat.copy(text = "").with(texts).with(components)
   }
 }
