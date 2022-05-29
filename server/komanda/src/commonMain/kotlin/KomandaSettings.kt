@@ -21,6 +21,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
 public class KomandaSettings(
+  public val typeAliases: Map<String, KClass<*>>,
   public val acceptedTargets: Map<KClass<*>, Chat>,
   public val exceptionHandlers: Set<ExceptionHandler>,
   public val adapters: Map<KClass<*>, Any>,
@@ -37,6 +38,7 @@ public typealias ExceptionHandler = suspend ExecutionScope<Any>.(failure: Comman
 public typealias Execution<S> = suspend ExecutionScope<S>.() -> Unit
 
 public class KomandaSettingsBuilder {
+  public var typeAliases: MutableMap<String, KClass<*>> = mutableMapOf()
   public var acceptedTargets: Map<KClass<*>, Chat> = mapOf()
 
   @PublishedApi
@@ -57,6 +59,10 @@ public class KomandaSettingsBuilder {
     acceptedTargets = acceptedTargets + buildMap(builder)
   }
 
+  public inline fun <reified A : Any> alias(name: String) {
+    typeAliases[name] = A::class
+  }
+
   public inline fun <reified A : Any> argument(noinline parser: (String) -> A) {
     val type = typeOf<A>()
     val klass = type as? KClass<*> ?: error("$type must be a class type")
@@ -65,6 +71,6 @@ public class KomandaSettingsBuilder {
   }
 
   public fun build(): KomandaSettings {
-    return KomandaSettings(acceptedTargets, exceptionHandlers, adapters)
+    return KomandaSettings(typeAliases, acceptedTargets, exceptionHandlers, adapters)
   }
 }
