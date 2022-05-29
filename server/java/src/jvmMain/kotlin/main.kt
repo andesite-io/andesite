@@ -18,6 +18,8 @@ package andesite.java
 
 import andesite.event.on
 import andesite.java.server.createJavaServer
+import andesite.komanda.getValue
+import andesite.player.MinecraftPlayer
 import andesite.player.PlayerChatEvent
 import andesite.player.PlayerJoinEvent
 import andesite.player.PlayerQuitEvent
@@ -29,6 +31,7 @@ import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.server.MinecraftServer
 import andesite.server.broadcast
+import andesite.server.onPlayerExecution
 import andesite.world.Location
 import andesite.world.anvil.readAnvilWorld
 import andesite.world.block.readBlockRegistry
@@ -46,6 +49,21 @@ fun main() {
   System.setProperty(DEBUG_PROPERTY_NAME, DEBUG_PROPERTY_VALUE_ON)
 
   val server = createServer()
+
+  server.command("hello") {
+    pattern {
+      node {
+        intersection("send", "to")
+        argument<MinecraftPlayer>("player")
+      }
+
+      onPlayerExecution {
+        val target: MinecraftPlayer by arguments
+
+        target.sendMessage("Hello! (from ${sender.username})")
+      }
+    }
+  }
 
   server.on<PlayerJoinEvent> {
     server.broadcast("{player} joined the server") {

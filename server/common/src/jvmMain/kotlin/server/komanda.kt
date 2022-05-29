@@ -14,24 +14,13 @@
  *    limitations under the License.
  */
 
-package andesite.komanda.parsing
+package andesite.server
 
-import kotlin.reflect.KClass
+import andesite.komanda.Execution
+import andesite.komanda.PatternBuilder
+import andesite.komanda.onExecution
+import andesite.player.MinecraftPlayer
 
-public sealed interface PatternNode
-
-public class ArgumentNode<A : Any>(public val type: KClass<A>, public val name: String) :
-  PatternNode
-
-public class VarargNode(public val name: String) : PatternNode
-
-public class PathNode(public val name: String) : PatternNode
-
-public class OptionalNode(public val name: String) : PatternNode
-
-public class IntersectionNode(public val identifiers: Set<String>) :
-  PatternNode
-
-public fun parsePatternNode(string: String): List<PatternNode> {
-  TODO()
+public fun PatternBuilder.onPlayerExecution(handler: Execution<MinecraftPlayer>) {
+  onExecution(handler)
 }

@@ -16,6 +16,8 @@
 
 package andesite.komanda
 
+import andesite.komanda.parsing.PathNode
+import andesite.komanda.parsing.parsePatternNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatListBuilder
 import kotlin.reflect.KClass
@@ -36,6 +38,8 @@ public interface CommandBuilder : PatternBuilder {
   public fun usage(builder: ChatListBuilder.() -> Unit)
 
   public fun pattern(text: String, builder: PatternBuilder.() -> Unit)
+
+  public fun pattern(builder: PatternBuilder.() -> Unit)
 }
 
 internal class CommandBuilderImpl(val name: String) : CommandBuilder {
@@ -48,12 +52,20 @@ internal class CommandBuilderImpl(val name: String) : CommandBuilder {
   val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
   val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
 
+  override fun node(builder: PatternNodeListBuilder.() -> Unit) {
+    // nothing to do in root of command
+  }
+
   override fun usage(builder: ChatListBuilder.() -> Unit) {
     usage = Chat.many(builder)
   }
 
   override fun pattern(text: String, builder: PatternBuilder.() -> Unit) {
-    children += PatternBuilderImpl(text).apply(builder).build()
+    children += PatternBuilderImpl(parsePatternNode(text)).apply(builder).build()
+  }
+
+  override fun pattern(builder: PatternBuilder.() -> Unit) {
+    children += PatternBuilderImpl().apply(builder).build()
   }
 
   override fun onFailure(handler: ExceptionHandler) {
@@ -66,18 +78,18 @@ internal class CommandBuilderImpl(val name: String) : CommandBuilder {
   }
 
   fun build(): Command {
-    val rootPattern = PatternImpl(name, exceptionHandlers, executionHandlers)
+    val nodes = listOf(PathNode(name))
+    val rootPattern = PatternImpl(nodes, exceptionHandlers, executionHandlers)
 
-    return CommandImpl(rootPattern, usage, aliases.toSet(), permissions.toSet(), children)
+    return CommandImpl(rootPattern, name, usage, aliases.toSet(), permissions.toSet(), children)
   }
 }
 
 internal class CommandImpl(
   val rootPattern: Pattern,
+  override val name: String,
   override val usage: List<Chat>,
   override val aliases: Set<String>,
   override val permissions: Set<String>,
   override val children: Set<Pattern>,
-) : Command, Pattern by rootPattern {
-  override val name: String = rootPattern.text
-}
+) : Command, Pattern by rootPattern
