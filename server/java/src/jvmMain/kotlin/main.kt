@@ -16,9 +16,9 @@
 
 package andesite.java
 
+import andesite.command.onPlayerExecution
 import andesite.event.on
 import andesite.java.server.createJavaServer
-import andesite.komanda.getValue
 import andesite.player.MinecraftPlayer
 import andesite.player.PlayerChatEvent
 import andesite.player.PlayerJoinEvent
@@ -31,7 +31,6 @@ import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.server.MinecraftServer
 import andesite.server.broadcast
-import andesite.server.onPlayerExecution
 import andesite.world.Location
 import andesite.world.anvil.readAnvilWorld
 import andesite.world.block.readBlockRegistry

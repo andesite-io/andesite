@@ -31,13 +31,21 @@ import com.github.h0tk3y.betterParse.parser.Parser
 
 public sealed interface ExecutionNode {
   public val text: String
+  public val fullText: String
+  public val name: String? get() = null
 }
 
-public data class SimpleNode(override val text: String) : ExecutionNode {
+public data class SimpleNode(override val text: String, val quote: Boolean) : ExecutionNode {
+  override val fullText: String = when (quote) {
+    true -> "'$text'"
+    else -> text
+  }
+
   override fun toString(): String = "ParseNode(text=\"$text\")"
 }
 
-public data class NamedNode(val name: String, val node: ExecutionNode) : ExecutionNode {
+public data class NamedNode(override val name: String, val node: ExecutionNode) : ExecutionNode {
+  override val fullText: String = "$name:${node.fullText}"
   override val text: String = node.text
 
   override fun toString(): String = "ParseNode(name=:$name, text=\"$text\")"
@@ -58,13 +66,13 @@ public fun parseCommandString(string: String): List<ExecutionNode> {
       .and(optional(-assign and parser { argument }))
       .map { (token, node) ->
         when (node) {
-          null -> SimpleNode(token.text)
+          null -> SimpleNode(token.text, false)
           else -> NamedNode(token.text, node)
         }
       }
 
     val quotedArgument: Parser<ExecutionNode> by quote map {
-      SimpleNode(it.text.substring(1, it.text.length - 1))
+      SimpleNode(it.text.substring(1, it.text.length - 1), true)
     }
 
     val argument: Parser<ExecutionNode> by parser { simpleArgument } or quotedArgument

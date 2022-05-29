@@ -16,24 +16,31 @@
 
 package andesite.komanda
 
+import andesite.komanda.errors.CommandNotFoundException
+import andesite.komanda.errors.NoSwitchableTargetException
+import andesite.komanda.parsing.ExecutionNode
 import andesite.komanda.parsing.parseCommandString
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.withContext
 
-public interface KomandaRoot {
+public interface KomandaRoot<S : Any> {
   public val komanda: KomandaSettings
 
   public fun komanda(configure: KomandaSettingsBuilder.() -> Unit)
 
   public fun command(name: String, builder: CommandBuilder.() -> Unit)
 
-  public suspend fun <S : Any> dispatch(string: String, sender: S)
+  public suspend fun dispatch(string: String, sender: S)
 }
 
-public fun KomandaRoot(configure: KomandaSettingsBuilder.() -> Unit): KomandaRoot {
-  return KomandaRootImpl(KomandaSettings(configure))
-}
+public abstract class AbstractKomandaRoot<S : Any>(
+  builder: KomandaSettingsBuilder.() -> Unit = {},
+) : KomandaRoot<S> {
+  public val commands: MutableMap<String, Command> = mutableMapOf()
 
-private class KomandaRootImpl(override var komanda: KomandaSettings) : KomandaRoot {
-  val commands: MutableMap<String, Command> = mutableMapOf()
+  public override var komanda: KomandaSettings = KomandaSettings(builder)
+
+  public abstract fun createExecutionScope(sender: S, nodes: List<ExecutionNode>): ExecutionScope<S>
 
   override fun komanda(configure: KomandaSettingsBuilder.() -> Unit) {
     komanda = KomandaSettings(configure)
@@ -43,7 +50,21 @@ private class KomandaRootImpl(override var komanda: KomandaSettings) : KomandaRo
     commands[name] = CommandBuilder(name).apply(builder).build()
   }
 
-  override suspend fun <S : Any> dispatch(string: String, sender: S) {
-    println(parseCommandString(string))
+  override suspend fun dispatch(string: String, sender: S) {
+    val executionNodes = parseCommandString(string)
+    if (executionNodes.isEmpty()) return
+
+    val name = executionNodes.first()
+    val arguments = executionNodes.drop(1)
+
+    val command = commands[name.text]
+      ?: throw CommandNotFoundException(name.text)
+
+    val handler = command.rootPattern.executionHandlers[sender::class]
+      ?: throw NoSwitchableTargetException(sender::class)
+
+    withContext(CoroutineName("command/$name")) {
+      handler.invoke(createExecutionScope(sender, arguments))
+    }
   }
 }

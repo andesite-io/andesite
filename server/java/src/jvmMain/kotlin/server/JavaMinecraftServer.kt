@@ -17,6 +17,7 @@
 package andesite.java.server
 
 import andesite.AndesiteError
+import andesite.command.MinecraftKomandaRoot
 import andesite.event.MinecraftEvent
 import andesite.java.decodeRootTag
 import andesite.java.play.processPlay
@@ -34,6 +35,7 @@ import andesite.protocol.java.handshake.NextState
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
+import andesite.server.Messageable
 import andesite.server.MinecraftServer
 import andesite.server.Motd
 import andesite.world.Location
@@ -68,7 +70,7 @@ internal class JavaMinecraftServer(
 ) :
   MinecraftServer,
   CoroutineScope by CoroutineScope(context + CoroutineName("andesite")),
-  KomandaRoot by createKomandaRoot() {
+  KomandaRoot<Messageable> by MinecraftKomandaRoot() {
   private val playersMutex = Mutex()
   private val playersMut: MutableList<JavaPlayer> = mutableListOf()
   override val players: List<JavaPlayer> get() = playersMut

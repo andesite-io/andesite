@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,22 +14,23 @@
  *    limitations under the License.
  */
 
-package andesite.player
+package andesite.command
 
-import andesite.event.EventHolder
-import andesite.protocol.java.JavaPacket
-import andesite.protocol.misc.Uuid
+import andesite.komanda.Arguments
+import andesite.komanda.ExecutionScope
+import andesite.komanda.errors.CommandFailure
+import andesite.protocol.misc.Chat
 import andesite.server.Messageable
-import org.apache.logging.log4j.kotlin.Logging
 
-public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Messageable {
-  public val id: Uuid
-  public val protocol: Int
-  public val username: String
+public class MinecraftExecutionScope<S : Messageable>(
+  override val arguments: Arguments,
+  override val sender: S,
+) : ExecutionScope<S> {
+  override suspend fun sendMessage(chat: Chat) {
+    sender.sendMessage(chat)
+  }
+
+  override suspend fun failwith(chat: Chat) {
+    throw CommandFailure(chat)
+  }
 }
-
-public interface JavaPlayer : MinecraftPlayer {
-  public suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
-}
-
-public interface BedrockPlayer : MinecraftPlayer

@@ -14,13 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.server
+package andesite.komanda.errors
 
-import andesite.komanda.Execution
-import andesite.komanda.PatternBuilder
-import andesite.komanda.onExecution
-import andesite.player.MinecraftPlayer
+import andesite.protocol.misc.Chat
+import andesite.protocol.misc.mordant
 
-public fun PatternBuilder.onPlayerExecution(handler: Execution<MinecraftPlayer>) {
-  onExecution(handler)
+public class CommandFailure(public val chat: Chat, override val cause: Throwable? = null) :
+  RuntimeException() {
+  override val message: String = chat.mordant()
 }

@@ -16,6 +16,7 @@
 
 package andesite.komanda
 
+import andesite.komanda.errors.CommandFailure
 import andesite.protocol.misc.Chat
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf

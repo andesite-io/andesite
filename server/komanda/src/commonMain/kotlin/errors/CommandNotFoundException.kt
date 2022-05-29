@@ -14,12 +14,8 @@
  *    limitations under the License.
  */
 
-package andesite.komanda
+package andesite.komanda.errors
 
-import andesite.protocol.misc.Chat
-import andesite.protocol.misc.mordant
-
-public class CommandFailure(public val chat: Chat, override val cause: Throwable? = null) :
-  RuntimeException() {
-  override val message: String = chat.mordant()
+public class CommandNotFoundException(public val command: String) : RuntimeException() {
+  override val message: String = "Command $command not found"
 }

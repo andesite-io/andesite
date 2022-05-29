@@ -14,14 +14,18 @@
  *    limitations under the License.
  */
 
-package andesite.java.server
+package andesite.command
 
-import andesite.komanda.KomandaRoot
+import andesite.komanda.AbstractKomandaRoot
+import andesite.komanda.Arguments
+import andesite.komanda.ExecutionScope
+import andesite.komanda.parsing.ExecutionNode
 import andesite.player.MinecraftPlayer
 import andesite.protocol.misc.Chat
+import andesite.server.Messageable
 
-internal fun createKomandaRoot(): KomandaRoot {
-  return KomandaRoot {
+public class MinecraftKomandaRoot : AbstractKomandaRoot<Messageable>(
+  {
     alias<Int>("int")
     alias<Double>("double")
     alias<Float>("float")
@@ -41,5 +45,12 @@ internal fun createKomandaRoot(): KomandaRoot {
     acceptTargets {
       put(MinecraftPlayer::class, Chat.of("&cThe executor must be a player"))
     }
+  },
+) {
+  override fun createExecutionScope(
+    sender: Messageable,
+    nodes: List<ExecutionNode>,
+  ): ExecutionScope<Messageable> {
+    return MinecraftExecutionScope(Arguments(nodes), sender)
   }
 }

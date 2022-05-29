@@ -16,17 +16,20 @@
 
 package andesite.komanda
 
+import andesite.komanda.parsing.ExecutionNode
+import andesite.protocol.misc.Chat
+import andesite.protocol.misc.mordant
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
 class DispatchTest {
   @Test
   fun `test dispatch`(): Unit = runBlocking {
-    val root = KomandaRoot { }
+    val root = TestKomandaRoot()
 
     root.command("hello") {
-      onAnyExecution {
-        sendMessage("Hello, $sender!")
+      onExecution<String> {
+        sendMessage("Hello, $arguments!")
       }
     }
 
@@ -36,4 +39,22 @@ class DispatchTest {
     root.dispatch("hello target='world'", "Gabi")
     root.dispatch("hello target= 'world'", "Gabi")
   }
+}
+
+class TestExecutionScope<S : Any>(override val sender: S, nodes: List<ExecutionNode>) :
+  ExecutionScope<S> {
+  override val arguments: Arguments = Arguments(nodes)
+
+  override suspend fun sendMessage(chat: Chat) {
+    println("message: ${chat.mordant()}")
+  }
+
+  override suspend fun failwith(chat: Chat) {
+    println("fail: ${chat.mordant()}")
+  }
+}
+
+class TestKomandaRoot : AbstractKomandaRoot<String>() {
+  override fun createExecutionScope(sender: String, nodes: List<ExecutionNode>) =
+    TestExecutionScope(sender, nodes)
 }

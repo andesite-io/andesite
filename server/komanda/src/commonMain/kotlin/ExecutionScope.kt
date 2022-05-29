@@ -16,15 +16,14 @@
 
 package andesite.komanda
 
+import andesite.komanda.parsing.ExecutionNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 
 public interface ExecutionScope<S : Any> {
-  public val target: KType
   public val arguments: Arguments
   public val sender: S
 
@@ -41,25 +40,36 @@ public interface ExecutionScope<S : Any> {
   }
 }
 
-public interface Arguments {
-  public val size: Int
+public class Arguments(private val nodes: List<ExecutionNode>) {
+  public val size: Int get() = nodes.size
 
-  public fun <A : Any> get(name: String, type: KClass<A>): A
-
-  public fun <A : Any> getOrNull(name: String, type: KClass<A>): A?
-
-  public fun toList(): List<String>
-}
-
-public inline fun <reified A : Any> Arguments.orDefault(value: A): ReadOnlyProperty<Any?, A> {
-  return ReadOnlyProperty { _, property ->
-    getOrNull(property.name, A::class) ?: value
+  public fun <A : Any> get(name: String, type: KClass<A>): A {
+    TODO()
   }
-}
 
-public inline operator fun <reified A : Any> Arguments.getValue(
-  thisRef: Any?,
-  property: KProperty<*>,
-): A {
-  return get(property.name, A::class)
+  public fun <A : Any> getOrNull(name: String, type: KClass<A>): A? {
+    TODO()
+  }
+
+  public inline fun <reified A : Any> Arguments.orDefault(value: A): ReadOnlyProperty<Any?, A> {
+    return ReadOnlyProperty { _, property ->
+      getOrNull(property.name, A::class) ?: value
+    }
+  }
+
+  public inline operator fun <reified A : Any> getValue(thisRef: Any?, property: KProperty<*>): A {
+    return get(property.name, A::class)
+  }
+
+  public fun toStringList(): List<String> {
+    return nodes.map { it.fullText }
+  }
+
+  public fun toList(): List<ExecutionNode> {
+    return nodes
+  }
+
+  override fun toString(): String {
+    return toStringList().joinToString(" ")
+  }
 }

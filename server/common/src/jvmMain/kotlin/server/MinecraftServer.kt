@@ -33,7 +33,7 @@ public interface MinecraftServer :
   CoroutineScope,
   EventHolder<MinecraftEvent>,
   Logging,
-  KomandaRoot {
+  KomandaRoot<Messageable> {
   public val codec: MinecraftCodec
   public val protocolVersion: Int
   public val minecraftVersion: String
