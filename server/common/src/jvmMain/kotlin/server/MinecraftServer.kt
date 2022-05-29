@@ -24,6 +24,7 @@ import andesite.protocol.serialization.MinecraftCodec
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 import org.apache.logging.log4j.kotlin.Logging
 
@@ -36,6 +37,7 @@ public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent>, 
   public val spawn: Location
   public val blockRegistry: BlockRegistry
   public val nbt: Nbt
+  public val json: Json
 
   public fun listen()
 }

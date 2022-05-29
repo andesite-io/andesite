@@ -53,6 +53,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 
 internal class JavaMinecraftServer(
@@ -79,6 +80,7 @@ internal class JavaMinecraftServer(
   }
 
   override val nbt: Nbt get() = codec.configuration.nbt
+  override val json: Json get() = codec.configuration.json
 
   override val protocolVersion = codec.configuration.protocolVersion
   override val minecraftVersion = extractMinecraftVersion(codec.configuration.protocolVersion)
