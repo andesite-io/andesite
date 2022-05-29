@@ -28,6 +28,7 @@ import andesite.protocol.misc.UuidSerializer
 import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.server.MinecraftServer
+import andesite.server.broadcast
 import andesite.world.Location
 import andesite.world.anvil.readAnvilWorld
 import andesite.world.block.readBlockRegistry
@@ -47,33 +48,27 @@ fun main() {
   val server = createServer()
 
   server.on<PlayerJoinEvent> {
-    server.players.forEach {
-      it.sendMessage("{player} joined the server") {
-        val player by placeholder(player.username) {
-          hoverEvent = ShowText("@${player.username}")
+    server.broadcast("{player} joined the server") {
+      val player by placeholder(player.username) {
+        hoverEvent = ShowText("@${player.username}")
 
-          hex("32a852")
-        }
+        hex("32a852")
       }
     }
   }
 
   server.on<PlayerQuitEvent> {
-    server.players.forEach {
-      it.sendMessage("{player} left the server") {
-        val player by placeholder(player.username) {
-          hoverEvent = ShowText("@${player.username}")
+    server.broadcast("{player} left the server") {
+      val player by placeholder(player.username) {
+        hoverEvent = ShowText("@${player.username}")
 
-          hex("32a852")
-        }
+        hex("32a852")
       }
     }
   }
 
   server.on<PlayerChatEvent> {
-    server.players.forEach {
-      it.sendMessage("<${player.username}> ${message.text}")
-    }
+    server.broadcast("<${player.username}> ${message.text}")
   }
 
   server.listen()
