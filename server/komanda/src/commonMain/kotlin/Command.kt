@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,23 +14,22 @@
  *    limitations under the License.
  */
 
-kotlin {
-  explicitApi()
+package andesite.komanda
 
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":protocol:common"))
-        implementation(project(":protocol:bedrock"))
-        implementation(project(":protocol:java"))
+import andesite.protocol.misc.Chat
+import andesite.protocol.misc.ChatListBuilder
+import kotlin.reflect.KType
 
-        implementation(project(":world:common"))
-        implementation(project(":world:anvil"))
+public interface Command {
+  public val target: KType
+  public val usage: List<Chat>
+  public val aliases: Set<String>
+  public val patterns: Set<Pattern>
+  public val permissions: Set<String>
+}
 
-        implementation(project(":server:komanda"))
+public interface CommandBuilder : PatternBuilder {
+  public fun usage(builder: ChatListBuilder.() -> Unit)
 
-        implementation("net.benwoodworth.knbt:knbt:0.11.1")
-      }
-    }
-  }
+  public fun pattern(text: String, builder: PatternBuilder.() -> Unit)
 }

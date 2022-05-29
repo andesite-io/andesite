@@ -18,6 +18,7 @@ package andesite.server
 
 import andesite.event.EventHolder
 import andesite.event.MinecraftEvent
+import andesite.komanda.KomandaRoot
 import andesite.player.MinecraftPlayer
 import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec
@@ -28,7 +29,11 @@ import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 import org.apache.logging.log4j.kotlin.Logging
 
-public interface MinecraftServer : CoroutineScope, EventHolder<MinecraftEvent>, Logging {
+public interface MinecraftServer :
+  CoroutineScope,
+  EventHolder<MinecraftEvent>,
+  Logging,
+  KomandaRoot {
   public val codec: MinecraftCodec
   public val protocolVersion: Int
   public val minecraftVersion: String

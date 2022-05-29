@@ -24,6 +24,7 @@ import andesite.java.player.Session
 import andesite.java.player.receivePacket
 import andesite.java.processLogin
 import andesite.java.processStatus
+import andesite.komanda.KomandaRoot
 import andesite.player.JavaPlayer
 import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.data.Dimension
@@ -64,8 +65,10 @@ internal class JavaMinecraftServer(
   override val motd: Motd,
   override val codec: MinecraftCodec,
   override val blockRegistry: BlockRegistry,
-) : MinecraftServer,
-  CoroutineScope by CoroutineScope(context + CoroutineName("andesite")) {
+) :
+  MinecraftServer,
+  CoroutineScope by CoroutineScope(context + CoroutineName("andesite")),
+  KomandaRoot by createKomandaRoot() {
   private val playersMutex = Mutex()
   private val playersMut: MutableList<JavaPlayer> = mutableListOf()
   override val players: List<JavaPlayer> get() = playersMut

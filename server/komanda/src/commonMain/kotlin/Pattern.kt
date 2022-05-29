@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,23 +14,20 @@
  *    limitations under the License.
  */
 
-kotlin {
-  explicitApi()
+package andesite.komanda
 
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":protocol:common"))
-        implementation(project(":protocol:bedrock"))
-        implementation(project(":protocol:java"))
+import kotlin.reflect.KClass
 
-        implementation(project(":world:common"))
-        implementation(project(":world:anvil"))
+public interface Pattern
 
-        implementation(project(":server:komanda"))
+public interface PatternBuilder {
+  public fun onFailure(handler: suspend ExecutionScope<Any>.() -> Unit)
 
-        implementation("net.benwoodworth.knbt:knbt:0.11.1")
-      }
-    }
-  }
+  public fun <S : Any> onExecution(type: KClass<S>, handler: suspend ExecutionScope<S>.() -> Unit)
+}
+
+public inline fun <reified S : Any> PatternBuilder.onExecution(
+  noinline handler: suspend ExecutionScope<S>.() -> Unit,
+) {
+  return onExecution(S::class, handler)
 }

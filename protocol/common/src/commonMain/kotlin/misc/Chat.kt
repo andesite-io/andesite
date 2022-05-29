@@ -56,6 +56,10 @@ public data class Chat(
     public fun build(chat: Chat, builder: ChatBuilder.() -> Unit): Chat {
       return ChatBuilder(chat).apply(builder).build()
     }
+
+    public fun many(builder: ChatListBuilder.() -> Unit): List<Chat> {
+      return ChatListBuilder().apply(builder).build()
+    }
   }
 
   public fun with(chats: Collection<Chat>): Chat {
@@ -84,6 +88,20 @@ public data class Chat(
 
 public typealias PlaceholderProvider =
   PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, Chat>>
+
+public class ChatListBuilder internal constructor() {
+  private val components: MutableList<Chat> = mutableListOf()
+
+  public fun append(chat: Chat) {
+    components += chat
+  }
+
+  public fun append(text: String, builder: ChatBuilder.() -> Unit) {
+    components += Chat.build(text, builder)
+  }
+
+  public fun build(): List<Chat> = components
+}
 
 public class ChatBuilder internal constructor(private val initial: Chat) {
   private val components: MutableList<Chat> = mutableListOf()

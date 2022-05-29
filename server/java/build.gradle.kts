@@ -18,6 +18,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
+        implementation(project(":server:komanda"))
         implementation(project(":server:common"))
 
         implementation(project(":protocol:common"))
