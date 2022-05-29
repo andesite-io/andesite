@@ -14,10 +14,7 @@
  *    limitations under the License.
  */
 
-@file:OptIn(
-  ExperimentalSerializationApi::class, ExperimentalSerializationApi::class,
-  ExperimentalSerializationApi::class,
-)
+@file:OptIn(ExperimentalSerializationApi::class)
 
 package andesite.java.player
 
