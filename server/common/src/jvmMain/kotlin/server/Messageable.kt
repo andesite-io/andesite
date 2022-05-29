@@ -20,7 +20,7 @@ import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
 
 public interface Messageable {
-  public fun sendMessage(chat: Chat)
+  public suspend fun sendMessage(chat: Chat)
 
   public suspend fun sendMessage(text: String = "", builder: ChatBuilder.() -> Unit) {
     sendMessage(Chat.build(text, builder))
