@@ -14,24 +14,21 @@
  *    limitations under the License.
  */
 
-kotlin {
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
+package andesite.komanda.parsing
 
-  explicitApi()
+public sealed interface ExecutionNode {
+  public val text: String
+}
 
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
-        implementation(project(":protocol:common"))
-      }
-    }
-  }
+public data class SimpleNode(override val text: String) : ExecutionNode {
+  override fun toString(): String = "ParseNode(text=\"$text\")"
+}
+
+public data class NamedNode(
+  public val name: String,
+  public val node: ExecutionNode,
+) : ExecutionNode {
+  override val text: String = node.text
+
+  override fun toString(): String = "ParseNode(name=:$name, text=\"$text\")"
 }

@@ -28,6 +28,16 @@ public interface PatternBuilder {
   public fun onFailure(handler: ExceptionHandler)
 
   public fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>)
+
+  public fun onAnyExecution(handler: Execution<Any>) {
+    onExecution(Any::class, handler)
+  }
+}
+
+public inline fun <reified S : Any> PatternBuilder.onExecution(
+  noinline handler: suspend ExecutionScope<S>.() -> Unit,
+) {
+  return onExecution(S::class, handler)
 }
 
 internal class PatternBuilderImpl(val text: String) : PatternBuilder {
@@ -53,9 +63,3 @@ internal class PatternImpl(
   override val exceptionHandlers: Set<ExceptionHandler>,
   override val executionHandlers: Map<KClass<*>, Execution<*>>,
 ) : Pattern
-
-public inline fun <reified S : Any> PatternBuilder.onExecution(
-  noinline handler: suspend ExecutionScope<S>.() -> Unit,
-) {
-  return onExecution(S::class, handler)
-}

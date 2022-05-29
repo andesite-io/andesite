@@ -14,24 +14,17 @@
  *    limitations under the License.
  */
 
-kotlin {
-  val hostOs = System.getProperty("os.name")
-  val isMingwX64 = hostOs.startsWith("Windows")
-  when {
-    hostOs == "Mac OS X" -> macosX64("native")
-    hostOs == "Linux" -> linuxX64("native")
-    isMingwX64 -> mingwX64("native")
-    else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-  }
+package andesite.komanda.parsing
 
-  explicitApi()
+public sealed interface PatternNode
 
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
-        implementation(project(":protocol:common"))
-      }
-    }
-  }
-}
+public class DefNode(public val name: String) : PatternNode
+
+public class VarargNode(public val name: String) : PatternNode
+
+public class PathNode(public val name: String) : PatternNode
+
+public class OptionalNode(public val node: PatternNode) : PatternNode
+
+public class IntersectionNode(public val right: PatternNode, public val left: PatternNode) :
+  PatternNode

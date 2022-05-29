@@ -26,6 +26,10 @@ internal data class Quote(val text: String, val placeholder: Boolean, val fullTe
 
 internal fun quoteString(string: String): List<Quote> = buildList {
   fun addIfNotEmpty(i: Int, j: Int, placeholder: Boolean = false) {
+    if (j >= string.length) {
+      return
+    }
+
     val text = string.substring(i, j)
     if (text.isEmpty()) return
 

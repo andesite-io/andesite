@@ -16,12 +16,16 @@
 
 package andesite.komanda
 
+import andesite.komanda.parsing.parseCommandString
+
 public interface KomandaRoot {
   public val komanda: KomandaSettings
 
   public fun komanda(configure: KomandaSettingsBuilder.() -> Unit)
 
   public fun command(name: String, builder: CommandBuilder.() -> Unit)
+
+  public suspend fun <S : Any> dispatch(string: String, sender: S)
 }
 
 public fun KomandaRoot(configure: KomandaSettingsBuilder.() -> Unit): KomandaRoot {
@@ -37,5 +41,9 @@ private class KomandaRootImpl(override var komanda: KomandaSettings) : KomandaRo
 
   override fun command(name: String, builder: CommandBuilder.() -> Unit) {
     commands[name] = CommandBuilderImpl(name).apply(builder).build()
+  }
+
+  override suspend fun <S : Any> dispatch(string: String, sender: S) {
+    println(parseCommandString(string))
   }
 }
