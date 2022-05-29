@@ -48,7 +48,7 @@ internal class JavaPlayerImpl(
     session.sendPacket(ChatMessagePacket(chat, ChatPosition.Chat, uuid4()))
   }
 
-  override suspend fun sendPacket(packet: JavaPacket, queue: Boolean) {
+  override suspend fun sendPacket(packet: JavaPacket) {
     session.sendPacket(JavaPacket.serializer(), packet)
   }
 }

@@ -29,7 +29,7 @@ public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Mes
 }
 
 public interface JavaPlayer : MinecraftPlayer {
-  public suspend fun sendPacket(packet: JavaPacket, queue: Boolean = false)
+  public suspend fun sendPacket(packet: JavaPacket)
 }
 
 public interface BedrockPlayer : MinecraftPlayer
