@@ -17,14 +17,17 @@
 package andesite.java.play
 
 import andesite.java.player.Session
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.cancel
 
-internal suspend fun handlePackets(session: Session) {
+internal suspend fun handlePackets(scope: CoroutineScope, session: Session) {
   while (true) {
     try {
       val packet = session.acceptPacket() ?: continue
 
       session.inboundPacketFlow.emit(packet)
     } catch (_: Throwable) {
+      scope.cancel()
       break
     }
   }

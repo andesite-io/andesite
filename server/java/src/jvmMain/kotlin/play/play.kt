@@ -35,7 +35,7 @@ import org.apache.logging.log4j.kotlin.logger
 private val logger = logger("andesite.handlers.Play")
 
 internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlayer): Job =
-  session.launch(CoroutineName("handlePlay")) {
+  session.launch(Job() + CoroutineName("io/processPlay")) job@{
     session.sendPacket(
       JoinGamePacket(
         entityId = 0,
@@ -73,7 +73,7 @@ internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlaye
 
     publish(PlayerJoinEvent(player))
 
-    launch(CoroutineName("in/listenPackets")) { handlePackets(session) }
+    launch(CoroutineName("in/listenPackets")) { handlePackets(this@job, session) }
     launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
     launch(CoroutineName("out/sendChunk")) { handleChunks(session) }
     launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
