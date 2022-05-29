@@ -35,6 +35,8 @@ public typealias ArgumentParser<A> = (text: String) -> A
 
 public typealias ExceptionHandler = suspend ExecutionScope<Any>.(failure: CommandFailure) -> Unit
 
+public typealias Execution<S> = suspend ExecutionScope<S>.() -> Unit
+
 public class KomandaSettingsBuilder {
   public var typeAliases: MutableMap<String, KClass<*>> = mutableMapOf()
   public var acceptedTargets: Map<KClass<*>, Chat> = mapOf()
@@ -45,19 +47,8 @@ public class KomandaSettingsBuilder {
   @PublishedApi
   internal val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
 
-  public inline fun <reified A : Any> alias(name: String) {
-    typeAliases[name] = A::class
-  }
-
   public fun <A : Any> argument(type: KClass<A>, parser: (String) -> A) {
     adapters[type] = parser
-  }
-
-  public inline fun <reified A : Any> argument(noinline parser: (String) -> A) {
-    val type = typeOf<A>()
-    val klass = type as? KClass<*> ?: error("$type must be a class type")
-
-    adapters[klass] = parser
   }
 
   public fun onFailure(handler: ExceptionHandler) {
@@ -66,6 +57,17 @@ public class KomandaSettingsBuilder {
 
   public fun acceptTargets(builder: MutableMap<KClass<*>, Chat>.() -> Unit) {
     acceptedTargets = acceptedTargets + buildMap(builder)
+  }
+
+  public inline fun <reified A : Any> alias(name: String) {
+    typeAliases[name] = A::class
+  }
+
+  public inline fun <reified A : Any> argument(noinline parser: (String) -> A) {
+    val type = typeOf<A>()
+    val klass = type as? KClass<*> ?: error("$type must be a class type")
+
+    adapters[klass] = parser
   }
 
   public fun build(): KomandaSettings {

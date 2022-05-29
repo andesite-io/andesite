@@ -18,18 +18,66 @@ package andesite.komanda
 
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatListBuilder
-import kotlin.reflect.KType
+import kotlin.reflect.KClass
 
-public interface Command {
-  public val target: KType
+public interface Command : Pattern {
+  public val name: String
   public val usage: List<Chat>
   public val aliases: Set<String>
-  public val patterns: Set<Pattern>
   public val permissions: Set<String>
+  public val children: Set<Pattern> // TODO: add possibility to pattern own children too
 }
 
 public interface CommandBuilder : PatternBuilder {
+  public var permissions: List<String>
+  public var aliases: List<String>
+  public var usage: List<Chat>
+
   public fun usage(builder: ChatListBuilder.() -> Unit)
 
   public fun pattern(text: String, builder: PatternBuilder.() -> Unit)
+}
+
+internal class CommandBuilderImpl(val name: String) : CommandBuilder {
+  override var permissions: List<String> = listOf()
+  override var aliases: List<String> = listOf()
+  override var usage: List<Chat> = listOf()
+
+  val children: MutableSet<Pattern> = mutableSetOf()
+
+  val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
+  val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
+
+  override fun usage(builder: ChatListBuilder.() -> Unit) {
+    usage = Chat.many(builder)
+  }
+
+  override fun pattern(text: String, builder: PatternBuilder.() -> Unit) {
+    children += PatternBuilderImpl(text).apply(builder).build()
+  }
+
+  override fun onFailure(handler: ExceptionHandler) {
+    exceptionHandlers += handler
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  override fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
+    executionHandlers[type] = handler as Execution<*>
+  }
+
+  fun build(): Command {
+    val rootPattern = PatternImpl(name, exceptionHandlers, executionHandlers)
+
+    return CommandImpl(rootPattern, usage, aliases.toSet(), permissions.toSet(), children)
+  }
+}
+
+internal class CommandImpl(
+  val rootPattern: Pattern,
+  override val usage: List<Chat>,
+  override val aliases: Set<String>,
+  override val permissions: Set<String>,
+  override val children: Set<Pattern>,
+) : Command, Pattern by rootPattern {
+  override val name: String = rootPattern.text
 }

@@ -29,11 +29,13 @@ public fun KomandaRoot(configure: KomandaSettingsBuilder.() -> Unit): KomandaRoo
 }
 
 private class KomandaRootImpl(override var komanda: KomandaSettings) : KomandaRoot {
+  val commands: MutableMap<String, Command> = mutableMapOf()
+
   override fun komanda(configure: KomandaSettingsBuilder.() -> Unit) {
     komanda = KomandaSettings(configure)
   }
 
   override fun command(name: String, builder: CommandBuilder.() -> Unit) {
-    TODO("Not yet implemented")
+    commands[name] = CommandBuilderImpl(name).apply(builder).build()
   }
 }

@@ -18,13 +18,41 @@ package andesite.komanda
 
 import kotlin.reflect.KClass
 
-public interface Pattern
+public interface Pattern {
+  public val text: String
+  public val exceptionHandlers: Set<ExceptionHandler>
+  public val executionHandlers: Map<KClass<*>, Execution<*>>
+}
 
 public interface PatternBuilder {
-  public fun onFailure(handler: suspend ExecutionScope<Any>.() -> Unit)
+  public fun onFailure(handler: ExceptionHandler)
 
-  public fun <S : Any> onExecution(type: KClass<S>, handler: suspend ExecutionScope<S>.() -> Unit)
+  public fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>)
 }
+
+internal class PatternBuilderImpl(val text: String) : PatternBuilder {
+  val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
+  val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
+
+  override fun onFailure(handler: ExceptionHandler) {
+    exceptionHandlers += handler
+  }
+
+  @Suppress("UNCHECKED_CAST")
+  override fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
+    executionHandlers[type] = handler as Execution<*>
+  }
+
+  fun build(): Pattern {
+    return PatternImpl(text, exceptionHandlers, executionHandlers)
+  }
+}
+
+internal class PatternImpl(
+  override val text: String,
+  override val exceptionHandlers: Set<ExceptionHandler>,
+  override val executionHandlers: Map<KClass<*>, Execution<*>>,
+) : Pattern
 
 public inline fun <reified S : Any> PatternBuilder.onExecution(
   noinline handler: suspend ExecutionScope<S>.() -> Unit,
