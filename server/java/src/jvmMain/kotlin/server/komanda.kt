@@ -22,12 +22,6 @@ import andesite.protocol.misc.Chat
 
 internal fun createKomandaRoot(): KomandaRoot {
   return KomandaRoot {
-    alias<Int>("int")
-    alias<Double>("double")
-    alias<Float>("float")
-    alias<Byte>("byte")
-    alias<Short>("short")
-
     onFailure { failure ->
       when (failure.cause) {
         null -> sendMessage(failure.chat)
