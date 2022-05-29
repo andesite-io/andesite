@@ -14,24 +14,18 @@
  *    limitations under the License.
  */
 
-package andesite.komanda.parsing
+package andesite.komanda
 
 import kotlin.reflect.KClass
 
-public sealed interface PatternNode
+public interface HasExecutor {
+  public fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>)
 
-public data class ArgumentNode<A : Any>(val type: KClass<A>, val name: String) :
-  PatternNode
+  public fun onAnyExecution(handler: Execution<Any>) {
+    onExecution(Any::class, handler)
+  }
+}
 
-public data class VarargNode(val name: String) : PatternNode
-
-public data class PathNode(val name: String) : PatternNode
-
-public data class OptionalNode(val name: String) : PatternNode
-
-public data class IntersectionNode(val identifiers: Set<String>) :
-  PatternNode
-
-public fun parsePatternNode(string: String): List<PatternNode> {
-  TODO()
+public inline fun <reified S : Any> HasExecutor.onExecution(noinline handler: Execution<S>) {
+  onExecution(S::class, handler)
 }

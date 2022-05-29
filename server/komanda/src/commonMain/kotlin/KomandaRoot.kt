@@ -40,7 +40,7 @@ private class KomandaRootImpl(override var komanda: KomandaSettings) : KomandaRo
   }
 
   override fun command(name: String, builder: CommandBuilder.() -> Unit) {
-    commands[name] = CommandBuilderImpl(name).apply(builder).build()
+    commands[name] = CommandBuilder(name).apply(builder).build()
   }
 
   override suspend fun <S : Any> dispatch(string: String, sender: S) {

@@ -37,10 +37,7 @@ public data class SimpleNode(override val text: String) : ExecutionNode {
   override fun toString(): String = "ParseNode(text=\"$text\")"
 }
 
-public data class NamedNode(
-  public val name: String,
-  public val node: ExecutionNode,
-) : ExecutionNode {
+public data class NamedNode(val name: String, val node: ExecutionNode) : ExecutionNode {
   override val text: String = node.text
 
   override fun toString(): String = "ParseNode(name=:$name, text=\"$text\")"

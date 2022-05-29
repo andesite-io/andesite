@@ -24,36 +24,38 @@ import andesite.komanda.parsing.PatternNode
 import andesite.komanda.parsing.VarargNode
 import kotlin.reflect.KClass
 
-public interface Pattern {
-  public val node: List<PatternNode>
-  public val exceptionHandlers: Set<ExceptionHandler>
-  public val executionHandlers: Map<KClass<*>, Execution<*>>
-}
+public data class Pattern(
+  val node: List<PatternNode>,
+  val exceptionHandlers: Set<ExceptionHandler>,
+  val executionHandlers: Map<KClass<*>, Execution<*>>,
+)
 
-public interface PatternBuilder {
-  public fun node(builder: PatternNodeListBuilder.() -> Unit)
+public class PatternBuilder(private var node: List<PatternNode>? = null) : HasExecutor {
+  private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
+  private val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
 
-  public fun onFailure(handler: ExceptionHandler)
-
-  public fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>)
-
-  public fun onAnyExecution(handler: Execution<Any>) {
-    onExecution(Any::class, handler)
+  public fun node(builder: PatternNodeListBuilder.() -> Unit) {
+    node = PatternNodeListBuilder().apply(builder).build()
   }
-}
 
-public inline fun <reified S : Any> PatternBuilder.onExecution(
-  noinline handler: suspend ExecutionScope<S>.() -> Unit,
-) {
-  return onExecution(S::class, handler)
+  public fun onFailure(handler: ExceptionHandler) {
+    exceptionHandlers += handler
+  }
+
+  override fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
+    @Suppress("UNCHECKED_CAST")
+    executionHandlers[type] = handler as Execution<*>
+  }
+
+  public fun build(): Pattern {
+    requireNotNull(node) { "The node must be set to build a Pattern" }
+
+    return Pattern(node!!, exceptionHandlers, executionHandlers)
+  }
 }
 
 public class PatternNodeListBuilder {
   private val nodes: MutableList<PatternNode> = mutableListOf()
-
-  public fun <A : Any> argument(type: KClass<A>, name: String): ArgumentNode<A> {
-    return ArgumentNode(type, name).also(nodes::add)
-  }
 
   public fun vararg(name: String): VarargNode {
     return VarargNode(name).also(nodes::add)
@@ -71,6 +73,10 @@ public class PatternNodeListBuilder {
     return IntersectionNode(identifiers.toSet()).also(nodes::add)
   }
 
+  public fun <A : Any> argument(type: KClass<A>, name: String): ArgumentNode<A> {
+    return ArgumentNode(type, name).also(nodes::add)
+  }
+
   public inline fun <reified A : Any> argument(name: String): ArgumentNode<A> {
     return argument(A::class, name)
   }
@@ -79,33 +85,3 @@ public class PatternNodeListBuilder {
     return nodes
   }
 }
-
-internal class PatternBuilderImpl(var node: List<PatternNode>? = null) : PatternBuilder {
-  val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
-  val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
-
-  override fun node(builder: PatternNodeListBuilder.() -> Unit) {
-    node = PatternNodeListBuilder().apply(builder).build()
-  }
-
-  override fun onFailure(handler: ExceptionHandler) {
-    exceptionHandlers += handler
-  }
-
-  @Suppress("UNCHECKED_CAST")
-  override fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
-    executionHandlers[type] = handler as Execution<*>
-  }
-
-  fun build(): Pattern {
-    requireNotNull(node) { "The node must be set to build a Pattern" }
-
-    return PatternImpl(node!!, exceptionHandlers, executionHandlers)
-  }
-}
-
-internal class PatternImpl(
-  override val node: List<PatternNode>,
-  override val exceptionHandlers: Set<ExceptionHandler>,
-  override val executionHandlers: Map<KClass<*>, Execution<*>>,
-) : Pattern
