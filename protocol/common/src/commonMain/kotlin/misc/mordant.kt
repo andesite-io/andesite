@@ -26,7 +26,10 @@ public fun Chat.mordant(): String {
     }
 
     val style = TextStyle(
-      color = chat.color.style.color,
+      color = when (val color = chat.color) {
+        Color.White -> null
+        else -> color.style.color
+      },
       bold = chat.bold,
       italic = chat.italic,
       underline = chat.underlined,
