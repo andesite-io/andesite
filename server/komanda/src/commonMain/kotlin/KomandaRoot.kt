@@ -38,12 +38,12 @@ public abstract class AbstractKomandaRoot<S : Any>(
 ) : KomandaRoot<S> {
   public val commands: MutableMap<String, Command> = mutableMapOf()
 
-  public override var komanda: KomandaSettings = KomandaSettings(builder)
+  public override var komanda: KomandaSettings = KomandaSettings(DefaultKomandaSettings, builder)
 
   public abstract fun createExecutionScope(sender: S, nodes: List<ExecutionNode>): ExecutionScope<S>
 
   override fun komanda(configure: KomandaSettingsBuilder.() -> Unit) {
-    komanda = KomandaSettings(configure)
+    komanda = KomandaSettings(komanda, configure)
   }
 
   override fun command(name: String, builder: CommandBuilder.() -> Unit) {

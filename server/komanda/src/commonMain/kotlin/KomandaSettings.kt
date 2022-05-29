@@ -22,14 +22,19 @@ import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
 public class KomandaSettings(
-  public val typeAliases: Map<String, KClass<*>>,
-  public val acceptedTargets: Map<KClass<*>, Chat>,
-  public val exceptionHandlers: Set<ExceptionHandler>,
-  public val adapters: Map<KClass<*>, Any>,
+  public val typeAliases: Map<String, KClass<*>> = emptyMap(),
+  public val acceptedTargets: Map<KClass<*>, Chat> = emptyMap(),
+  public val exceptionHandlers: Set<ExceptionHandler> = emptySet(),
+  public val adapters: Map<KClass<*>, Any> = emptyMap(),
 )
 
-public fun KomandaSettings(configure: KomandaSettingsBuilder.() -> Unit): KomandaSettings {
-  return KomandaSettingsBuilder().apply(configure).build()
+public val DefaultKomandaSettings: KomandaSettings = KomandaSettings()
+
+public fun KomandaSettings(
+  from: KomandaSettings = DefaultKomandaSettings,
+  configure: KomandaSettingsBuilder.() -> Unit,
+): KomandaSettings {
+  return KomandaSettingsBuilder(from).apply(configure).build()
 }
 
 public typealias ArgumentParser<A> = (text: String) -> A
@@ -38,9 +43,9 @@ public typealias ExceptionHandler = suspend ExecutionScope<Any>.(failure: Comman
 
 public typealias Execution<S> = suspend ExecutionScope<S>.() -> Unit
 
-public class KomandaSettingsBuilder {
-  public var typeAliases: MutableMap<String, KClass<*>> = mutableMapOf()
-  public var acceptedTargets: Map<KClass<*>, Chat> = mapOf()
+public class KomandaSettingsBuilder(private val from: KomandaSettings) {
+  public val typeAliases: MutableMap<String, KClass<*>> = from.typeAliases.toMutableMap()
+  public val acceptedTargets: MutableMap<KClass<*>, Chat> = from.acceptedTargets.toMutableMap()
 
   @PublishedApi
   internal val adapters: MutableMap<KClass<*>, Any> = mutableMapOf()
@@ -57,7 +62,7 @@ public class KomandaSettingsBuilder {
   }
 
   public fun acceptTargets(builder: MutableMap<KClass<*>, Chat>.() -> Unit) {
-    acceptedTargets = acceptedTargets + buildMap(builder)
+    acceptedTargets.apply(builder)
   }
 
   public inline fun <reified A : Any> alias(name: String) {
