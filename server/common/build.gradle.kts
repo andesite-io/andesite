@@ -27,7 +27,7 @@ kotlin {
         implementation(project(":world:common"))
         implementation(project(":world:anvil"))
 
-        implementation(project(":server:komanda"))
+        implementation(project(":komanda"))
 
         implementation("net.benwoodworth.knbt:knbt:0.11.1")
       }
