@@ -51,11 +51,15 @@ public data class NamedNode(override val name: String, val node: ExecutionNode) 
   override fun toString(): String = "ParseNode(name=:$name, text=\"$text\")"
 }
 
+private val QuotedStringRegex: Regex = Regex("""(["'])(?:\\\1|.)*?\1""")
+private val IdRegex: Regex = Regex("""\w+""")
+private val WhitespaceRegex: Regex = Regex("""\s+""")
+
 public fun parseCommandString(string: String): List<ExecutionNode> {
   val grammar = object : Grammar<List<ExecutionNode>>() {
-    val id by regexToken("""\w+""")
-    val quote by regexToken("""([\"'])(?:\\\1|.)*?\1""")
-    val ws by regexToken("""\s+""", ignore = true)
+    val id by regexToken(IdRegex)
+    val quote by regexToken(QuotedStringRegex)
+    val ws by regexToken(WhitespaceRegex, ignore = true)
 
     val colon by literalToken(":")
     val equal by literalToken("=")
