@@ -14,8 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.java.play
+package andesite.java
 
+import andesite.java.game.handleChat
+import andesite.java.game.handleChunks
+import andesite.java.game.handleKeepAlive
+import andesite.java.game.handlePackets
 import andesite.java.player.Session
 import andesite.java.player.sendPacket
 import andesite.java.server.JavaMinecraftServer

@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package andesite.java.play
+package andesite.java.game
 
 import andesite.java.convertChunk
 import andesite.java.player.Session

@@ -20,10 +20,10 @@ import andesite.AndesiteError
 import andesite.command.MinecraftKomandaRoot
 import andesite.event.MinecraftEvent
 import andesite.java.decodeRootTag
-import andesite.java.play.processPlay
 import andesite.java.player.Session
 import andesite.java.player.receivePacket
 import andesite.java.processLogin
+import andesite.java.processPlay
 import andesite.java.processStatus
 import andesite.komanda.KomandaRoot
 import andesite.player.JavaPlayer

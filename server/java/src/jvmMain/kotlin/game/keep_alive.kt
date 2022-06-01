@@ -14,20 +14,28 @@
  *    limitations under the License.
  */
 
-package andesite.java.play
+@file:OptIn(ExperimentalTime::class)
+
+package andesite.java.game
 
 import andesite.java.player.Session
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.cancel
+import andesite.java.player.sendPacket
+import andesite.protocol.currentTimeMillis
+import andesite.protocol.java.v756.KeepAlivePacket
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.delay
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun handlePackets(scope: CoroutineScope, session: Session) {
+private val logger = logger("andesite.handlers.KeepAlive")
+
+internal suspend fun handleKeepAlive(session: Session) {
   while (true) {
-    try {
-      val packet = session.acceptPacket() ?: continue
+    delay(20.seconds)
 
-      session.inboundPacketFlow.emit(packet)
+    try {
+      session.sendPacket(KeepAlivePacket(currentTimeMillis()))
     } catch (_: Throwable) {
-      scope.cancel()
       break
     }
   }
