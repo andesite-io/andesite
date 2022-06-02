@@ -23,11 +23,11 @@ public sealed interface PatternNode
 public data class ArgumentNode<A : Any>(val type: KClass<A>, val name: String) :
   PatternNode
 
-public data class VarargNode(val name: String) : PatternNode
+public data class VarargNode<A : Any>(val type: KClass<A>, val name: String) : PatternNode
+
+public data class OptionalNode<A : Any>(val type: KClass<A>, val name: String) : PatternNode
 
 public data class PathNode(val name: String) : PatternNode
-
-public data class OptionalNode(val name: String) : PatternNode
 
 public data class IntersectionNode(val identifiers: Set<String>) :
   PatternNode

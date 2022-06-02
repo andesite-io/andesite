@@ -57,20 +57,20 @@ public class PatternBuilder(private var node: List<PatternNode>? = null) : HasEx
 public class PatternNodeListBuilder {
   private val nodes: MutableList<PatternNode> = mutableListOf()
 
-  public fun vararg(name: String): VarargNode {
-    return VarargNode(name).also(nodes::add)
+  public fun <A : Any> vararg(type: KClass<A>, name: String): VarargNode<A> {
+    return VarargNode(type, name).also(nodes::add)
   }
 
-  public fun path(name: String): PathNode {
-    return PathNode(name).also(nodes::add)
+  public inline fun <reified A : Any> vararg(name: String): VarargNode<A> {
+    return vararg(A::class, name)
   }
 
-  public fun optional(name: String): OptionalNode {
-    return OptionalNode(name).also(nodes::add)
+  public fun <A : Any> optional(type: KClass<A>, name: String): OptionalNode<A> {
+    return OptionalNode(type, name).also(nodes::add)
   }
 
-  public fun intersection(vararg identifiers: String): IntersectionNode {
-    return IntersectionNode(identifiers.toSet()).also(nodes::add)
+  public inline fun <reified A : Any> optional(name: String): OptionalNode<A> {
+    return optional(A::class, name)
   }
 
   public fun <A : Any> argument(type: KClass<A>, name: String): ArgumentNode<A> {
@@ -79,6 +79,14 @@ public class PatternNodeListBuilder {
 
   public inline fun <reified A : Any> argument(name: String): ArgumentNode<A> {
     return argument(A::class, name)
+  }
+
+  public fun path(name: String): PathNode {
+    return PathNode(name).also(nodes::add)
+  }
+
+  public fun intersection(vararg identifiers: String): IntersectionNode {
+    return IntersectionNode(identifiers.toSet()).also(nodes::add)
   }
 
   public fun build(): List<PatternNode> {
