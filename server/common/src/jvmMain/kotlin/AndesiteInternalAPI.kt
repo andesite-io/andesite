@@ -14,18 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.server
+package andesite
 
-import andesite.protocol.misc.Chat
-
-public data class Motd(
-  val version: String,
-  val maxPlayers: Int,
-  val text: Chat,
+@RequiresOptIn(
+  level = RequiresOptIn.Level.ERROR,
+  message = "This API is internal in andesite and should not be used." +
+    " It could be removed or changed without notice.",
 )
-
-public interface MotdBuilder {
-  public var version: String
-  public var maxPlayers: Int
-  public var text: Chat
-}
+@Retention(AnnotationRetention.BINARY)
+public annotation class AndesiteInternalAPI

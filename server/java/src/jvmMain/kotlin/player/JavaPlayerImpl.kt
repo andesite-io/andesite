@@ -24,6 +24,7 @@ import andesite.protocol.java.v756.ChatPosition
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.Uuid
 import andesite.server.MinecraftServer
+import andesite.world.Location
 import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +35,7 @@ internal class JavaPlayerImpl(
   override val id: Uuid,
   override val protocol: Int,
   override val username: String,
+  override var location: Location,
   val session: Session,
   val server: MinecraftServer,
 ) : JavaPlayer, CoroutineScope by session {

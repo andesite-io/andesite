@@ -16,16 +16,20 @@
 
 package andesite.player
 
+import andesite.AndesiteInternalAPI
 import andesite.event.EventHolder
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Uuid
 import andesite.server.Messageable
+import andesite.world.Location
 import org.apache.logging.log4j.kotlin.Logging
 
 public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Messageable {
   public val id: Uuid
   public val protocol: Int
   public val username: String
+  public var location: Location
+    @AndesiteInternalAPI set
 }
 
 public interface JavaPlayer : MinecraftPlayer {

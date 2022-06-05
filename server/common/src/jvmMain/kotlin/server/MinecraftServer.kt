@@ -20,7 +20,6 @@ import andesite.event.EventHolder
 import andesite.event.MinecraftEvent
 import andesite.komanda.KomandaRoot
 import andesite.player.MinecraftPlayer
-import andesite.protocol.misc.Chat
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
@@ -45,12 +44,6 @@ public interface MinecraftServer :
   public val json: Json
 
   public fun listen()
-}
-
-public interface MotdBuilder {
-  public var version: String
-  public var maxPlayers: Int
-  public var text: Chat
 }
 
 public interface MinecraftServerBuilder {
