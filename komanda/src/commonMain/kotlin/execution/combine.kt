@@ -45,7 +45,7 @@ public fun <S : Any> PatternNode.combine(node: ExecutionNode): Boolean {
         else -> true
       }
     }
-    is OptionalNode -> TODO()
-    is VarargNode -> TODO()
+    is OptionalNode<*> -> TODO()
+    is VarargNode<*> -> TODO()
   }
 }
