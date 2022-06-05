@@ -26,10 +26,13 @@ import andesite.protocol.misc.Uuid
 import andesite.server.MinecraftServer
 import andesite.world.Location
 import com.benasher44.uuid.uuid4
+import kotlin.reflect.KClass
+import kotlin.reflect.full.starProjectedType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.serialization.serializer
 
 internal class JavaPlayerImpl(
   override val id: Uuid,
@@ -50,7 +53,7 @@ internal class JavaPlayerImpl(
     session.sendPacket(ChatMessagePacket(chat, ChatPosition.Chat, uuid4()))
   }
 
-  override suspend fun sendPacket(packet: JavaPacket) {
-    session.sendPacket(JavaPacket.serializer(), packet)
+  override suspend fun <A : JavaPacket> sendPacket(type: KClass<A>, packet: A) {
+    session.sendPacket(server.codec.serializersModule.serializer(type.starProjectedType), packet)
   }
 }
