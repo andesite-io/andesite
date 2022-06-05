@@ -16,9 +16,11 @@
 
 package andesite.java
 
+import andesite.AndesiteInternalAPI
 import andesite.java.game.handleChat
 import andesite.java.game.handleChunks
 import andesite.java.game.handleKeepAlive
+import andesite.java.game.handleMove
 import andesite.java.game.handlePackets
 import andesite.java.player.Session
 import andesite.java.player.sendPacket
@@ -38,6 +40,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
+@AndesiteInternalAPI
 internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlayer): Job =
   session.launch(Job() + CoroutineName("io/processPlay")) job@{
     session.sendPacket(
@@ -79,6 +82,7 @@ internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlaye
 
     launch(CoroutineName("in/listenPackets")) { handlePackets(this@job, session) }
     launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
-    launch(CoroutineName("out/sendChunk")) { handleChunks(session) }
+    launch(CoroutineName("out/sendChunk")) { handleChunks(session, player) }
     launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
+    launch(CoroutineName("in/listenMove")) { handleMove(session, player) }
   }

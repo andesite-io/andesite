@@ -22,7 +22,8 @@ import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Uuid
 import andesite.server.Messageable
 import andesite.world.Location
-import kotlin.reflect.KClass
+import kotlinx.serialization.SerializationStrategy
+import kotlinx.serialization.serializer
 import org.apache.logging.log4j.kotlin.Logging
 
 public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Messageable {
@@ -34,11 +35,11 @@ public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Mes
 }
 
 public interface JavaPlayer : MinecraftPlayer {
-  public suspend fun <A : JavaPacket> sendPacket(type: KClass<A>, packet: A)
+  public suspend fun <A : JavaPacket> sendPacket(serializer: SerializationStrategy<A>, packet: A)
 }
 
 public suspend inline fun <reified A : JavaPacket> JavaPlayer.sendPacket(packet: A) {
-  sendPacket(A::class, packet)
+  sendPacket(serializer(), packet)
 }
 
 public interface BedrockPlayer : MinecraftPlayer

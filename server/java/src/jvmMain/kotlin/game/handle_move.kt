@@ -16,21 +16,26 @@
 
 package andesite.java.game
 
-import andesite.java.convertChunk
+import andesite.AndesiteInternalAPI
 import andesite.java.player.Session
-import andesite.java.player.sendPacket
 import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
-import org.apache.logging.log4j.kotlin.logger
+import andesite.player.PlayerMoveEvent
+import andesite.protocol.java.v756.PositionMutatorPacket
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.onEach
 
-private val logger = logger("andesite.java.game.Chunk")
+@AndesiteInternalAPI
+internal suspend fun JavaMinecraftServer.handleMove(session: Session, player: JavaPlayer) {
+  session.inboundPacketFlow
+    .filterIsInstance<PositionMutatorPacket>()
+    .onEach { packet ->
+      val oldLocation = player.location
+      val newLocation = packet.apply(oldLocation)
+      player.location = newLocation
 
-internal suspend fun JavaMinecraftServer.handleChunks(session: Session, player: JavaPlayer) {
-  for (x in -1 until ((player.location.x * 2) / 16 + 1).toInt()) {
-    for (z in -1 until ((player.location.z * 2) / 16 + 1).toInt()) {
-      val chunk = player.location.world.getChunkAt(x, z) ?: continue
-
-      session.sendPacket(convertChunk(chunk))
+      publish(PlayerMoveEvent(oldLocation, newLocation, player))
     }
-  }
+    .collect()
 }

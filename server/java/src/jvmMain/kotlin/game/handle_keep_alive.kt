@@ -27,7 +27,7 @@ import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.delay
 import org.apache.logging.log4j.kotlin.logger
 
-private val logger = logger("andesite.handlers.KeepAlive")
+private val logger = logger("andesite.java.game.KeepAlive")
 
 internal suspend fun handleKeepAlive(session: Session) {
   while (true) {

@@ -17,6 +17,7 @@
 package andesite.java.server
 
 import andesite.AndesiteError
+import andesite.AndesiteInternalAPI
 import andesite.command.MinecraftKomandaRoot
 import andesite.event.MinecraftEvent
 import andesite.java.decodeRootTag
@@ -106,6 +107,7 @@ internal class JavaMinecraftServer(
     eventFlow.emit(event)
   }
 
+  @AndesiteInternalAPI
   override fun listen(): Unit = runBlocking(coroutineContext) {
     logger.info("Starting andesite...")
 

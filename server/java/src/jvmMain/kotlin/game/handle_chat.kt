@@ -27,7 +27,7 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
 import org.apache.logging.log4j.kotlin.logger
 
-private val logger = logger("andesite.handlers.Chat")
+private val logger = logger("andesite.java.game.Chat")
 
 internal suspend fun JavaMinecraftServer.handleChat(session: Session, player: JavaPlayer) {
   session.inboundPacketFlow

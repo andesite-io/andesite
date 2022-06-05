@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,15 +14,12 @@
  *    limitations under the License.
  */
 
-kotlin {
-  sourceSets {
-    val commonMain by getting {
-      dependencies {
-        implementation(project(":protocol:common"))
-        implementation(project(":protocol:java"))
+package andesite.player
 
-        implementation(project(":world:common"))
-      }
-    }
-  }
-}
+import andesite.world.Location
+
+public class PlayerMoveEvent(
+  public val oldLocation: Location,
+  public val newLocation: Location,
+  override val player: MinecraftPlayer,
+) : PlayerEvent

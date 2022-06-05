@@ -35,6 +35,9 @@ public fun Versions.v756(
       register<PlayerPositionAndLookPacket>()
       register<ServerKeepAlivePacket>()
       register<ServerChatMessagePacket>()
+      register<PlayerPositionPacket>()
+      register<PlayerRotationPacket>()
+      register<PlayerPositionAndRotationPacket>()
     }
 
     builder()
