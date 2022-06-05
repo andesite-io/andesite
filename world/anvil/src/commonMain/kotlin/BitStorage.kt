@@ -16,30 +16,30 @@
 
 package andesite.world.anvil
 
-interface BitStorage {
-  val bits: Int
-  val size: Int
-  val data: LongArray
+public interface BitStorage {
+  public val bits: Int
+  public val size: Int
+  public val data: LongArray
 
-  operator fun get(index: Int): Int
-  operator fun set(index: Int, value: Int)
+  public operator fun get(index: Int): Int
+  public operator fun set(index: Int, value: Int)
 
-  fun getAndSet(index: Int, value: Int): Int
-  fun unpack(out: IntArray)
-  fun forEachIndexed(f: (index: Int, value: Int) -> Unit)
+  public fun getAndSet(index: Int, value: Int): Int
+  public fun unpack(out: IntArray)
+  public fun forEachIndexed(f: (index: Int, value: Int) -> Unit)
 
-  fun iterator(): IntIterator
+  public fun iterator(): IntIterator
 
-  companion object {
-    fun empty(): BitStorage = ZeroBitStorage
+  public companion object {
+    public fun empty(): BitStorage = ZeroBitStorage
   }
 }
 
-fun BitStorage(bits: Int, size: Int, data: LongArray? = null): BitStorage {
+public fun BitStorage(bits: Int, size: Int, data: LongArray? = null): BitStorage {
   return BitStorageImpl(bits, size, data)
 }
 
-fun BitStorage(bits: Int, size: Int, values: IntArray): BitStorage {
+public fun BitStorage(bits: Int, size: Int, values: IntArray): BitStorage {
   return BitStorageImpl(bits, size, values)
 }
 

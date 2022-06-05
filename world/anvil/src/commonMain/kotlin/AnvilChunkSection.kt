@@ -38,20 +38,20 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.encoding.decodeStructure
 import net.benwoodworth.knbt.NbtCompound
 
-class AnvilChunkSection(
-  val y: Int,
-  val skyLight: ByteArray,
-  val blockLight: ByteArray,
-  val blockStates: PalettedContainer,
+public class AnvilChunkSection(
+  public val y: Int,
+  public val skyLight: ByteArray,
+  public val blockLight: ByteArray,
+  public val blockStates: PalettedContainer,
 ) : ChunkSection {
-  val bitsPerBlock = blockStates.bitsPerBlock
-  val sectionHeight = 16
-  val sectionWidth = 16
+  public val bitsPerBlock: Int = blockStates.bitsPerBlock
+  public val sectionHeight: Int = 16
+  public val sectionWidth: Int = 16
 
-  val serializedSize: Int
+  public val serializedSize: Int
     get(): Int = 2 + blockStates.serializedSize
 
-  fun isEmpty(): Boolean {
+  public fun isEmpty(): Boolean {
     return blockStates.nonEmptyBlockCount == 0.toShort()
   }
 
@@ -60,7 +60,7 @@ class AnvilChunkSection(
   }
 }
 
-class AnvilChunkSectionSerializer(
+public class AnvilChunkSectionSerializer(
   private val registry: BlockRegistry,
 ) : KSerializer<AnvilChunkSection> {
   override val descriptor: SerialDescriptor = buildClassSerialDescriptor("AnvilChunkSection") {

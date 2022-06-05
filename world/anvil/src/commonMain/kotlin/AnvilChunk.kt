@@ -26,20 +26,20 @@ import kotlinx.serialization.Serializable
 import net.benwoodworth.knbt.NbtTag
 
 @Serializable
-class AnvilChunk(
-  val isLightOn: Boolean,
-  @SerialName("xPos") val x: Int,
-  @SerialName("zPos") val z: Int,
-  @SerialName("LastUpdate") val lastUpdate: Long,
-  @SerialName("InhabitedTime") val inhabitedTime: Long,
-  @SerialName("Heightmaps") val heightmaps: Map<HeightmapKind, NbtTag>,
-  @SerialName("Biomes") val biomes: IntArray,
-  @SerialName("TileEntities") val tileEntities: List<NbtTag>,
-  @SerialName("TileTicks") val tileTicks: List<NbtTag>,
-  @SerialName("Status") val status: String,
+public class AnvilChunk(
+  public val isLightOn: Boolean,
+  @SerialName("xPos") public val x: Int,
+  @SerialName("zPos") public val z: Int,
+  @SerialName("LastUpdate") public val lastUpdate: Long,
+  @SerialName("InhabitedTime") public val inhabitedTime: Long,
+  @SerialName("Heightmaps") public val heightmaps: Map<HeightmapKind, NbtTag>,
+  @SerialName("Biomes") public val biomes: IntArray,
+  @SerialName("TileEntities") public val tileEntities: List<NbtTag>,
+  @SerialName("TileTicks") public val tileTicks: List<NbtTag>,
+  @SerialName("Status") public val status: String,
   @SerialName("Sections") override val sections: List<@Contextual AnvilChunkSection> = emptyList(),
 ) : Chunk {
-  fun calculateChunkSize(): Int {
+  public fun calculateChunkSize(): Int {
     var i = 0
     var j = 0
 
@@ -55,7 +55,7 @@ class AnvilChunk(
     return i
   }
 
-  fun extractChunkData(buf: Output): BitSet {
+  public fun extractChunkData(buf: Output): BitSet {
     val bitset = BitSet()
 
     var i = 0

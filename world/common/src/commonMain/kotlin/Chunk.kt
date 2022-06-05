@@ -16,6 +16,6 @@
 
 package andesite.world
 
-interface Chunk {
-  val sections: List<ChunkSection>
+public interface Chunk {
+  public val sections: List<ChunkSection>
 }

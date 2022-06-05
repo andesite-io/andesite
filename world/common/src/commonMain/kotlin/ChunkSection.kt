@@ -18,6 +18,6 @@ package andesite.world
 
 import io.ktor.utils.io.core.ByteReadPacket
 
-interface ChunkSection {
-  fun writeToNetwork(): ByteReadPacket
+public interface ChunkSection {
+  public fun writeToNetwork(): ByteReadPacket
 }

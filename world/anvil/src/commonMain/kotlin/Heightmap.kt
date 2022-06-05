@@ -27,10 +27,10 @@ import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
 @Serializable
-class Heightmap
+public class Heightmap
 
 @Serializable(HeightmapKeySerializer::class)
-enum class HeightmapKind(val kind: String, val usage: HeightmapUsage) {
+public enum class HeightmapKind(public val kind: String, public val usage: HeightmapUsage) {
   WorldSurfaceWg("WORLD_SURFACE_WG", HeightmapUsage.LiveWorld),
   WorldSurface("WORLD_SURFACE", HeightmapUsage.Client),
   OceanFloorWg("OCEAN_FLOOR_WG", HeightmapUsage.LiveWorld),
@@ -39,11 +39,11 @@ enum class HeightmapKind(val kind: String, val usage: HeightmapUsage) {
   MotionBlockingNoLeaves("MOTION_BLOCKING_NO_LEAVES", HeightmapUsage.Client),
 }
 
-enum class HeightmapUsage {
+public enum class HeightmapUsage {
   WorldGen, Client, LiveWorld
 }
 
-object HeightmapKeySerializer : KSerializer<HeightmapKind> {
+internal object HeightmapKeySerializer : KSerializer<HeightmapKind> {
   override val descriptor: SerialDescriptor = HeightmapKeyDescriptor
 
   override fun serialize(encoder: Encoder, value: HeightmapKind) {

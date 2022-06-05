@@ -15,6 +15,8 @@
  */
 
 kotlin {
+  explicitApi()
+
   sourceSets {
     val commonMain by getting {
       dependencies {

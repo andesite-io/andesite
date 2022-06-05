@@ -16,7 +16,7 @@
 
 package andesite.world.anvil
 
-class AnvilRegion(
-  val name: String,
-  val chunks: List<AnvilChunk>,
+public class AnvilRegion(
+  public val name: String,
+  public val chunks: List<AnvilChunk>,
 )

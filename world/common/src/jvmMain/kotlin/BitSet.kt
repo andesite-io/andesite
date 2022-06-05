@@ -16,4 +16,4 @@
 
 package andesite.world
 
-actual typealias BitSet = java.util.BitSet
+public actual typealias BitSet = java.util.BitSet

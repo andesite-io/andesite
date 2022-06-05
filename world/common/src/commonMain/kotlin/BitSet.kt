@@ -16,10 +16,10 @@
 
 package andesite.world
 
-expect class BitSet() {
-  fun get(index: Int): Boolean
+public expect class BitSet() {
+  public fun get(index: Int): Boolean
 
-  fun set(index: Int)
+  public fun set(index: Int)
 
-  fun toLongArray(): LongArray
+  public fun toLongArray(): LongArray
 }

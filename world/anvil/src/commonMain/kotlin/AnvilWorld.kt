@@ -19,10 +19,10 @@ package andesite.world.anvil
 import andesite.world.Location
 import andesite.world.World
 
-private const val LoadFactor = 4000000
+private const val LoadFactor: Int = 4000000
 
-class AnvilWorld(val regions: Array<AnvilRegion>) : World {
-  val chunks = HashMap<Long, AnvilChunk>().apply {
+public class AnvilWorld(public val regions: Array<AnvilRegion>) : World {
+  public val chunks: MutableMap<Long, AnvilChunk> = HashMap<Long, AnvilChunk>().apply {
     regions.flatMap(AnvilRegion::chunks).forEach {
       put((it.x * LoadFactor + it.z).toLong(), it)
     }

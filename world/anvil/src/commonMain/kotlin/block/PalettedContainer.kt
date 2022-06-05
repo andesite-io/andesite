@@ -36,24 +36,28 @@ import kotlin.math.log2
 import kotlin.math.max
 import net.benwoodworth.knbt.NbtCompound
 
-class PalettedContainer(val palette: Palette, val storage: BitStorage) {
-  val bitsPerBlock = palette.bitsPerBlock
-  val blocks = storage.iterator().asSequence().mapNotNull { palette.blockById(it) }.toList()
-  var nonEmptyBlockCount: Short = 0
+public class PalettedContainer(public val palette: Palette, public val storage: BitStorage) {
+  public val bitsPerBlock: Int = palette.bitsPerBlock
+  public val blocks: List<Block> = storage
+    .iterator()
+    .asSequence()
+    .mapNotNull { palette.blockById(it) }
+    .toList()
+  public var nonEmptyBlockCount: Short = 0
     private set
 
-  val serializedSize: Int
+  public val serializedSize: Int
     get() = 1 + palette.serializedSize + storage.size.countVarInt() + storage.data.size * 8
 
-  fun blockOf(x: Int, y: Int, z: Int): Block {
+  public fun blockOf(x: Int, y: Int, z: Int): Block {
     return blocks[(y and 0xF) * 256 + (z and 0xF) * 16 + (x and 0xF)]
   }
 
-  fun recount() {
+  public fun recount() {
     nonEmptyBlockCount = blocks.filterNot { it.isAir }.count().toShort()
   }
 
-  fun writeToNetwork(): ByteReadPacket = buildPacket {
+  public fun writeToNetwork(): ByteReadPacket = buildPacket {
     writeShort(nonEmptyBlockCount)
     writeUByte(palette.bitsPerBlock.toUByte())
     val palette = palette.writeToNetwork()

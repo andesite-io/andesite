@@ -19,7 +19,7 @@ package andesite.world
 /**
  * Class that represents a location in the game.
  */
-data class Location(
+public data class Location(
   val x: Double,
   val y: Double,
   val z: Double,
@@ -27,7 +27,7 @@ data class Location(
   val pitch: Float,
   val world: World,
 ) {
-  operator fun div(other: Location): Location {
+  public operator fun div(other: Location): Location {
     return Location(
       x / other.x,
       y / other.y,
@@ -38,7 +38,7 @@ data class Location(
     )
   }
 
-  operator fun times(other: Location): Location {
+  public operator fun times(other: Location): Location {
     return Location(
       x * other.x,
       y * other.y,
@@ -49,7 +49,7 @@ data class Location(
     )
   }
 
-  operator fun minus(other: Location): Location {
+  public operator fun minus(other: Location): Location {
     return Location(
       x - other.x,
       y - other.y,
@@ -60,7 +60,7 @@ data class Location(
     )
   }
 
-  operator fun plus(other: Location): Location {
+  public operator fun plus(other: Location): Location {
     return Location(
       x + other.x,
       y + other.y,

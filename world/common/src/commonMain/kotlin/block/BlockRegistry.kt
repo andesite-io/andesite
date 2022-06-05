@@ -34,34 +34,34 @@ import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.serializer
 
-typealias StateId = Int
+public typealias StateId = Int
 
 @Serializable
-class BlockPaletteEntry(
-  val properties: JsonObject = buildJsonObject { },
-  val states: List<BlockState> = emptyList(),
+public class BlockPaletteEntry(
+  public val properties: JsonObject = buildJsonObject { },
+  public val states: List<BlockState> = emptyList(),
 )
 
 @Serializable
-class BlockState(
-  val id: StateId,
-  val properties: JsonObject = buildJsonObject { },
-  val default: Boolean = false,
+public class BlockState(
+  public val id: StateId,
+  public val properties: JsonObject = buildJsonObject { },
+  public val default: Boolean = false,
 ) {
-  fun toBlock(): Block {
+  public fun toBlock(): Block {
     return Block(Identifier(id.toString()), properties)
   }
 }
 
 @Serializable(GlobalPaletteSerializer::class)
-class BlockRegistry(private val map: Map<Identifier, BlockPaletteEntry>) :
+public class BlockRegistry(private val map: Map<Identifier, BlockPaletteEntry>) :
   Map<Identifier, BlockPaletteEntry> by map {
-  val bitsPerBlock: Int = ceil(log2(size.toDouble())).toInt()
+  public val bitsPerBlock: Int = ceil(log2(size.toDouble())).toInt()
 
-  val totalStates: Int =
+  public val totalStates: Int =
     flatMap { it.value.states }.maxOfOrNull { it.id } ?: error("No states found")
 
-  fun blockById(stateId: StateId): Block? {
+  public fun blockById(stateId: StateId): Block? {
     for ((blockId, entry) in map) {
       for (state in entry.states) {
         if (state.id == stateId) {
@@ -72,15 +72,15 @@ class BlockRegistry(private val map: Map<Identifier, BlockPaletteEntry>) :
     return null
   }
 
-  fun stateIdForBlock(block: Block): StateId? {
+  public fun stateIdForBlock(block: Block): StateId? {
     return this[block.id]
       ?.states
       ?.find { state -> state.properties == block.properties }
       ?.id
   }
 
-  companion object {
-    fun empty(): BlockRegistry {
+  public companion object {
+    public fun empty(): BlockRegistry {
       return BlockRegistry(emptyMap())
     }
   }
@@ -90,7 +90,7 @@ private val json = Json {
   ignoreUnknownKeys = true
 }
 
-fun readBlockRegistry(text: String): BlockRegistry {
+public fun readBlockRegistry(text: String): BlockRegistry {
   return json.decodeFromString(serializer(), text)
 }
 

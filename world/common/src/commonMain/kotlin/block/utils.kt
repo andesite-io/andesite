@@ -38,13 +38,13 @@ import net.benwoodworth.knbt.NbtString
 import net.benwoodworth.knbt.NbtTag
 import net.benwoodworth.knbt.buildNbtCompound
 
-fun namelessTag(tag: NbtTag): NbtCompound {
+public fun namelessTag(tag: NbtTag): NbtCompound {
   return buildNbtCompound { put("", tag) }
 }
 
-fun NbtCompound.toJsonObject(): JsonObject = this.toJsonElement().jsonObject
+public fun NbtCompound.toJsonObject(): JsonObject = this.toJsonElement().jsonObject
 
-fun NbtTag.toJsonElement(): JsonElement {
+public fun NbtTag.toJsonElement(): JsonElement {
   return when (this) {
     is NbtCompound -> buildJsonObject {
       forEach { (key, value) -> put(key, value.toJsonElement()) }

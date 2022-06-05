@@ -58,7 +58,7 @@ internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
   return AnvilRegion(name, chunks.filterNotNull())
 }
 
-fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
+public fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
   logger.info("Loading world `${folder.name}`")
 
   val nbt = Nbt {

@@ -25,18 +25,18 @@ import andesite.world.block.StateId
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 
-sealed interface Palette {
-  val bitsPerBlock: Int
-  val serializedSize: Int
+public sealed interface Palette {
+  public val bitsPerBlock: Int
+  public val serializedSize: Int
 
-  fun blockById(id: StateId): Block?
+  public fun blockById(id: StateId): Block?
 
-  fun stateIdForBlock(block: Block): StateId?
+  public fun stateIdForBlock(block: Block): StateId?
 
-  fun writeToNetwork(): ByteReadPacket
+  public fun writeToNetwork(): ByteReadPacket
 }
 
-class SingleValuePalette(val singleStateId: StateId) : Palette {
+public class SingleValuePalette(public val singleStateId: StateId) : Palette {
   override val serializedSize: Int get() = TODO("Not yet implemented")
 
   override val bitsPerBlock: Int = 0
@@ -60,10 +60,10 @@ class SingleValuePalette(val singleStateId: StateId) : Palette {
  *   - For block states and bits per between 5 and 8, the given value is used
  *   - For biomes and bits per entry <= 3, the given value is used
  */
-class IndirectPalette(
+public class IndirectPalette(
   override val bitsPerBlock: Int,
-  val registry: BlockRegistry,
-  val palette: Array<VarInt>,
+  public val registry: BlockRegistry,
+  public val palette: Array<VarInt>,
 ) : Palette {
   override val serializedSize: Int
     get(): Int = palette.fold(palette.size.countVarInt()) { a, b ->
@@ -89,7 +89,7 @@ class IndirectPalette(
 /**
  * This format is used for bits per entry values greater than or equal to a threshold (9 for block states, 4 for biomes)
  */
-class DirectPalette(val registry: BlockRegistry) : Palette {
+public class DirectPalette(public val registry: BlockRegistry) : Palette {
   override val bitsPerBlock: Int = registry.bitsPerBlock
 
   override val serializedSize: Int = 0.countVarInt()

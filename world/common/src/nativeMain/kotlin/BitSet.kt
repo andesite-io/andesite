@@ -16,15 +16,16 @@
 
 package andesite.world
 
-actual class BitSet {
-  actual fun get(index: Int): Boolean {
+public actual class BitSet {
+  public actual fun get(index: Int): Boolean {
     TODO("Not yet implemented")
   }
 
-  actual fun set(index: Int) {
+  public actual fun set(index: Int) {
+    TODO("Not yet implemented")
   }
 
-  actual fun toLongArray(): LongArray {
+  public actual fun toLongArray(): LongArray {
     TODO("Not yet implemented")
   }
 }

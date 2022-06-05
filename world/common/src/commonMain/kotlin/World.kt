@@ -16,7 +16,7 @@
 
 package andesite.world
 
-interface World {
-  fun getChunkAt(x: Int, z: Int): Chunk?
-  fun getChunkAt(location: Location): Chunk?
+public interface World {
+  public fun getChunkAt(x: Int, z: Int): Chunk?
+  public fun getChunkAt(location: Location): Chunk?
 }
