@@ -50,12 +50,7 @@ fun main() {
   val server = createServer()
 
   server.command("hello") {
-    pattern {
-      node {
-        intersection("send", "to")
-        argument<MinecraftPlayer>("player")
-      }
-
+    pattern("send|to <target:player>") {
       onPlayerExecution {
         val target: MinecraftPlayer by arguments
 

@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2022 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -14,19 +14,4 @@
  *    limitations under the License.
  */
 
-rootProject.name = "andesite"
-
-include("world:common")
-include("world:anvil")
-include("world:slime")
-include("protocol:common")
-include("protocol:java")
-include("protocol:java:v756")
-include("protocol:bedrock")
-include("protocol:bedrock:v465")
-include("item:generator")
-include("item")
-include("komanda")
-include("server:common")
-include("server:bedrock")
-include("server:java")
+kotlin {}
