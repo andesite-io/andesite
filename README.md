@@ -25,8 +25,8 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.gabrielleeg1.andesite:protocol:common:{latest_version}'
-  implementation 'com.gabrielleeg1.andesite:protocol:java:v756:{latest_version}' // Example for version v756 protocol
+  implementation 'me.gabrielleeg1.andesite:protocol:common:{latest_version}'
+  implementation 'me.gabrielleeg1.andesite:protocol:java:v756:{latest_version}' // Example for version v756 protocol
 }
 ```
 
@@ -38,8 +38,8 @@ repositories {
 }
 
 dependencies {
-  implementation("com.gabrielleeg1.andesite:protocol:common:{latest_version}")
-  implementation("com.gabrielleeg1.andesite:protocol:java:v756:{latest_version}") // Example for version v756 protocol
+  implementation("me.gabrielleeg1.andesite:protocol:common:{latest_version}")
+  implementation("me.gabrielleeg1.andesite:protocol:java:v756:{latest_version}") // Example for version v756 protocol
 }
 ```
 

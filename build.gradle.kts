@@ -25,7 +25,7 @@ plugins {
   id("io.gitlab.arturbosch.detekt") version "1.19.0" apply false
 }
 
-group = "com.gabrielleeg1"
+group = "me.gabrielleeg1"
 version = "0.0.1-dev"
 
 subprojects {
