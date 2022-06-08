@@ -8,98 +8,22 @@
 Simple library for building [Minecraft Protocol](https://wiki.vg/Main_Page) for Minecraft Java Edition and Bedrock
 Edition.
 
-### Implemented versions
+### Protocol versions
 
 The following versions of Minecraft are supported:
 
-- [Java](protocol/java)
-  - [v756](protocol/java/v756)
+- [Java](andesite-protocol/andesite-protocol-java)
+  - [v756](andesite-protocol/andesite-protocol-java/andesite-protocol-java-v756)
 
-### Installation
+- [Bedrock](andesite-protocol/andesite-protocol-bedrock)
+  - [v465](andesite-protocol/andesite-protocol-bedrock/andesite-protocol-bedrock-v465) (TODO)
 
-You can use the gradle groovy with the following code:
+### World versions
 
-```groovy
-repositories {
-  maven { url 'todo' }
-}
+The following versions of Minecraft world format are supported:
 
-dependencies {
-  implementation 'me.gabrielleeg1.andesite:protocol:common:{latest_version}'
-  implementation 'me.gabrielleeg1.andesite:protocol:java:v756:{latest_version}' // Example for version v756 protocol
-}
-```
-
-Or either with kotlin gradle dsl:
-
-```kt
-repositories {
-  maven("todo")
-}
-
-dependencies {
-  implementation("me.gabrielleeg1.andesite:protocol:common:{latest_version}")
-  implementation("me.gabrielleeg1.andesite:protocol:java:v756:{latest_version}") // Example for version v756 protocol
-}
-```
-
-### Samples
-
-Samples to use with andesite
-
-#### Java protocol
-
-This is a simple example of using `andesite:protocol`:
-
-- PS: The example is for [v756 protocol](https://wiki.vg/index.php?title=Protocol&oldid=16918)
-
-```kt
-@ProtocolPacket(0x00)
-@Serializable
-data class HandshakePacket(
-  val protocolVersion: VarInt,
-  val serverAddress: String,
-  val serverPort: UShort,
-  val nextState: NextState,
-)
-
-@ProtocolEnum
-@ProtocolVariant(Variant.VarInt)
-@Serializable
-enum class NextState {
-  @ProtocolValue(1)
-  Status,
-
-  @ProtocolValue(2)
-  Login;
-}
-
-val codec = MinecraftCodec.v756 { json = Json; nbt = SerializersModule { contextual(UuidSerializer) } }
-val packet = codec.decodeFromByteArray<HandshakePacket>(bytes)
-
-println(packet)
-```
-
-#### Anvil world
-
-This is a simple example of loading an anvil world with `andesite:world:anvil`:
-
-- PS: The example is for [v756 protocol](https://wiki.vg/index.php?title=Protocol&oldid=16918)
-- PS: This only works in `jvm` target.
-
-```kt
-fun resource(path: String): File {
-  return ClassLoader.getSystemResource(path)
-    ?.file
-    ?.let(::File)
-    ?: error("Can not find resource $path")
-}
-
-val blockRegistry = readBlockRegistry(resource("v756").resolve("blocks.json").readText())
-val anvilWorld: AnvilWorld = readAnvilWorld(blockRegistry, resource("world"))
-
-println(anvilWorld)
-```
+- [Anvil](andesite-world/andesite-world-anvil)
+- [Slime](andesite-world/andesite-world-slime)
 
 ### Licensing
 
