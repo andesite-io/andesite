@@ -15,13 +15,6 @@
  */
 
 subprojects {
-  apply(plugin = "signing")
-  apply(plugin = "maven-publish")
-  apply(plugin = "org.danilopianini.publish-on-central")
-
-  group = "me.gabrielleeg1"
-  version = "1.0.0"
-
   kotlin {
 //    https://youtrack.jetbrains.com/issue/KT-52677
 //    val hostOs = System.getProperty("os.name")

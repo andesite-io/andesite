@@ -47,7 +47,7 @@ body:
     attributes:
       label: ⭐ Environment
       description: Which is your Andesite version.
-      placeholder: "e.g. 1.0.0-SNAPSHOT"
+      placeholder: "e.g. 1.0-SNAPSHOT"
     validations:
       required: true
   - type: textarea

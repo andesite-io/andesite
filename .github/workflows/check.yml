@@ -1,8 +1,8 @@
 name: Check source code
 
 on:
-  release:
   pull_request:
+    types: [opened, reopened]
 
 jobs:
   check:

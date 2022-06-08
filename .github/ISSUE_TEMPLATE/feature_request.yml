@@ -49,7 +49,7 @@ body:
     attributes:
       label: ⭐ Environment
       description: What is your current Andesite version? Maybe this feature already exists and you don't know
-      placeholder: "e.g. 1.0.0-SNAPSHOT"
+      placeholder: "e.g. 1.0-SNAPSHOT"
     validations:
       required: true
   - type: textarea

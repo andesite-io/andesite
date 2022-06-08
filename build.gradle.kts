@@ -15,6 +15,8 @@
  */
 
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
+import java.lang.System.getenv
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 
@@ -23,7 +25,21 @@ plugins {
   kotlin("plugin.serialization") version "1.6.21" apply false
   id("org.jlleitschuh.gradle.ktlint") version "10.2.1" apply false
   id("io.gitlab.arturbosch.detekt") version "1.19.0" apply false
-  id("org.danilopianini.publish-on-central") version "0.7.19"
+  id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
+  `maven-publish`
+  signing
+}
+
+nexusPublishing {
+  repositories {
+    sonatype {
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+
+      username.set(getenv("OSSRH_USERNAME"))
+      password.set(getenv("OSSRH_PASSWORD"))
+    }
+  }
 }
 
 subprojects {
@@ -31,6 +47,8 @@ subprojects {
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
   apply(plugin = "io.gitlab.arturbosch.detekt")
+  apply(plugin = "maven-publish")
+  apply(plugin = "signing")
 
   repositories {
     mavenCentral()
@@ -57,6 +75,8 @@ subprojects {
       }
 
       testRuns["test"].executionTask.configure {
+        testLogging.showStandardStreams = true
+        testLogging.exceptionFormat = TestExceptionFormat.FULL
         useJUnitPlatform()
       }
     }
@@ -100,6 +120,44 @@ subprojects {
           implementation(kotlin("test-junit5"))
         }
       }
+    }
+  }
+
+  publishing {
+    publications {
+      withType<MavenPublication> {
+        pom {
+          licenses {
+            license {
+              name.set("Apache License, Version 2.0")
+              url.set("https://www.apache.org/licenses/LICENSE-2.0")
+            }
+          }
+
+          scm {
+            url.set("https://github.com/gabrielleeg1/andesite")
+            connection.set("git@github.com:gabrielleeg1/andesite.git")
+          }
+
+          developers {
+            developer {
+              id.set("gabrielleeg1")
+              name.set("Gabrielle Guimarães de Oliveira")
+              email.set("gabrielle1guim@gmail.com")
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (getenv("OSSRH_SIGNING_KEY") != null) {
+    signing {
+      val keyId = getenv("OSSRH_SIGNING_KEY_ID")
+      val key = getenv("OSSRH_SIGNING_KEY")
+      val password = getenv("OSSRH_SIGNING_PASSWORD")
+
+      useInMemoryPgpKeys(keyId, key, password)
     }
   }
 }
