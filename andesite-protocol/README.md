@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
   implementation 'me.gabrielleeg1:andesite-protocol-java-v756:{latest_version}' // Example for version v756 protocol
+  implementation 'me.gabrielleeg1:andesite-protocol-java-v756-jvm:{latest_version}'
 }
 ```
 
@@ -23,6 +24,7 @@ repositories {
 
 dependencies {
   implementation("me.gabrielleeg1:andesite-protocol-java-v756:{latest_version}") // Example for version v756 protocol
+  implementation("me.gabrielleeg1:andesite-protocol-java-v756-jvm:{latest_version}")
 }
 ```
 
