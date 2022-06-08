@@ -71,7 +71,6 @@ subprojects {
     jvm {
       compilations.all {
         kotlinOptions.jvmTarget = "16"
-        kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=all", "-Xcontext-receivers")
       }
 
       testRuns["test"].executionTask.configure {
