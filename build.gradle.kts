@@ -26,9 +26,6 @@ plugins {
   id("org.danilopianini.publish-on-central") version "0.7.19"
 }
 
-group = "me.gabrielleeg1"
-version = "1.0.0-SNAPSHOT"
-
 subprojects {
   apply(plugin = "org.jetbrains.kotlin.multiplatform")
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
