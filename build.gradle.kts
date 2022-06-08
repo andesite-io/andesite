@@ -23,10 +23,11 @@ plugins {
   kotlin("plugin.serialization") version "1.6.21" apply false
   id("org.jlleitschuh.gradle.ktlint") version "10.2.1" apply false
   id("io.gitlab.arturbosch.detekt") version "1.19.0" apply false
+  id("org.danilopianini.publish-on-central") version "0.7.19"
 }
 
 group = "me.gabrielleeg1"
-version = "0.0.1-dev"
+version = "1.0.0-SNAPSHOT"
 
 subprojects {
   apply(plugin = "org.jetbrains.kotlin.multiplatform")
