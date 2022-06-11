@@ -28,8 +28,19 @@ class DispatchTest {
     val root = TestKomandaRoot()
 
     root.command("hello") {
-      onExecution<String> {
-        sendMessage("Hello, $arguments!")
+      pattern {
+        val target: String by arguments
+          .creating<String>()
+          .suggests {
+            add(Suggestion.empty())
+          }
+          .executes { value ->
+            "test $value"
+          }
+
+        onExecution<String> {
+          sendMessage("Hello, $target!")
+        }
       }
     }
 
