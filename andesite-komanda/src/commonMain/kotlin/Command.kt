@@ -20,7 +20,6 @@ import andesite.komanda.parsing.PathNode
 import andesite.komanda.parsing.parsePatternNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatListBuilder
-import kotlin.reflect.KClass
 
 public data class Command(
   val rootPattern: Pattern,
@@ -31,15 +30,17 @@ public data class Command(
   val children: Set<Pattern>,
 )
 
-public class CommandBuilder(private val name: String) : HasExecutor {
+public class CommandBuilder(private val name: String) {
   public var permissions: List<String> = listOf()
   public var aliases: List<String> = listOf()
   public var usage: List<Chat> = listOf()
 
+  private var rootPattern: Pattern? = null
   private val children: MutableSet<Pattern> = mutableSetOf()
 
-  private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
-  private val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
+  public fun rootPattern(builder: PatternBuilder.() -> Unit) {
+    rootPattern = PatternBuilder(listOf(PathNode(name))).apply(builder).build()
+  }
 
   public fun usage(builder: ChatListBuilder.() -> Unit) {
     usage = Chat.many(builder)
@@ -53,19 +54,7 @@ public class CommandBuilder(private val name: String) : HasExecutor {
     children += PatternBuilder().apply(builder).build()
   }
 
-  public fun onFailure(handler: ExceptionHandler) {
-    exceptionHandlers += handler
-  }
-
-  override fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
-    @Suppress("UNCHECKED_CAST")
-    executionHandlers[type] = handler as Execution<*>
-  }
-
   public fun build(): Command {
-    val nodes = listOf(PathNode(name))
-    val rootPattern = Pattern(nodes, exceptionHandlers, executionHandlers)
-
-    return Command(rootPattern, name, usage, aliases.toSet(), permissions.toSet(), children)
+    return Command(rootPattern!!, name, usage, aliases.toSet(), permissions.toSet(), children)
   }
 }

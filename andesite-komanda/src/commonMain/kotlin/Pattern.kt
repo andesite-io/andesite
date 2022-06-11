@@ -30,7 +30,7 @@ public data class Pattern(
   val executionHandlers: Map<KClass<*>, Execution<*>>,
 )
 
-public class PatternBuilder(private var node: List<PatternNode>? = null) : HasExecutor {
+public class PatternBuilder(private var node: List<PatternNode>? = null) {
   private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
   private val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
 
@@ -44,7 +44,15 @@ public class PatternBuilder(private var node: List<PatternNode>? = null) : HasEx
     exceptionHandlers += handler
   }
 
-  override fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
+  public inline fun <reified S : Any> onExecution(noinline handler: Execution<S>) {
+    onExecution(S::class, handler)
+  }
+
+  public fun onAnyExecution(handler: Execution<Any>) {
+    onExecution(Any::class, handler)
+  }
+
+  public fun <S : Any> onExecution(type: KClass<S>, handler: Execution<S>) {
     @Suppress("UNCHECKED_CAST")
     executionHandlers[type] = handler as Execution<*>
   }
