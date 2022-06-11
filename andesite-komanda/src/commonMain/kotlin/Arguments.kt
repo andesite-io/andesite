@@ -21,12 +21,14 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-public class Argument
+public class Argument<A : Any>(public val name: String, public val type: KClass<A>) {
+  override fun toString(): String = "Argument<${type.simpleName}>(name=$name)"
+}
 
 public class ArgumentListBuilder {
-  private var arguments: MutableSet<Argument> = mutableSetOf()
+  private var arguments: MutableSet<Argument<*>> = mutableSetOf()
 
-  public fun adding(argument: Argument) {
+  public fun <A : Any> adding(argument: Argument<A>) {
     arguments += argument
   }
 
@@ -46,6 +48,7 @@ public class ArgumentBuilder<A : Any>(
   private val type: KClass<A>,
   private val builder: ArgumentListBuilder,
 ) {
+  private var name: String? = null
   private var executes: (suspend ExecutionScope<*>.(value: String) -> A)? = null
   private var suggests: ((text: String) -> Set<Suggestion>)? = null
 
@@ -67,21 +70,19 @@ public class ArgumentBuilder<A : Any>(
     }
   }
 
-  public fun build(): Argument {
-    return Argument()
+  public fun build(): Argument<A> {
+    return Argument(name!!, type)
   }
 
   public operator fun provideDelegate(
     _thisRef: Any?,
     property: KProperty<*>
-  ): ReadOnlyProperty<Any?, A> {
-    builder.adding(build())
+  ): ReadOnlyProperty<Any?, Argument<A>> {
+    name = property.name
+    val argument = build().also { builder.adding(it) }
 
-    return ReadOnlyProperty { thisRef, _ ->
-      when (thisRef) {
-        is ExecutionScope<*> -> thisRef.arguments.get(property.name, type)
-        else -> error("Could not get argument value of ${property.name} in scope $thisRef")
-      }
+    return ReadOnlyProperty { _, _ ->
+      argument
     }
   }
 }

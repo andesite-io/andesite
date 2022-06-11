@@ -27,6 +27,14 @@ public interface ExecutionScope<S : Any> {
   public val arguments: Arguments
   public val sender: S
 
+  public fun <A : Any> Argument<A>.value(): A {
+    return arguments.get(name, type)
+  }
+
+  public fun <A : Any> Argument<A>.orDefault(orDefault: () -> A): A {
+    return arguments.getOrNull(name, type) ?: orDefault()
+  }
+
   public suspend fun sendMessage(chat: Chat)
 
   public suspend fun sendMessage(text: String, builder: ChatBuilder.() -> Unit = {}) {

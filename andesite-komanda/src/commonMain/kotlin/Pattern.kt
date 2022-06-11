@@ -34,7 +34,7 @@ public class PatternBuilder(private var node: List<PatternNode>? = null) {
   private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
   private val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
 
-  public val arguments: ArgumentListBuilder get() = TODO()
+  public val arguments: ArgumentListBuilder = ArgumentListBuilder()
 
   public fun node(builder: PatternNodeListBuilder.() -> Unit) {
     node = PatternNodeListBuilder().apply(builder).build()

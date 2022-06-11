@@ -28,8 +28,8 @@ class DispatchTest {
     val root = TestKomandaRoot()
 
     root.command("hello") {
-      pattern {
-        val target: String by arguments
+      rootPattern {
+        val target: Argument<String> by arguments
           .creating<String>()
           .suggests {
             add(Suggestion.empty())
@@ -39,16 +39,16 @@ class DispatchTest {
           }
 
         onExecution<String> {
-          sendMessage("Hello, $target!")
+          sendMessage("Hello, ${target.value()}!")
         }
       }
     }
 
     root.dispatch("hello world carlos", "Gabi")
-    root.dispatch("hello 'world'", "Gabi")
-    root.dispatch("hello target:'world'", "Gabi")
-    root.dispatch("hello target='world'", "Gabi")
-    root.dispatch("hello target= 'world'", "Gabi")
+//    root.dispatch("hello 'world'", "Gabi")
+//    root.dispatch("hello target:'world'", "Gabi")
+//    root.dispatch("hello target='world'", "Gabi")
+//    root.dispatch("hello target= 'world'", "Gabi")
   }
 }
 
