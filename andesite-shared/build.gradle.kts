@@ -14,8 +14,6 @@
  *    limitations under the License.
  */
 
-package andesite.komanda
-
-public expect class LocalScope() {
-  public var executionScope: ExecutionScope<*>?
+kotlin {
+  explicitApi()
 }

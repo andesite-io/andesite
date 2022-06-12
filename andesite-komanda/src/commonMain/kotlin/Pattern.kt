@@ -35,7 +35,7 @@ public data class Pattern(
   public suspend fun propagateScope(executionScope: ExecutionScope<*>) {
     return suspendCoroutine { cont ->
       arguments.forEach { argument ->
-        argument.localScope.executionScope = executionScope
+        argument.localScope = executionScope
       }
 
       cont.resume(Unit)

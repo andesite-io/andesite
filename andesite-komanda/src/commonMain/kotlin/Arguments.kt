@@ -16,6 +16,7 @@
 
 package andesite.komanda
 
+import andesite.shared.AndesiteProperties
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -23,13 +24,13 @@ import kotlin.reflect.KProperty
 public class Argument<A : Any>(public val name: String, public val type: KClass<A>) {
   override fun toString(): String = "Argument<${type.simpleName}>(name=$name)"
 
-  public val localScope: LocalScope = LocalScope()
+  public var localScope: ExecutionScope<*>? by AndesiteProperties.threadLocal()
 
   public operator fun getValue(thisRef: Nothing?, property: KProperty<*>): A {
-    val executionScope =
-      localScope.executionScope ?: error("Could not find execution scope in current thread")
-
-    return executionScope.arguments.get(name, type)
+    return localScope
+      ?.arguments
+      ?.get(name, type)
+      ?: error("Could not find execution scope in current thread")
   }
 }
 

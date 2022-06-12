@@ -16,6 +16,7 @@
 
 rootProject.name = "andesite"
 
+include("andesite-shared")
 include("andesite-world:andesite-world-common")
 include("andesite-world:andesite-world-anvil")
 include("andesite-world:andesite-world-slime")

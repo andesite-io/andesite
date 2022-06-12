@@ -14,12 +14,12 @@
  *    limitations under the License.
  */
 
-package andesite.komanda
+package andesite.shared
 
-public actual class LocalScope {
-  private val _executionScope: ThreadLocal<ExecutionScope<*>> = ThreadLocal()
+public object AndesiteProperties {
+  public fun <A : Any> threadLocal(): NullableThreadLocalProperty<A> = NullableThreadLocalProperty()
 
-  public actual var executionScope: ExecutionScope<*>?
-    get(): ExecutionScope<*>? = _executionScope.get()
-    set(value) = _executionScope.set(value)
+  public fun <A : Any> threadLocal(value: A): ThreadLocalProperty<A> = ThreadLocalProperty(value)
+
+  public fun <A : Any> builder(): BuilderProperty<A> = BuilderProperty()
 }

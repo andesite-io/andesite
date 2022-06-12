@@ -14,12 +14,11 @@
  *    limitations under the License.
  */
 
-package andesite
+package andesite.shared
 
-@RequiresOptIn(
-  level = RequiresOptIn.Level.ERROR,
-  message = "This API is internal in andesite and should not be used." +
-    " It could be removed or changed without notice.",
-)
-@Retention(AnnotationRetention.BINARY)
-public annotation class AndesiteInternalAPI
+import kotlin.properties.ReadWriteProperty
+
+public expect class ThreadLocalProperty<A : Any> internal constructor(value: A) :
+  ReadWriteProperty<Any?, A> {
+  public var value: A
+}

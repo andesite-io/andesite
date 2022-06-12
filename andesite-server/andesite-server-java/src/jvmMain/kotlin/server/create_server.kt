@@ -22,11 +22,10 @@ import andesite.server.MinecraftServer
 import andesite.server.MinecraftServerBuilder
 import andesite.server.Motd
 import andesite.server.MotdBuilder
+import andesite.shared.AndesiteProperties
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import kotlin.coroutines.CoroutineContext
-import kotlin.properties.ReadWriteProperty
-import kotlin.reflect.KProperty
 
 fun createJavaServer(
   context: CoroutineContext,
@@ -36,9 +35,9 @@ fun createJavaServer(
 }
 
 private class MotdBuilderImpl : MotdBuilder {
-  override var version: String by BuilderProperty()
-  override var maxPlayers: Int by BuilderProperty()
-  override var text: Chat by BuilderProperty()
+  override var version: String by AndesiteProperties.builder()
+  override var maxPlayers: Int by AndesiteProperties.builder()
+  override var text: Chat by AndesiteProperties.builder()
 
   fun build(): Motd {
     return Motd(version, maxPlayers, text)
@@ -46,12 +45,12 @@ private class MotdBuilderImpl : MotdBuilder {
 }
 
 private class MinecraftServerBuilderImpl(val context: CoroutineContext) : MinecraftServerBuilder {
-  override var hostname: String by BuilderProperty()
-  override var port: Int by BuilderProperty()
-  override var spawn: Location by BuilderProperty()
-  override var blockRegistry: BlockRegistry by BuilderProperty()
-  override var codec: MinecraftCodec by BuilderProperty()
-  var motd: Motd by BuilderProperty()
+  override var hostname: String by AndesiteProperties.builder()
+  override var port: Int by AndesiteProperties.builder()
+  override var spawn: Location by AndesiteProperties.builder()
+  override var blockRegistry: BlockRegistry by AndesiteProperties.builder()
+  override var codec: MinecraftCodec by AndesiteProperties.builder()
+  var motd: Motd by AndesiteProperties.builder()
 
   override fun motd(builder: MotdBuilder.() -> Unit) {
     motd = MotdBuilderImpl().apply(builder).build()
@@ -59,17 +58,5 @@ private class MinecraftServerBuilderImpl(val context: CoroutineContext) : Minecr
 
   fun build(): MinecraftServer {
     return JavaMinecraftServer(context, hostname, port, spawn, motd, codec, blockRegistry)
-  }
-}
-
-private class BuilderProperty<T : Any> : ReadWriteProperty<Any?, T> {
-  private var value: T? = null
-
-  override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-    return requireNotNull(value) { "Property ${property.name} should be initialized before build." }
-  }
-
-  override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-    this.value = value
   }
 }
