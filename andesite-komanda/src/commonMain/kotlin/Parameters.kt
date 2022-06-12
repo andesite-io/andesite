@@ -16,8 +16,6 @@
 
 package andesite.komanda
 
-import andesite.protocol.misc.Uuid
-import com.benasher44.uuid.uuidFrom
 import kotlin.reflect.KClass
 
 public typealias Parameters = Map<String, Parameter<*>>
@@ -54,8 +52,6 @@ public class ParametersBuilder {
   public fun uLong(): ParameterBuilder<ULong> = creating<ULong>().executes { it.toULong() }
 
   public fun string(): ParameterBuilder<String> = creating<String>().executes { it }
-
-  public fun uuid(): ParameterBuilder<Uuid> = creating<Uuid>().executes { uuidFrom(it) }
 
   public fun build(): Set<Parameter<*>> {
     return parameters.toSet()

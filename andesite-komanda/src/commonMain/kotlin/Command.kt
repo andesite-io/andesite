@@ -16,14 +16,12 @@
 
 package andesite.komanda
 
-import andesite.komanda.parsing.PathNode
-import andesite.komanda.parsing.PatternExpr
 import andesite.komanda.parsing.parsePatternNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatListBuilder
 
 public data class Command(
-  val rootPattern: Pattern?,
+  val fallback: Pattern?,
   val name: String,
   val usage: List<Chat>,
   val aliases: Set<String>,
@@ -36,11 +34,11 @@ public class CommandBuilder(private val name: String) {
   public var aliases: List<String> = listOf()
   public var usage: List<Chat> = listOf()
 
-  private var rootPattern: Pattern? = null
+  private var fallback: Pattern? = null
   private val children: MutableSet<Pattern> = mutableSetOf()
 
-  public fun rootPattern(builder: PatternBuilder.() -> Unit) {
-    rootPattern = PatternBuilder(PatternExpr(PathNode(name))).apply(builder).build()
+  public fun fallback(builder: FallbackBuilder.() -> Unit) {
+    fallback = FallbackBuilder(name).apply(builder).build()
   }
 
   public fun usage(builder: ChatListBuilder.() -> Unit) {
@@ -56,6 +54,6 @@ public class CommandBuilder(private val name: String) {
   }
 
   public fun build(): Command {
-    return Command(rootPattern, name, usage, aliases.toSet(), permissions.toSet(), children)
+    return Command(fallback, name, usage, aliases.toSet(), permissions.toSet(), children)
   }
 }

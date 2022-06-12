@@ -27,6 +27,12 @@ class DispatchTest {
     val root = TestKomandaRoot()
 
     root.command("hello") {
+      fallback {
+        onExecution<String> {
+          sendMessage("Hello from fallback, $arguments!")
+        }
+      }
+
       pattern {
         expr {
           path("world")
@@ -40,18 +46,12 @@ class DispatchTest {
         val batata by parameters.string()
 
         onExecution<String> {
-          sendMessage("Hello, target=$target, batata=$batata")
-        }
-      }
-
-      rootPattern {
-        onExecution<String> {
-          sendMessage("Hello, $arguments!")
+          sendMessage("Hello from pattern, target=$target, batata=$batata")
         }
       }
     }
 
-    root.dispatch("hello world 'carlos' another 'batata'", "Gabi")
+    root.dispatch("hello fsfwf 'carlos' another 'batata'", "Gabi")
 //    root.dispatch("hello 'world'", "Gabi")
 //    root.dispatch("hello target:'world'", "Gabi")
 //    root.dispatch("hello target='world'", "Gabi")

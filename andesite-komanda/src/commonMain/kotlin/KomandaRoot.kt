@@ -73,30 +73,40 @@ public abstract class AbstractKomandaRoot<S : Any>(
             rawArguments = parseArguments(argumentExecutionNodes, pattern),
           )
 
-          return handlePattern(command, pattern, sender, arguments)
+          return command.handlePattern(pattern, sender, arguments)
         }
       }
       .fold(null as Throwable?) { _, next ->
         next.exceptionOrNull()
       }
 
-    if (resultingError != null) {
+    val fallbackArguments = Arguments(emptyMap(), executionNodes.joinToString(" ") { it.fullText })
+
+    if (resultingError != null && !command.handleFallback(sender, fallbackArguments)) {
       throw resultingError
     }
-
-    // TODO: add fallback
   }
 
-  private suspend fun handlePattern(
-    command: Command,
-    pattern: Pattern,
-    sender: S,
-    arguments: Arguments,
-  ) {
-    val handler = pattern.executionHandlers[sender::class]
+  private suspend fun Command.handleFallback(sender: S, arguments: Arguments): Boolean {
+    if (fallback == null) return false
+
+    val handler = fallback.executionHandlers[sender::class]
+      ?: fallback.executionHandlers[Any::class]
       ?: throw NoSwitchableTargetException(sender::class)
 
-    withContext(CoroutineName("command/${command.name}/pattern/${pattern.expr}")) {
+    withContext(CoroutineName("command/$name/fallback")) {
+      handler.invoke(createExecutionScope(sender, arguments))
+    }
+
+    return true
+  }
+
+  private suspend fun Command.handlePattern(pattern: Pattern, sender: S, arguments: Arguments) {
+    val handler = pattern.executionHandlers[sender::class]
+      ?: pattern.executionHandlers[Any::class]
+      ?: throw NoSwitchableTargetException(sender::class)
+
+    withContext(CoroutineName("command/$name/pattern/${pattern.expr}")) {
       val currentScope = createExecutionScope(sender, arguments)
       // propagate scope for the command arguments
       pattern.propagateScope(currentScope)

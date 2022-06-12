@@ -22,8 +22,10 @@ import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-@JvmInline
-public value class Arguments(private val map: Map<String, Any?>) {
+public class Arguments(
+  private val map: Map<String, Any?>,
+  private val toString: String = map.toString(),
+) {
   public val size: Int get() = map.size
 
   public infix fun compose(other: Arguments): Arguments {
@@ -56,9 +58,7 @@ public value class Arguments(private val map: Map<String, Any?>) {
     return map.values.mapNotNull { it.toString() }
   }
 
-  override fun toString(): String {
-    return map.toString()
-  }
+  override fun toString(): String = toString
 
   public companion object {
     public fun empty(): Arguments = Arguments(mapOf())
