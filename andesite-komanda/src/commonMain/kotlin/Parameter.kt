@@ -32,7 +32,7 @@ public class Parameter<A : Any>(
   public val executes: ArgumentExecutes<A>,
   public val suggests: ArgumentSuggests,
 ) {
-  override fun toString(): String = "Argument<${type.simpleName}>(name=$name)"
+  override fun toString(): String = "Parameter<${type.simpleName}>(name=$name)"
 
   public var localScope: ExecutionScope<*>? by AndesiteProperties.threadLocal()
 
@@ -48,8 +48,8 @@ public class ParameterBuilder<A : Any>(
   private val type: KClass<A>,
   private val builder: ParametersBuilder,
 ) {
-  private var name: String? = null
-  private var executes: ArgumentExecutes<A>? = null
+  private var name: String by AndesiteProperties.builder()
+  private var executes: ArgumentExecutes<A> by AndesiteProperties.builder()
   private var suggests: ArgumentSuggests = { setOf() }
 
   public fun executes(executes: ArgumentExecutes<A>): ParameterBuilder<A> {
@@ -71,7 +71,7 @@ public class ParameterBuilder<A : Any>(
   }
 
   public fun build(): Parameter<A> {
-    return Parameter(name!!, type, executes!!, suggests)
+    return Parameter(name, type, executes, suggests)
   }
 
   public operator fun provideDelegate(
@@ -80,8 +80,6 @@ public class ParameterBuilder<A : Any>(
   ): Parameter<A> {
     name = property.name
 
-    val argument = build()
-    builder.add(argument)
-    return argument
+    return build().also { parameter -> builder.add(parameter) }
   }
 }
