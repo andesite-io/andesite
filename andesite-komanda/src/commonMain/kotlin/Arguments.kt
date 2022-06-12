@@ -28,7 +28,7 @@ public class Argument<A : Any>(public val name: String, public val type: KClass<
 public class ArgumentListBuilder {
   private var arguments: MutableSet<Argument<*>> = mutableSetOf()
 
-  public fun <A : Any> adding(argument: Argument<A>) {
+  public fun <A : Any> add(argument: Argument<A>) {
     arguments += argument
   }
 
@@ -79,7 +79,7 @@ public class ArgumentBuilder<A : Any>(
     property: KProperty<*>
   ): ReadOnlyProperty<Any?, Argument<A>> {
     name = property.name
-    val argument = build().also { builder.adding(it) }
+    val argument = build().also { builder.add(it) }
 
     return ReadOnlyProperty { _, _ ->
       argument
