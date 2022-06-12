@@ -18,9 +18,6 @@ package andesite.komanda
 
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
 
 public interface ExecutionScope<S : Any> {
   public val arguments: Arguments
@@ -44,44 +41,5 @@ public interface ExecutionScope<S : Any> {
 
   public suspend fun failwith(text: String, builder: ChatBuilder.() -> Unit = {}) {
     failwith(Chat.build(text, builder))
-  }
-}
-
-@JvmInline
-public value class Arguments(private val map: Map<String, Any?>) {
-  public val size: Int get() = map.size
-
-  public infix fun compose(other: Arguments): Arguments {
-    return Arguments(map = map + other.map)
-  }
-
-  public fun <A : Any> get(name: String, type: KClass<A>): A {
-    TODO()
-  }
-
-  public fun <A : Any> getOrNull(name: String, type: KClass<A>): A? {
-    TODO()
-  }
-
-  public inline fun <reified A : Any> orDefault(value: A): ReadOnlyProperty<Any?, A> {
-    return ReadOnlyProperty { _, property ->
-      getOrNull(property.name, A::class) ?: value
-    }
-  }
-
-  public inline operator fun <reified A : Any> getValue(thisRef: Any?, property: KProperty<*>): A {
-    return get(property.name, A::class)
-  }
-
-  public fun toStringList(): List<String> {
-    return map.values.mapNotNull { it.toString() }
-  }
-
-  override fun toString(): String {
-    return map.toString()
-  }
-
-  public companion object {
-    public fun empty(): Arguments = Arguments(mapOf())
   }
 }

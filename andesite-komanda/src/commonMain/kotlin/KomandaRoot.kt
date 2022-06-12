@@ -17,8 +17,12 @@
 package andesite.komanda
 
 import andesite.komanda.errors.CommandNotFoundException
+import andesite.komanda.errors.NoSwitchablePatternException
 import andesite.komanda.errors.NoSwitchableTargetException
+import andesite.komanda.execution.GroupException
+import andesite.komanda.execution.MatchException
 import andesite.komanda.execution.Matcher
+import andesite.komanda.parsing.ExecutionNode
 import andesite.komanda.parsing.parseCommandString
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.withContext
@@ -60,26 +64,54 @@ public abstract class AbstractKomandaRoot<S : Any>(
     val command = commands[name.text]
       ?: throw CommandNotFoundException(name.text)
 
-    command.children.forEach { pattern ->
-      println("Groups with:")
-      println("  executionNodes: <$argumentExecutionNodes>")
-      println("  expr: ${pattern.expr}")
-      val arguments = Matcher
-        .group(argumentExecutionNodes, pattern.expr)
+    val resultingError = command.children
+      .map { pattern ->
+        runCatching {
+          val arguments = parseArguments(argumentExecutionNodes, pattern)
+
+          return handlePattern(command, pattern, sender, arguments)
+        }
+      }
+      .fold(null as Throwable?) { _, next ->
+        next.exceptionOrNull()
+      }
+
+    if (resultingError != null) {
+      throw resultingError
+    }
+
+    // TODO: add fallback
+  }
+
+  private suspend fun parseArguments(
+    executionNodes: List<ExecutionNode>,
+    pattern: Pattern,
+  ): Arguments {
+    try {
+      return Matcher
+        .group(executionNodes, pattern.expr)
         .map { it.tryAsArguments() }
         .fold(Arguments.empty()) { acc, next ->
           acc compose next.getOrThrow()
         }
-      println("  arguments: $arguments")
+    } catch (exception: MatchException) {
+      throw NoSwitchablePatternException(exception.message)
+    } catch (exception: GroupException) {
+      throw NoSwitchablePatternException(exception.message)
     }
+  }
 
-    val pattern = command.rootPattern
-
+  private suspend fun handlePattern(
+    command: Command,
+    pattern: Pattern,
+    sender: S,
+    arguments: Arguments,
+  ) {
     val handler = pattern.executionHandlers[sender::class]
       ?: throw NoSwitchableTargetException(sender::class)
 
-    withContext(CoroutineName("command/$name")) {
-      val currentScope = createExecutionScope(sender, Arguments.empty())
+    withContext(CoroutineName("command/${command.name}/pattern/${pattern.expr}")) {
+      val currentScope = createExecutionScope(sender, arguments)
       // propagate scope for the command arguments
       pattern.propagateScope(currentScope)
       handler.invoke(currentScope)

@@ -16,21 +16,52 @@
 
 package andesite.komanda
 
-import andesite.shared.AndesiteProperties
-import kotlin.properties.PropertyDelegateProvider
+import andesite.komanda.errors.ArgumentNotFoundException
+import andesite.komanda.errors.ArgumentNotTypecheckException
+import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-public class Argument<A : Any>(public val name: String, public val type: KClass<A>) {
-  override fun toString(): String = "Argument<${type.simpleName}>(name=$name)"
+@JvmInline
+public value class Arguments(private val map: Map<String, Any?>) {
+  public val size: Int get() = map.size
 
-  public var localScope: ExecutionScope<*>? by AndesiteProperties.threadLocal()
+  public infix fun compose(other: Arguments): Arguments {
+    return Arguments(map = map + other.map)
+  }
 
-  public operator fun getValue(thisRef: Nothing?, property: KProperty<*>): A {
-    return localScope
-      ?.arguments
-      ?.get(name, type)
-      ?: error("Could not find execution scope in current thread")
+  public fun <A : Any> get(name: String, type: KClass<A>): A {
+    return getOrNull(name, type) ?: throw ArgumentNotFoundException(name)
+  }
+
+  public fun <A : Any> getOrNull(name: String, type: KClass<A>): A? {
+    val argument = map[name] ?: return null
+    if (!type.isInstance(argument)) throw ArgumentNotTypecheckException(name, type, argument::class)
+
+    @Suppress("UNCHECKED_CAST")
+    return argument as A
+  }
+
+  public inline fun <reified A : Any> orDefault(value: A): ReadOnlyProperty<Any?, A> {
+    return ReadOnlyProperty { _, property ->
+      getOrNull(property.name, A::class) ?: value
+    }
+  }
+
+  public inline operator fun <reified A : Any> getValue(thisRef: Any?, property: KProperty<*>): A {
+    return get(property.name, A::class)
+  }
+
+  public fun toStringList(): List<String> {
+    return map.values.mapNotNull { it.toString() }
+  }
+
+  override fun toString(): String {
+    return map.toString()
+  }
+
+  public companion object {
+    public fun empty(): Arguments = Arguments(mapOf())
   }
 }
 
@@ -51,52 +82,5 @@ public class ArgumentListBuilder {
 
   public fun build(): Set<Argument<*>> {
     return arguments.toSet()
-  }
-}
-
-public typealias ArgumentProvider<A> = PropertyDelegateProvider<Nothing?, ArgumentBuilder<A>>
-public typealias ArgumentExecutes<A> = suspend ExecutionScope<*>.(value: String) -> A
-public typealias ArgumentSuggestsBuilder = suspend MutableSet<Suggestion>.(text: String) -> Unit
-public typealias ArgumentSuggests = suspend (text: String) -> Set<Suggestion>
-
-public class ArgumentBuilder<A : Any>(
-  private val type: KClass<A>,
-  private val builder: ArgumentListBuilder,
-) {
-  private var name: String? = null
-  private var executes: ArgumentExecutes<A>? = null
-  private var suggests: ArgumentSuggests? = null
-
-  public fun executes(executes: ArgumentExecutes<A>): ArgumentBuilder<A> {
-    this.executes = executes
-    return this
-  }
-
-  public fun exactSuggests(suggests: ArgumentSuggests): ArgumentBuilder<A> {
-    this.suggests = suggests
-    return this
-  }
-
-  public fun suggests(fn: ArgumentSuggestsBuilder): ArgumentBuilder<A> {
-    return exactSuggests { text ->
-      buildSet {
-        fn(text)
-      }
-    }
-  }
-
-  public fun build(): Argument<A> {
-    return Argument(name!!, type)
-  }
-
-  public operator fun provideDelegate(
-    _thisRef: Any?,
-    property: KProperty<*>
-  ): Argument<A> {
-    name = property.name
-
-    val argument = build()
-    builder.add(argument)
-    return argument
   }
 }

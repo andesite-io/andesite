@@ -23,7 +23,7 @@ import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatListBuilder
 
 public data class Command(
-  val rootPattern: Pattern,
+  val rootPattern: Pattern?,
   val name: String,
   val usage: List<Chat>,
   val aliases: Set<String>,
@@ -56,6 +56,6 @@ public class CommandBuilder(private val name: String) {
   }
 
   public fun build(): Command {
-    return Command(rootPattern!!, name, usage, aliases.toSet(), permissions.toSet(), children)
+    return Command(rootPattern, name, usage, aliases.toSet(), permissions.toSet(), children)
   }
 }
