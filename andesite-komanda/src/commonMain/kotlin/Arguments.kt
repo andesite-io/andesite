@@ -56,26 +56,28 @@ public class ArgumentListBuilder {
 
 public typealias ArgumentProvider<A> = PropertyDelegateProvider<Nothing?, ArgumentBuilder<A>>
 public typealias ArgumentExecutes<A> = suspend ExecutionScope<*>.(value: String) -> A
+public typealias ArgumentSuggestsBuilder = suspend MutableSet<Suggestion>.(text: String) -> Unit
+public typealias ArgumentSuggests = suspend (text: String) -> Set<Suggestion>
 
 public class ArgumentBuilder<A : Any>(
   private val type: KClass<A>,
   private val builder: ArgumentListBuilder,
 ) {
   private var name: String? = null
-  private var executes: (suspend ExecutionScope<*>.(value: String) -> A)? = null
-  private var suggests: ((text: String) -> Set<Suggestion>)? = null
+  private var executes: ArgumentExecutes<A>? = null
+  private var suggests: ArgumentSuggests? = null
 
   public fun executes(executes: ArgumentExecutes<A>): ArgumentBuilder<A> {
     this.executes = executes
     return this
   }
 
-  public fun exactSuggests(suggests: (text: String) -> Set<Suggestion>): ArgumentBuilder<A> {
+  public fun exactSuggests(suggests: ArgumentSuggests): ArgumentBuilder<A> {
     this.suggests = suggests
     return this
   }
 
-  public fun suggests(fn: MutableSet<Suggestion>.(String) -> Unit): ArgumentBuilder<A> {
+  public fun suggests(fn: ArgumentSuggestsBuilder): ArgumentBuilder<A> {
     return exactSuggests { text ->
       buildSet {
         fn(text)
