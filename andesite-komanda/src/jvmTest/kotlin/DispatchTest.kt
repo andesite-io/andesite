@@ -35,8 +35,16 @@ class DispatchTest {
           argument<String>("batata")
         }
 
+        val target by arguments
+          .creating<String>()
+          .executes { it }
+
+        val batata by arguments
+          .creating<String>()
+          .executes { it }
+
         onExecution<String> {
-          sendMessage("Hello, $arguments")
+          sendMessage("Hello, target=$target, batata=$batata")
         }
       }
 

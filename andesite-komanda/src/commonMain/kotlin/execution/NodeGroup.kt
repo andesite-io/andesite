@@ -16,14 +16,13 @@
 
 package andesite.komanda.execution
 
-import andesite.komanda.Arguments
 import andesite.komanda.parsing.ArgumentNode
 import andesite.komanda.parsing.ExecutionNode
 import andesite.komanda.parsing.NamedNode
 import andesite.komanda.parsing.PatternExpr
 
 internal data class NodeGroup(val executionNodes: List<ExecutionNode>, val expr: PatternExpr) {
-  internal fun tryAsArguments(): Result<Arguments> {
+  internal fun tryAsArguments(): Result<RawArguments> {
     return try {
       Result.success(asArguments())
     } catch (failure: MatchException) {
@@ -31,7 +30,7 @@ internal data class NodeGroup(val executionNodes: List<ExecutionNode>, val expr:
     }
   }
 
-  internal fun asArguments(): Arguments {
+  internal fun asArguments(): RawArguments {
     val executionNodes = executionNodes.drop(1)
     val expr = expr.drop(1)
 
@@ -66,7 +65,7 @@ internal data class NodeGroup(val executionNodes: List<ExecutionNode>, val expr:
       }
     }
 
-    return Arguments(arguments)
+    return arguments
   }
 }
 

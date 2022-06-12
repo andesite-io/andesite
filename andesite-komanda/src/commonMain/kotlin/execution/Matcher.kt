@@ -58,4 +58,6 @@ internal object Matcher {
     }
 }
 
+internal typealias RawArguments = Map<String, ExecutionNode>
+
 internal class GroupException(override val message: String) : RuntimeException()

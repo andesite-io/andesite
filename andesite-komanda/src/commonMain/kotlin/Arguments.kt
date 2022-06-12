@@ -64,23 +64,3 @@ public value class Arguments(private val map: Map<String, Any?>) {
     public fun empty(): Arguments = Arguments(mapOf())
   }
 }
-
-public class ArgumentListBuilder {
-  private var arguments: MutableSet<Argument<*>> = mutableSetOf()
-
-  public fun <A : Any> add(argument: Argument<A>) {
-    arguments += argument
-  }
-
-  public fun <A : Any> creating(type: KClass<A>): ArgumentBuilder<A> {
-    return ArgumentBuilder(type, this)
-  }
-
-  public inline fun <reified A : Any> creating(): ArgumentBuilder<A> {
-    return creating(A::class)
-  }
-
-  public fun build(): Set<Argument<*>> {
-    return arguments.toSet()
-  }
-}

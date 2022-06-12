@@ -35,17 +35,22 @@ public sealed interface ExecutionNode {
   public val name: String? get() = null
 }
 
-public data class SimpleNode(override val text: String, val quote: Boolean) : ExecutionNode {
+public data class SimpleNode(
+  val quote: Boolean,
+  override val text: String,
   override val fullText: String = when (quote) {
     true -> "'$text'"
     else -> text
-  }
-
+  },
+) : ExecutionNode {
   override fun toString(): String = "ParseNode(text=\"$text\")"
 }
 
-public data class NamedNode(override val name: String, val node: ExecutionNode) : ExecutionNode {
-  override val fullText: String = "$name:${node.fullText}"
+public data class NamedNode(
+  val node: ExecutionNode,
+  override val name: String,
+  override val fullText: String = "$name:${node.fullText}",
+) : ExecutionNode {
   override val text: String = node.text
 
   override fun toString(): String = "ParseNode(name=:$name, text=\"$text\")"
@@ -70,13 +75,13 @@ public fun parseCommandString(string: String): List<ExecutionNode> {
       .and(optional(-assign and parser { argument }))
       .map { (token, node) ->
         when (node) {
-          null -> SimpleNode(token.text, false)
-          else -> NamedNode(token.text, node)
+          null -> SimpleNode(false, token.text)
+          else -> NamedNode(node, token.text)
         }
       }
 
     val quotedArgument: Parser<ExecutionNode> by quote map {
-      SimpleNode(it.text.substring(1, it.text.length - 1), true)
+      SimpleNode(true, it.text.substring(1, it.text.length - 1))
     }
 
     val argument: Parser<ExecutionNode> by parser { simpleArgument } or quotedArgument

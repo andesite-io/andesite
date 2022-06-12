@@ -19,9 +19,11 @@ package andesite.komanda
 import andesite.komanda.errors.CommandNotFoundException
 import andesite.komanda.errors.NoSwitchablePatternException
 import andesite.komanda.errors.NoSwitchableTargetException
+import andesite.komanda.errors.ParameterNotFoundException
 import andesite.komanda.execution.GroupException
 import andesite.komanda.execution.MatchException
 import andesite.komanda.execution.Matcher
+import andesite.komanda.execution.RawArguments
 import andesite.komanda.parsing.ExecutionNode
 import andesite.komanda.parsing.parseCommandString
 import kotlinx.coroutines.CoroutineName
@@ -67,7 +69,9 @@ public abstract class AbstractKomandaRoot<S : Any>(
     val resultingError = command.children
       .map { pattern ->
         runCatching {
-          val arguments = parseArguments(argumentExecutionNodes, pattern)
+          val arguments: Arguments = pattern.adaptRawArguments(
+            rawArguments = parseArguments(argumentExecutionNodes, pattern),
+          )
 
           return handlePattern(command, pattern, sender, arguments)
         }
@@ -81,24 +85,6 @@ public abstract class AbstractKomandaRoot<S : Any>(
     }
 
     // TODO: add fallback
-  }
-
-  private suspend fun parseArguments(
-    executionNodes: List<ExecutionNode>,
-    pattern: Pattern,
-  ): Arguments {
-    try {
-      return Matcher
-        .group(executionNodes, pattern.expr)
-        .map { it.tryAsArguments() }
-        .fold(Arguments.empty()) { acc, next ->
-          acc compose next.getOrThrow()
-        }
-    } catch (exception: MatchException) {
-      throw NoSwitchablePatternException(exception.message)
-    } catch (exception: GroupException) {
-      throw NoSwitchablePatternException(exception.message)
-    }
   }
 
   private suspend fun handlePattern(
@@ -115,6 +101,33 @@ public abstract class AbstractKomandaRoot<S : Any>(
       // propagate scope for the command arguments
       pattern.propagateScope(currentScope)
       handler.invoke(currentScope)
+    }
+  }
+
+  private suspend fun Pattern.adaptRawArguments(rawArguments: RawArguments): Arguments {
+    val arguments = buildMap {
+      rawArguments.forEach { (name, executionNode) ->
+        val parameter = parameters[name] ?: throw ParameterNotFoundException(name)
+
+        put(name, parameter.executes(executionNode.text) as Any?)
+      }
+    }
+
+    return Arguments(arguments)
+  }
+
+  private fun parseArguments(executionNodes: List<ExecutionNode>, pattern: Pattern): RawArguments {
+    try {
+      return Matcher
+        .group(executionNodes, pattern.expr)
+        .map { it.tryAsArguments() }
+        .fold(mapOf()) { acc, next ->
+          acc + next.getOrThrow()
+        }
+    } catch (exception: MatchException) {
+      throw NoSwitchablePatternException(exception.message)
+    } catch (exception: GroupException) {
+      throw NoSwitchablePatternException(exception.message)
     }
   }
 }

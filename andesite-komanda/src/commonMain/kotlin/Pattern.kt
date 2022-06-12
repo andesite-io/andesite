@@ -26,13 +26,13 @@ import kotlin.reflect.KClass
 
 public data class Pattern(
   val expr: PatternExpr,
-  val arguments: Set<Argument<*>>,
+  val parameters: Map<String, Parameter<*>>,
   val exceptionHandlers: Set<ExceptionHandler>,
   val executionHandlers: Map<KClass<*>, Execution<*>>,
 ) {
   public suspend fun propagateScope(executionScope: ExecutionScope<*>) {
     return suspendCoroutine { cont ->
-      arguments.forEach { argument ->
+      parameters.values.forEach { argument ->
         argument.localScope = executionScope
       }
 
@@ -45,7 +45,7 @@ public class PatternBuilder(private var node: PatternExpr? = null) {
   private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
   private val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
 
-  public val arguments: ArgumentListBuilder = ArgumentListBuilder()
+  public val arguments: ParametersBuilder = ParametersBuilder()
 
   public fun expr(builder: PatternExprBuilder.() -> Unit) {
     node = PatternExprBuilder().apply(builder).build()
@@ -69,9 +69,10 @@ public class PatternBuilder(private var node: PatternExpr? = null) {
   }
 
   public fun build(): Pattern {
-    requireNotNull(node) { "The node must be set to build a Pattern" }
+    val node = requireNotNull(node) { "The node must be set to build a Pattern" }
+    val arguments = arguments.build().associateBy { it.name }
 
-    return Pattern(node!!, arguments.build(), exceptionHandlers, executionHandlers)
+    return Pattern(node, arguments, exceptionHandlers, executionHandlers)
   }
 }
 

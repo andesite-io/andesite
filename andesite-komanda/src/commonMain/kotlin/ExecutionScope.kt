@@ -23,11 +23,11 @@ public interface ExecutionScope<S : Any> {
   public val arguments: Arguments
   public val sender: S
 
-  public fun <A : Any> Argument<A>.value(): A {
+  public fun <A : Any> Parameter<A>.value(): A {
     return arguments.get(name, type)
   }
 
-  public fun <A : Any> Argument<A>.orDefault(orDefault: () -> A): A {
+  public fun <A : Any> Parameter<A>.orDefault(orDefault: () -> A): A {
     return arguments.getOrNull(name, type) ?: orDefault()
   }
 
