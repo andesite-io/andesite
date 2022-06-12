@@ -21,6 +21,11 @@ import kotlin.properties.PropertyDelegateProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
+public typealias ArgumentProvider<A> = PropertyDelegateProvider<Nothing?, ParameterBuilder<A>>
+public typealias ArgumentExecutes<A> = suspend (value: String) -> A
+public typealias ArgumentSuggests = suspend (text: String) -> Set<Suggestion>
+public typealias ArgumentSuggestsBuilder = suspend MutableSet<Suggestion>.(text: String) -> Unit
+
 public class Parameter<A : Any>(
   public val name: String,
   public val type: KClass<A>,
@@ -39,12 +44,7 @@ public class Parameter<A : Any>(
   }
 }
 
-public typealias ArgumentProvider<A> = PropertyDelegateProvider<Nothing?, ArgumentBuilder<A>>
-public typealias ArgumentExecutes<A> = suspend (value: String) -> A
-public typealias ArgumentSuggestsBuilder = suspend MutableSet<Suggestion>.(text: String) -> Unit
-public typealias ArgumentSuggests = suspend (text: String) -> Set<Suggestion>
-
-public class ArgumentBuilder<A : Any>(
+public class ParameterBuilder<A : Any>(
   private val type: KClass<A>,
   private val builder: ParametersBuilder,
 ) {
@@ -52,17 +52,17 @@ public class ArgumentBuilder<A : Any>(
   private var executes: ArgumentExecutes<A>? = null
   private var suggests: ArgumentSuggests = { setOf() }
 
-  public fun executes(executes: ArgumentExecutes<A>): ArgumentBuilder<A> {
+  public fun executes(executes: ArgumentExecutes<A>): ParameterBuilder<A> {
     this.executes = executes
     return this
   }
 
-  public fun exactSuggests(suggests: ArgumentSuggests): ArgumentBuilder<A> {
+  public fun exactSuggests(suggests: ArgumentSuggests): ParameterBuilder<A> {
     this.suggests = suggests
     return this
   }
 
-  public fun suggests(fn: ArgumentSuggestsBuilder): ArgumentBuilder<A> {
+  public fun suggests(fn: ArgumentSuggestsBuilder): ParameterBuilder<A> {
     return exactSuggests { text ->
       buildSet {
         fn(text)
@@ -83,25 +83,5 @@ public class ArgumentBuilder<A : Any>(
     val argument = build()
     builder.add(argument)
     return argument
-  }
-}
-
-public class ParametersBuilder {
-  private var parameters: MutableSet<Parameter<*>> = mutableSetOf()
-
-  public fun <A : Any> add(parameter: Parameter<A>) {
-    parameters += parameter
-  }
-
-  public fun <A : Any> creating(type: KClass<A>): ArgumentBuilder<A> {
-    return ArgumentBuilder(type, this)
-  }
-
-  public inline fun <reified A : Any> creating(): ArgumentBuilder<A> {
-    return creating(A::class)
-  }
-
-  public fun build(): Set<Parameter<*>> {
-    return parameters.toSet()
   }
 }
