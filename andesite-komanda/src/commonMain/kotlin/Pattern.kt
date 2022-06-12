@@ -17,17 +17,15 @@
 package andesite.komanda
 
 import andesite.komanda.parsing.ArgumentNode
-import andesite.komanda.parsing.IntersectionNode
-import andesite.komanda.parsing.OptionalNode
 import andesite.komanda.parsing.PathNode
+import andesite.komanda.parsing.PatternExpr
 import andesite.komanda.parsing.PatternNode
-import andesite.komanda.parsing.VarargNode
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
 public data class Pattern(
-  val node: List<PatternNode>,
+  val expr: PatternExpr,
   val arguments: Set<Argument<*>>,
   val exceptionHandlers: Set<ExceptionHandler>,
   val executionHandlers: Map<KClass<*>, Execution<*>>,
@@ -43,14 +41,14 @@ public data class Pattern(
   }
 }
 
-public class PatternBuilder(private var node: List<PatternNode>? = null) {
+public class PatternBuilder(private var node: PatternExpr? = null) {
   private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
   private val executionHandlers: MutableMap<KClass<*>, Execution<*>> = mutableMapOf()
 
   public val arguments: ArgumentListBuilder = ArgumentListBuilder()
 
-  public fun node(builder: PatternNodeListBuilder.() -> Unit) {
-    node = PatternNodeListBuilder().apply(builder).build()
+  public fun expr(builder: PatternExprBuilder.() -> Unit) {
+    node = PatternExprBuilder().apply(builder).build()
   }
 
   public fun onFailure(handler: ExceptionHandler) {
@@ -77,22 +75,26 @@ public class PatternBuilder(private var node: List<PatternNode>? = null) {
   }
 }
 
-public class PatternNodeListBuilder {
+public class PatternExprBuilder {
   private val nodes: MutableList<PatternNode> = mutableListOf()
 
-  public fun <A : Any> vararg(type: KClass<A>, name: String): VarargNode<A> {
-    return VarargNode(type, name).also(nodes::add)
+  public fun path(vararg names: String): PathNode {
+    return PathNode(names.toSet()).also(nodes::add)
   }
 
-  public inline fun <reified A : Any> vararg(name: String): VarargNode<A> {
+  public fun <A : Any> vararg(type: KClass<A>, name: String): ArgumentNode<A> {
+    return ArgumentNode(type, name, vararg = true).also(nodes::add)
+  }
+
+  public inline fun <reified A : Any> vararg(name: String): ArgumentNode<A> {
     return vararg(A::class, name)
   }
 
-  public fun <A : Any> optional(type: KClass<A>, name: String): OptionalNode<A> {
-    return OptionalNode(type, name).also(nodes::add)
+  public fun <A : Any> optional(type: KClass<A>, name: String): ArgumentNode<A> {
+    return ArgumentNode(type, name, optional = true).also(nodes::add)
   }
 
-  public inline fun <reified A : Any> optional(name: String): OptionalNode<A> {
+  public inline fun <reified A : Any> optional(name: String): ArgumentNode<A> {
     return optional(A::class, name)
   }
 
@@ -104,15 +106,7 @@ public class PatternNodeListBuilder {
     return argument(A::class, name)
   }
 
-  public fun path(name: String): PathNode {
-    return PathNode(name).also(nodes::add)
-  }
-
-  public fun intersection(vararg identifiers: String): IntersectionNode {
-    return IntersectionNode(identifiers.toSet()).also(nodes::add)
-  }
-
-  public fun build(): List<PatternNode> {
-    return nodes
+  public fun build(): PatternExpr {
+    return PatternExpr(nodes)
   }
 }

@@ -16,7 +16,6 @@
 
 package andesite.komanda
 
-import andesite.komanda.parsing.ExecutionNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.mordant
 import kotlinx.coroutines.runBlocking
@@ -28,23 +27,27 @@ class DispatchTest {
     val root = TestKomandaRoot()
 
     root.command("hello") {
-      rootPattern {
-        val target by arguments
-          .creating<String>()
-          .suggests {
-            add(Suggestion.empty())
-          }
-          .executes { value ->
-            "test $value"
-          }
+      pattern {
+        expr {
+          path("world")
+          argument<String>("target")
+          path("another")
+          argument<String>("batata")
+        }
 
         onExecution<String> {
-          sendMessage("Hello, $target!")
+          sendMessage("Hello, $arguments")
+        }
+      }
+
+      rootPattern {
+        onExecution<String> {
+          sendMessage("Hello, $arguments!")
         }
       }
     }
 
-    root.dispatch("hello world carlos", "Gabi")
+    root.dispatch("hello world 'carlos' another 'batata'", "Gabi")
 //    root.dispatch("hello 'world'", "Gabi")
 //    root.dispatch("hello target:'world'", "Gabi")
 //    root.dispatch("hello target='world'", "Gabi")
@@ -52,10 +55,8 @@ class DispatchTest {
   }
 }
 
-class TestExecutionScope<S : Any>(override val sender: S, nodes: List<ExecutionNode>) :
+class TestExecutionScope<S : Any>(override val sender: S, override val arguments: Arguments) :
   ExecutionScope<S> {
-  override val arguments: Arguments = Arguments(nodes)
-
   override suspend fun sendMessage(chat: Chat) {
     println("message: ${chat.mordant()}")
   }
@@ -66,6 +67,6 @@ class TestExecutionScope<S : Any>(override val sender: S, nodes: List<ExecutionN
 }
 
 class TestKomandaRoot : AbstractKomandaRoot<String>() {
-  override fun createExecutionScope(sender: String, nodes: List<ExecutionNode>) =
-    TestExecutionScope(sender, nodes)
+  override fun createExecutionScope(sender: String, arguments: Arguments) =
+    TestExecutionScope(sender, arguments)
 }

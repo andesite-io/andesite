@@ -17,6 +17,7 @@
 package andesite.komanda
 
 import andesite.komanda.parsing.PathNode
+import andesite.komanda.parsing.PatternExpr
 import andesite.komanda.parsing.parsePatternNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatListBuilder
@@ -39,7 +40,7 @@ public class CommandBuilder(private val name: String) {
   private val children: MutableSet<Pattern> = mutableSetOf()
 
   public fun rootPattern(builder: PatternBuilder.() -> Unit) {
-    rootPattern = PatternBuilder(listOf(PathNode(name))).apply(builder).build()
+    rootPattern = PatternBuilder(PatternExpr(PathNode(name))).apply(builder).build()
   }
 
   public fun usage(builder: ChatListBuilder.() -> Unit) {

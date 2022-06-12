@@ -16,7 +16,6 @@
 
 package andesite.komanda
 
-import andesite.komanda.parsing.ExecutionNode
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
 import kotlin.properties.ReadOnlyProperty
@@ -48,8 +47,13 @@ public interface ExecutionScope<S : Any> {
   }
 }
 
-public class Arguments(private val nodes: List<ExecutionNode>) {
-  public val size: Int get() = nodes.size
+@JvmInline
+public value class Arguments(private val map: Map<String, Any?>) {
+  public val size: Int get() = map.size
+
+  public infix fun compose(other: Arguments): Arguments {
+    return Arguments(map = map + other.map)
+  }
 
   public fun <A : Any> get(name: String, type: KClass<A>): A {
     TODO()
@@ -59,7 +63,7 @@ public class Arguments(private val nodes: List<ExecutionNode>) {
     TODO()
   }
 
-  public inline fun <reified A : Any> Arguments.orDefault(value: A): ReadOnlyProperty<Any?, A> {
+  public inline fun <reified A : Any> orDefault(value: A): ReadOnlyProperty<Any?, A> {
     return ReadOnlyProperty { _, property ->
       getOrNull(property.name, A::class) ?: value
     }
@@ -70,14 +74,14 @@ public class Arguments(private val nodes: List<ExecutionNode>) {
   }
 
   public fun toStringList(): List<String> {
-    return nodes.map { it.fullText }
-  }
-
-  public fun toList(): List<ExecutionNode> {
-    return nodes
+    return map.values.mapNotNull { it.toString() }
   }
 
   override fun toString(): String {
-    return toStringList().joinToString(" ")
+    return map.toString()
+  }
+
+  public companion object {
+    public fun empty(): Arguments = Arguments(mapOf())
   }
 }

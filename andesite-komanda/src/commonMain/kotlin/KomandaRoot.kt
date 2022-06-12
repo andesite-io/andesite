@@ -18,7 +18,7 @@ package andesite.komanda
 
 import andesite.komanda.errors.CommandNotFoundException
 import andesite.komanda.errors.NoSwitchableTargetException
-import andesite.komanda.parsing.ExecutionNode
+import andesite.komanda.execution.Matcher
 import andesite.komanda.parsing.parseCommandString
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.withContext
@@ -40,7 +40,7 @@ public abstract class AbstractKomandaRoot<S : Any>(
 
   public override var komanda: KomandaSettings = KomandaSettings(DefaultKomandaSettings, builder)
 
-  public abstract fun createExecutionScope(sender: S, nodes: List<ExecutionNode>): ExecutionScope<S>
+  public abstract fun createExecutionScope(sender: S, arguments: Arguments): ExecutionScope<S>
 
   override fun komanda(configure: KomandaSettingsBuilder.() -> Unit) {
     komanda = KomandaSettings(komanda, configure)
@@ -55,10 +55,23 @@ public abstract class AbstractKomandaRoot<S : Any>(
     if (executionNodes.isEmpty()) return
 
     val name = executionNodes.first()
-    val arguments = executionNodes.drop(1)
+    val argumentExecutionNodes = executionNodes.drop(1)
 
     val command = commands[name.text]
       ?: throw CommandNotFoundException(name.text)
+
+    command.children.forEach { pattern ->
+      println("Groups with:")
+      println("  executionNodes: <$argumentExecutionNodes>")
+      println("  expr: ${pattern.expr}")
+      val arguments = Matcher
+        .group(argumentExecutionNodes, pattern.expr)
+        .map { it.tryAsArguments() }
+        .fold(Arguments.empty()) { acc, next ->
+          acc compose next.getOrThrow()
+        }
+      println("  arguments: $arguments")
+    }
 
     val pattern = command.rootPattern
 
@@ -66,7 +79,7 @@ public abstract class AbstractKomandaRoot<S : Any>(
       ?: throw NoSwitchableTargetException(sender::class)
 
     withContext(CoroutineName("command/$name")) {
-      val currentScope = createExecutionScope(sender, arguments)
+      val currentScope = createExecutionScope(sender, Arguments.empty())
       // propagate scope for the command arguments
       pattern.propagateScope(currentScope)
       handler.invoke(currentScope)
