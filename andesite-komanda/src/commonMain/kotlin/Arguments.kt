@@ -17,12 +17,20 @@
 package andesite.komanda
 
 import kotlin.properties.PropertyDelegateProvider
-import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 public class Argument<A : Any>(public val name: String, public val type: KClass<A>) {
   override fun toString(): String = "Argument<${type.simpleName}>(name=$name)"
+
+  public val localScope: LocalScope = LocalScope()
+
+  public operator fun getValue(thisRef: Nothing?, property: KProperty<*>): A {
+    val executionScope =
+      localScope.executionScope ?: error("Could not find execution scope in current thread")
+
+    return executionScope.arguments.get(name, type)
+  }
 }
 
 public class ArgumentListBuilder {
@@ -38,6 +46,10 @@ public class ArgumentListBuilder {
 
   public inline fun <reified A : Any> creating(): ArgumentBuilder<A> {
     return creating(A::class)
+  }
+
+  public fun build(): Set<Argument<*>> {
+    return arguments.toSet()
   }
 }
 
@@ -77,12 +89,11 @@ public class ArgumentBuilder<A : Any>(
   public operator fun provideDelegate(
     _thisRef: Any?,
     property: KProperty<*>
-  ): ReadOnlyProperty<Any?, Argument<A>> {
+  ): Argument<A> {
     name = property.name
-    val argument = build().also { builder.add(it) }
 
-    return ReadOnlyProperty { _, _ ->
-      argument
-    }
+    val argument = build()
+    builder.add(argument)
+    return argument
   }
 }

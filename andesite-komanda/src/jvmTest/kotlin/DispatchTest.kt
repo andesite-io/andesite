@@ -29,7 +29,7 @@ class DispatchTest {
 
     root.command("hello") {
       rootPattern {
-        val target: Argument<String> by arguments
+        val target by arguments
           .creating<String>()
           .suggests {
             add(Suggestion.empty())
@@ -39,7 +39,7 @@ class DispatchTest {
           }
 
         onExecution<String> {
-          sendMessage("Hello, ${target.value()}!")
+          sendMessage("Hello, $target!")
         }
       }
     }

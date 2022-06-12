@@ -22,13 +22,26 @@ import andesite.komanda.parsing.OptionalNode
 import andesite.komanda.parsing.PathNode
 import andesite.komanda.parsing.PatternNode
 import andesite.komanda.parsing.VarargNode
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 import kotlin.reflect.KClass
 
 public data class Pattern(
   val node: List<PatternNode>,
+  val arguments: Set<Argument<*>>,
   val exceptionHandlers: Set<ExceptionHandler>,
   val executionHandlers: Map<KClass<*>, Execution<*>>,
-)
+) {
+  public suspend fun propagateScope(executionScope: ExecutionScope<*>) {
+    return suspendCoroutine { cont ->
+      arguments.forEach { argument ->
+        argument.localScope.executionScope = executionScope
+      }
+
+      cont.resume(Unit)
+    }
+  }
+}
 
 public class PatternBuilder(private var node: List<PatternNode>? = null) {
   private val exceptionHandlers: MutableSet<ExceptionHandler> = mutableSetOf()
@@ -60,7 +73,7 @@ public class PatternBuilder(private var node: List<PatternNode>? = null) {
   public fun build(): Pattern {
     requireNotNull(node) { "The node must be set to build a Pattern" }
 
-    return Pattern(node!!, exceptionHandlers, executionHandlers)
+    return Pattern(node!!, arguments.build(), exceptionHandlers, executionHandlers)
   }
 }
 

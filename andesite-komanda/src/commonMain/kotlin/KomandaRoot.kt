@@ -60,11 +60,16 @@ public abstract class AbstractKomandaRoot<S : Any>(
     val command = commands[name.text]
       ?: throw CommandNotFoundException(name.text)
 
-    val handler = command.rootPattern.executionHandlers[sender::class]
+    val pattern = command.rootPattern
+
+    val handler = pattern.executionHandlers[sender::class]
       ?: throw NoSwitchableTargetException(sender::class)
 
     withContext(CoroutineName("command/$name")) {
-      handler.invoke(createExecutionScope(sender, arguments))
+      val currentScope = createExecutionScope(sender, arguments)
+      // propagate scope for the command arguments
+      pattern.propagateScope(currentScope)
+      handler.invoke(currentScope)
     }
   }
 }
