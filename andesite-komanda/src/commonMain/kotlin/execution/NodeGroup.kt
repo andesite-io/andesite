@@ -16,9 +16,9 @@
 
 package andesite.komanda.execution
 
-import andesite.komanda.parsing.ArgumentNode
 import andesite.komanda.parsing.ExecutionNode
 import andesite.komanda.parsing.NamedNode
+import andesite.komanda.parsing.ParameterNode
 import andesite.komanda.parsing.PatternExpr
 
 internal data class NodeGroup(val executionNodes: List<ExecutionNode>, val expr: PatternExpr) {
@@ -40,7 +40,7 @@ internal data class NodeGroup(val executionNodes: List<ExecutionNode>, val expr:
       if (executionNodes.filterIsInstance<NamedNode>().isNotEmpty()) {
         expr.forEach { node ->
           when (node) {
-            is ArgumentNode<*> -> {
+            is ParameterNode<*> -> {
               val argumentNode = executionNodes.find { it.name == node.name }
                 ?: throw MatchException("Could not find argument with name ${node.name}")
 
@@ -56,7 +56,7 @@ internal data class NodeGroup(val executionNodes: List<ExecutionNode>, val expr:
           val patternNode = expr.nodes.elementAtOrNull(index)
             ?: error("Could not find pattern node with at index $index")
 
-          if (patternNode !is ArgumentNode<*>) {
+          if (patternNode !is ParameterNode<*>) {
             throw MatchException("Pattern node found at $index is not a an argument")
           }
 

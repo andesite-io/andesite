@@ -33,16 +33,8 @@ class DispatchTest {
         }
       }
 
-      pattern {
-        expr {
-          path("world")
-          argument<String>("target")
-          path("another")
-          argument<String>("batata")
-        }
-
+      pattern("world <target> another [batata]") {
         val target by parameters.string()
-
         val batata by parameters.string()
 
         onExecution<String> {

@@ -16,6 +16,7 @@
 
 package andesite.komanda.parsing
 
+import andesite.komanda.errors.ExecutionNodeParsingException
 import com.github.h0tk3y.betterParse.combinators.and
 import com.github.h0tk3y.betterParse.combinators.map
 import com.github.h0tk3y.betterParse.combinators.optional
@@ -27,6 +28,7 @@ import com.github.h0tk3y.betterParse.grammar.parseToEnd
 import com.github.h0tk3y.betterParse.grammar.parser
 import com.github.h0tk3y.betterParse.lexer.literalToken
 import com.github.h0tk3y.betterParse.lexer.regexToken
+import com.github.h0tk3y.betterParse.parser.ParseException
 import com.github.h0tk3y.betterParse.parser.Parser
 
 public sealed interface ExecutionNode {
@@ -90,5 +92,9 @@ public fun parseCommandString(string: String): List<ExecutionNode> {
     separatedTerms(argument, ws, acceptZero = true)
   }
 
-  return grammar.parseToEnd(string)
+  return try {
+    grammar.parseToEnd(string)
+  } catch (cause: ParseException) {
+    throw ExecutionNodeParsingException("Execution node parsing failed", cause)
+  }
 }

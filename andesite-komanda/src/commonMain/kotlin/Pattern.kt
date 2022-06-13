@@ -16,7 +16,7 @@
 
 package andesite.komanda
 
-import andesite.komanda.parsing.ArgumentNode
+import andesite.komanda.parsing.ParameterNode
 import andesite.komanda.parsing.PathNode
 import andesite.komanda.parsing.PatternExpr
 import andesite.komanda.parsing.PatternNode
@@ -83,27 +83,27 @@ public class PatternExprBuilder {
     return PathNode(names.toSet()).also(nodes::add)
   }
 
-  public fun <A : Any> vararg(type: KClass<A>, name: String): ArgumentNode<A> {
-    return ArgumentNode(type, name, vararg = true).also(nodes::add)
+  public fun <A : Any> vararg(type: KClass<A>, name: String): ParameterNode<A> {
+    return ParameterNode(type, name, vararg = true).also(nodes::add)
   }
 
-  public inline fun <reified A : Any> vararg(name: String): ArgumentNode<A> {
+  public inline fun <reified A : Any> vararg(name: String): ParameterNode<A> {
     return vararg(A::class, name)
   }
 
-  public fun <A : Any> optional(type: KClass<A>, name: String): ArgumentNode<A> {
-    return ArgumentNode(type, name, optional = true).also(nodes::add)
+  public fun <A : Any> optional(type: KClass<A>, name: String): ParameterNode<A> {
+    return ParameterNode(type, name, optional = true).also(nodes::add)
   }
 
-  public inline fun <reified A : Any> optional(name: String): ArgumentNode<A> {
+  public inline fun <reified A : Any> optional(name: String): ParameterNode<A> {
     return optional(A::class, name)
   }
 
-  public fun <A : Any> argument(type: KClass<A>, name: String): ArgumentNode<A> {
-    return ArgumentNode(type, name).also(nodes::add)
+  public fun <A : Any> argument(type: KClass<A>, name: String): ParameterNode<A> {
+    return ParameterNode(type, name).also(nodes::add)
   }
 
-  public inline fun <reified A : Any> argument(name: String): ArgumentNode<A> {
+  public inline fun <reified A : Any> argument(name: String): ParameterNode<A> {
     return argument(A::class, name)
   }
 
