@@ -17,6 +17,7 @@
 package andesite.komanda
 
 import andesite.shared.AndesiteProperties
+import andesite.shared.runIfInitialized
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -26,31 +27,49 @@ public typealias ArgumentExecutes<A> = suspend (value: String) -> A
 public typealias ArgumentSuggests = suspend (text: String) -> Set<Suggestion>
 public typealias ArgumentSuggestsBuilder = suspend MutableSet<Suggestion>.(text: String) -> Unit
 
-public class Parameter<A : Any>(
+public class Parameter<A>(
   public val name: String,
-  public val type: KClass<A>,
+  public val type: KClass<A & Any>,
   public val executes: ArgumentExecutes<A>,
   public val suggests: ArgumentSuggests,
+  public val nullable: Boolean,
 ) {
   override fun toString(): String = "Parameter<${type.simpleName}>(name=$name)"
 
   public var localScope: ExecutionScope<*>? by AndesiteProperties.threadLocal()
 
   public operator fun getValue(thisRef: Nothing?, property: KProperty<*>): A {
-    return localScope
-      ?.arguments
-      ?.get(name, type)
+    val arguments = localScope?.arguments
       ?: error("Could not find execution scope in current thread")
+
+    return if (nullable) {
+      // Suppress unchecked cast, if the nullable is true, the A will be nullable
+      @Suppress("UNCHECKED_CAST")
+      arguments.getOrNull(name, type) as A
+    } else {
+      arguments.get(name, type)
+    }
   }
 }
 
-public class ParameterBuilder<A : Any>(
-  private val type: KClass<A>,
+public class ParameterBuilder<A>(
+  private val type: KClass<A & Any>,
   private val builder: ParametersBuilder,
+  private val nullable: Boolean = false,
 ) {
   private var name: String by AndesiteProperties.builder()
   private var executes: ArgumentExecutes<A> by AndesiteProperties.builder()
   private var suggests: ArgumentSuggests = { setOf() }
+
+  @Suppress("UNCHECKED_CAST")
+  public fun nullable(): ParameterBuilder<A?> =
+    ParameterBuilder(type, builder, nullable = true).apply {
+      runIfInitialized(this@ParameterBuilder::name) { this@runIfInitialized.name = it }
+      runIfInitialized(this@ParameterBuilder::suggests) { this@runIfInitialized.suggests = it }
+      runIfInitialized(this@ParameterBuilder::executes) {
+        this@runIfInitialized.executes = it as ArgumentExecutes<A & Any>
+      }
+    } as ParameterBuilder<A?>
 
   public fun executes(executes: ArgumentExecutes<A>): ParameterBuilder<A> {
     this.executes = executes
@@ -71,7 +90,7 @@ public class ParameterBuilder<A : Any>(
   }
 
   public fun build(): Parameter<A> {
-    return Parameter(name, type, executes, suggests)
+    return Parameter(name, type, executes, suggests, nullable)
   }
 
   public operator fun provideDelegate(

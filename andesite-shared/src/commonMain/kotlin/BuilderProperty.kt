@@ -23,10 +23,22 @@ public class BuilderProperty<T : Any> : ReadWriteProperty<Any?, T> {
   private var value: T? = null
 
   override fun getValue(thisRef: Any?, property: KProperty<*>): T {
-    return requireNotNull(value) { "Property ${property.name} should be initialized before build." }
+    return value ?: throw BuilderInitializationException(
+      message = "Property ${property.name} should be initialized before build.",
+    )
   }
 
   override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
     this.value = value
+  }
+}
+
+public class BuilderInitializationException(override val message: String) : RuntimeException()
+
+public fun <R, A> R.runIfInitialized(property: () -> A, f: R.(A) -> Unit) {
+  try {
+    f(property())
+  } catch (_: BuilderInitializationException) {
+    // nothing
   }
 }

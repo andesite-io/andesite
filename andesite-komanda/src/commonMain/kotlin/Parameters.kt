@@ -23,7 +23,7 @@ public typealias Parameters = Map<String, Parameter<*>>
 public class ParametersBuilder {
   private var parameters: MutableSet<Parameter<*>> = mutableSetOf()
 
-  public fun <A : Any> add(parameter: Parameter<A>) {
+  public fun <A> add(parameter: Parameter<A>) {
     parameters += parameter
   }
 
