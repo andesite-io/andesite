@@ -19,7 +19,6 @@ package andesite.command
 import andesite.komanda.AbstractKomandaRoot
 import andesite.komanda.Arguments
 import andesite.komanda.ExecutionScope
-import andesite.komanda.parsing.ExecutionNode
 import andesite.player.MinecraftPlayer
 import andesite.protocol.misc.Chat
 import andesite.server.Messageable
@@ -49,8 +48,8 @@ public class MinecraftKomandaRoot : AbstractKomandaRoot<Messageable>(
 ) {
   override fun createExecutionScope(
     sender: Messageable,
-    nodes: List<ExecutionNode>,
+    arguments: Arguments,
   ): ExecutionScope<Messageable> {
-    return MinecraftExecutionScope(Arguments(nodes), sender)
+    return MinecraftExecutionScope(arguments, sender)
   }
 }

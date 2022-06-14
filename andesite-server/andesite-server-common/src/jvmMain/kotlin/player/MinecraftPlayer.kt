@@ -16,11 +16,11 @@
 
 package andesite.player
 
-import andesite.AndesiteInternalAPI
 import andesite.event.EventHolder
 import andesite.protocol.java.JavaPacket
 import andesite.protocol.misc.Uuid
 import andesite.server.Messageable
+import andesite.shared.AndesiteInternalAPI
 import andesite.world.Location
 import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer

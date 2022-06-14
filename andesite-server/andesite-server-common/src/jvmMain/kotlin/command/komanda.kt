@@ -18,7 +18,6 @@ package andesite.command
 
 import andesite.komanda.Execution
 import andesite.komanda.PatternBuilder
-import andesite.komanda.onExecution
 import andesite.player.MinecraftPlayer
 
 public fun PatternBuilder.onPlayerExecution(handler: Execution<MinecraftPlayer>) {

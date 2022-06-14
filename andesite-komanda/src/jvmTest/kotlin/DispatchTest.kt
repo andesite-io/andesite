@@ -33,12 +33,12 @@ class DispatchTest {
         }
       }
 
-      pattern("to <target>") {
+      pattern("to <target> [message]") {
         val target by parameters.string()
-        val batata by parameters.string().nullable()
+        val message by parameters.string().nullable()
 
         onExecution<String> {
-          sendMessage("Hello from pattern, target=$target, batata=$batata")
+          sendMessage("Hello from pattern, target=$target, message=$message")
         }
       }
     }
