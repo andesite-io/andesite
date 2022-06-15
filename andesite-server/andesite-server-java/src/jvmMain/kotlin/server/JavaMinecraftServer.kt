@@ -14,10 +14,11 @@
  *    limitations under the License.
  */
 
+@file:OptIn(AndesiteInternalAPI::class)
+
 package andesite.java.server
 
 import andesite.AndesiteError
-import andesite.AndesiteInternalAPI
 import andesite.command.MinecraftKomandaRoot
 import andesite.event.MinecraftEvent
 import andesite.java.decodeRootTag
@@ -39,6 +40,7 @@ import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.server.Messageable
 import andesite.server.MinecraftServer
 import andesite.server.Motd
+import andesite.shared.AndesiteInternalAPI
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager
@@ -107,7 +109,6 @@ internal class JavaMinecraftServer(
     eventFlow.emit(event)
   }
 
-  @AndesiteInternalAPI
   override fun listen(): Unit = runBlocking(coroutineContext) {
     logger.info("Starting andesite...")
 

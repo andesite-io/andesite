@@ -16,7 +16,6 @@
 
 package andesite.java
 
-import andesite.AndesiteInternalAPI
 import andesite.java.game.handleChat
 import andesite.java.game.handleChunks
 import andesite.java.game.handleKeepAlive
@@ -33,6 +32,7 @@ import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
+import andesite.shared.AndesiteInternalAPI
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

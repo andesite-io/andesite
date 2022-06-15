@@ -16,12 +16,12 @@
 
 package andesite.java.game
 
-import andesite.AndesiteInternalAPI
 import andesite.java.player.Session
 import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
 import andesite.player.PlayerMoveEvent
 import andesite.protocol.java.v756.PositionMutatorPacket
+import andesite.shared.AndesiteInternalAPI
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
