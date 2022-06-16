@@ -36,7 +36,7 @@ public class Parameter<A>(
 ) {
   override fun toString(): String = "Parameter<${type.simpleName}>(name=$name)"
 
-  public var localScope: ExecutionScope<*>? by AndesiteProperties.threadLocal()
+  internal var localScope: ExecutionScope<*>? by AndesiteProperties.threadLocal()
 
   public operator fun getValue(thisRef: Nothing?, property: KProperty<*>): A {
     val arguments = localScope?.arguments
@@ -89,7 +89,7 @@ public class ParameterBuilder<A>(
     }
   }
 
-  public fun build(): Parameter<A> {
+  internal fun build(): Parameter<A> {
     return Parameter(name, type, executes, suggests, nullable)
   }
 
