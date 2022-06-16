@@ -14,26 +14,16 @@
  *    limitations under the License.
  */
 
-package andesite.item
+package andesite.item.properties
 
-import andesite.item.properties.FoodProperties
-import andesite.protocol.misc.Identifier
+import andesite.item.Effect
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class Item(
-  val id: Long,
-  val mojangName: String,
-  val rarity: Rarity,
-  val translationKey: String,
-  val depletes: Boolean,
-  val maxStackSize: Long,
-  val maxDamage: Long,
-  val edible: Boolean,
-  val fireResistant: Boolean,
-  val blockId: Identifier,
-  val eatingSound: Identifier,
-  val drinkingSound: Identifier,
-  val specificItemData: SpecificItemData,
-  val foodProperties: FoodProperties? = null
+public data class FoodProperties(
+  val alwaysEdible: Boolean,
+  val isFastFood: Boolean,
+  val nutrition: Long,
+  val saturationModifier: Double,
+  val effects: List<Effect>,
 )

@@ -16,24 +16,13 @@
 
 package andesite.item
 
-import andesite.item.properties.FoodProperties
 import andesite.protocol.misc.Identifier
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class Item(
-  val id: Long,
-  val mojangName: String,
-  val rarity: Rarity,
-  val translationKey: String,
-  val depletes: Boolean,
-  val maxStackSize: Long,
-  val maxDamage: Long,
-  val edible: Boolean,
-  val fireResistant: Boolean,
-  val blockId: Identifier,
-  val eatingSound: Identifier,
-  val drinkingSound: Identifier,
-  val specificItemData: SpecificItemData,
-  val foodProperties: FoodProperties? = null
+public data class Effect(
+  val id: Identifier,
+  val amplifier: Long,
+  val duration: Long,
+  val chance: Double
 )

@@ -16,24 +16,18 @@
 
 package andesite.item
 
-import andesite.item.properties.FoodProperties
-import andesite.protocol.misc.Identifier
+import andesite.item.properties.ArmorProperties
+import andesite.item.properties.BucketItemProperties
+import andesite.item.properties.DyeItemProperties
+import andesite.item.properties.SpawnEggProperties
+import andesite.item.properties.TieredItemProperties
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class Item(
-  val id: Long,
-  val mojangName: String,
-  val rarity: Rarity,
-  val translationKey: String,
-  val depletes: Boolean,
-  val maxStackSize: Long,
-  val maxDamage: Long,
-  val edible: Boolean,
-  val fireResistant: Boolean,
-  val blockId: Identifier,
-  val eatingSound: Identifier,
-  val drinkingSound: Identifier,
-  val specificItemData: SpecificItemData,
-  val foodProperties: FoodProperties? = null
+public data class SpecificItemData(
+  val armorProperties: ArmorProperties? = null,
+  val tieredItemProperties: TieredItemProperties? = null,
+  val bucketItemProperties: BucketItemProperties? = null,
+  val dyeItemProperties: DyeItemProperties? = null,
+  val spawnEggProperties: SpawnEggProperties? = null,
 )

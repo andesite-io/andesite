@@ -16,24 +16,20 @@
 
 package andesite.item
 
-import andesite.item.properties.FoodProperties
-import andesite.protocol.misc.Identifier
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-public data class Item(
-  val id: Long,
-  val mojangName: String,
-  val rarity: Rarity,
-  val translationKey: String,
-  val depletes: Boolean,
-  val maxStackSize: Long,
-  val maxDamage: Long,
-  val edible: Boolean,
-  val fireResistant: Boolean,
-  val blockId: Identifier,
-  val eatingSound: Identifier,
-  val drinkingSound: Identifier,
-  val specificItemData: SpecificItemData,
-  val foodProperties: FoodProperties? = null
-)
+public enum class Slot {
+  @SerialName("chest")
+  Chest,
+
+  @SerialName("feet")
+  Feet,
+
+  @SerialName("head")
+  Head,
+
+  @SerialName("legs")
+  Legs;
+}
