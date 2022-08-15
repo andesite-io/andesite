@@ -43,9 +43,9 @@ import andesite.shared.AndesiteInternalAPI
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager
+import io.ktor.network.sockets.InetSocketAddress
 import io.ktor.network.sockets.aSocket
 import io.ktor.utils.io.ClosedWriteChannelException
-import java.net.InetSocketAddress
 import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope

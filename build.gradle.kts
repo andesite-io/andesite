@@ -91,7 +91,7 @@ subprojects {
       val commonMain by getting {
         dependencies {
           implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-          implementation("io.ktor:ktor-network:1.6.4")
+          implementation("io.ktor:ktor-network:2.0.3")
           implementation("com.benasher44:uuid:0.3.1")
           implementation("net.benwoodworth.knbt:knbt:0.11.1")
           implementation("org.jetbrains.kotlinx:atomicfu:0.17.2")

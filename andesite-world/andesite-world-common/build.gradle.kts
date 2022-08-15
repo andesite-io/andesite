@@ -21,7 +21,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(project(":andesite-protocol:andesite-protocol-common"))
-        implementation("io.ktor:ktor-network:1.6.4")
+        implementation("io.ktor:ktor-network:2.0.3")
       }
     }
   }
