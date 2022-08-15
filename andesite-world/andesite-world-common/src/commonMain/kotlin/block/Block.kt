@@ -28,6 +28,10 @@ public data class Block(
   val properties: JsonObject = buildJsonObject { },
 ) {
   val isAir: Boolean get() = id.equals("minecraft:air")
+
+  public companion object {
+    public val Stone: Block = Block(Identifier("minecraft:stone"))
+  }
 }
 
 public fun NbtCompound.toBlock(): Block {
