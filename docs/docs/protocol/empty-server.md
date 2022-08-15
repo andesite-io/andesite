@@ -17,15 +17,15 @@ The project only supports the Java Edition currently.
 These are the dependencies required to run the server.
 
 ```
-api("me.gabrielleeg1:andesite-protocol-common:1.0.3-SNAPSHOT")
-api("me.gabrielleeg1:andesite-protocol-java:1.0.3-SNAPSHOT")
+api("me.gabrielleeg1:andesite-protocol-common:$andesite_version")
+api("me.gabrielleeg1:andesite-protocol-java:$andesite_version")
 
-implementation("io.ktor:ktor-network:2.0.3")
+implementation("io.ktor:ktor-network:$ktor_version")
 
-implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_json_version")
 
-implementation("net.benwoodworth.knbt:knbt:0.11.2")
+implementation("net.benwoodworth.knbt:knbt:$knbt_version")
 ```
 
 ## Getting Started

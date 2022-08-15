@@ -16,9 +16,12 @@ repositories {
 }
 
 dependencies {
-  api("me.gabrielleeg1:andesite-protocol-common:1.0.2-SNAPSHOT")
+  api("me.gabrielleeg1:andesite-protocol-common:$andesite_version")
 
-  implementation("net.benwoodworth.knbt:knbt:0.11.2")
+  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_json_version")
+
+  implementation("net.benwoodworth.knbt:knbt:$knbt_version")
 }
 ```
 

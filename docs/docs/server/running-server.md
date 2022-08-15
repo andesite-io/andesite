@@ -17,25 +17,25 @@ The project only supports the Java Edition 1.17.1 currently.
 These are the dependencies required to run the server.
 
 ```
-api("me.gabrielleeg1:andesite-komanda:1.0.3-SNAPSHOT")
+api("me.gabrielleeg1:andesite-komanda:$andesite_version")
 
-api("me.gabrielleeg1:andesite-protocol-common:1.0.3-SNAPSHOT")
-api("me.gabrielleeg1:andesite-protocol-java-v756:1.0.3-SNAPSHOT")
+api("me.gabrielleeg1:andesite-protocol-common:$andesite_version")
+api("me.gabrielleeg1:andesite-protocol-java-v756:$andesite_version")
 
-api("me.gabrielleeg1:andesite-world-common:1.0.3-SNAPSHOT")
-api("me.gabrielleeg1:andesite-world-anvil:1.0.3-SNAPSHOT")
+api("me.gabrielleeg1:andesite-world-common:$andesite_version")
+api("me.gabrielleeg1:andesite-world-anvil:$andesite_version")
 
-api("me.gabrielleeg1:andesite-server-common:1.0.3-SNAPSHOT")
-api("me.gabrielleeg1:andesite-server-java:1.0.3-SNAPSHOT")
+api("me.gabrielleeg1:andesite-server-common:$andesite_version")
+api("me.gabrielleeg1:andesite-server-java:$andesite_version")
 
-implementation("org.apache.logging.log4j:log4j-api-kotlin:1.2.0")
-implementation("org.apache.logging.log4j:log4j-api:2.17.2")
-implementation("org.apache.logging.log4j:log4j-core:2.18.0")
+implementation("org.apache.logging.log4j:log4j-api-kotlin:$log4j2_kotlin_version")
+implementation("org.apache.logging.log4j:log4j-api:$log4j2_version")
+implementation("org.apache.logging.log4j:log4j-core:$log4j2_version")
 
-implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_json_version")
 
-implementation("net.benwoodworth.knbt:knbt:0.11.2")
+implementation("net.benwoodworth.knbt:knbt:$knbt_version")
 ```
 
 ## Getting Started
