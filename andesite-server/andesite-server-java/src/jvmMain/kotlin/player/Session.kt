@@ -32,7 +32,6 @@ import io.ktor.network.sockets.openWriteChannel
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
 import io.ktor.utils.io.core.writeFully
-import io.ktor.utils.io.readPacket
 import io.ktor.utils.io.writePacket
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineName
