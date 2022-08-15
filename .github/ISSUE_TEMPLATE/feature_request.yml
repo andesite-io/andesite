@@ -3,19 +3,16 @@ description: I have a suggestion (and may want to implement it 🙂)!
 title: "[FR] "
 labels: [ "type: feature" ]
 body:
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: First, a few things...
       description: This will help us better interpret your request.
       options:
-        - label: Is your feature request related to a problem?
-          required: false
-        - label: Will this feature just help you or is it something everyone needs?
-          required: false
-        - label: Have you tried to implement or *draft* this feature?
-          required: false
-        - label: Is your feature a breaking change?
-          required: false
+        - Is your feature request related to a problem?
+        - Will this feature just help you or is it something everyone needs?
+        - Have you tried to implement or *draft* this feature?
+        - Is your feature a breaking change?
+        - None of the others
   - type: textarea
     attributes:
       label: 😄 Describe the solution you'd like
@@ -34,15 +31,10 @@ body:
       description: If this feature is a breaking change or what drawbacks does it have?
     validations:
       required: false
-  - type: checkboxes
+  - type: input
     attributes:
       label: 💻 Platform
       description: On which platforms do you want this feature to be applied?
-      options:
-        - label: Windows
-        - label: macOS
-        - label: Linux
-        - label: Other
   
   - type: input
     id: environment

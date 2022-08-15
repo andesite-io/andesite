@@ -1,15 +1,15 @@
 name: 🐞 Bug report
 description: Something isn't working
 title: "[BUG] "
-labels: ["type: bug"]
+labels: [ "type: bug" ]
 body:
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: Is there an existing issue for this?
       description: Please search to see if an issue already exists for the bug you encountered.
       options:
-        - label: I have searched the existing issues
-          required: true
+        - Yes
+        - No
   - type: textarea
     attributes:
       label: 🐛 Describe the bug
@@ -33,15 +33,10 @@ body:
         4. See error...
     validations:
       required: false
-  - type: checkboxes
+  - type: input
     attributes:
       label: 💻 Platform
       description: On which platform did the bug occur?
-      options:
-        - label: Windows
-        - label: macOS
-        - label: Linux
-        - label: Other
   - type: input
     id: environment
     attributes:
