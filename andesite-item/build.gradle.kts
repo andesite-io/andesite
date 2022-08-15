@@ -30,7 +30,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(projects.andesiteProtocol.andesiteProtocolCommon)
+        api(projects.andesiteProtocol.andesiteProtocolCommon)
       }
     }
   }

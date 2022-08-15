@@ -19,7 +19,6 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(projects.andesiteProtocol.andesiteProtocolBedrock)
-        implementation(projects.andesiteProtocol.andesiteProtocolCommon)
       }
     }
   }

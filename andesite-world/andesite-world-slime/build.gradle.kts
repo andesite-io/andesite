@@ -20,7 +20,7 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(projects.andesiteWorld.andesiteWorldCommon)
+        api(projects.andesiteWorld.andesiteWorldCommon)
       }
     }
   }

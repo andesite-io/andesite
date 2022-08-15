@@ -92,16 +92,16 @@ subprojects {
       val commonMain by getting {
         dependencies {
           afterEvaluate {
-            implementation(libs.ktx.datetime)
-            implementation(libs.ktor.network)
-            implementation(libs.uuid)
-            implementation(libs.knbt)
-            implementation(libs.ktx.atomicfu)
-            implementation(libs.ktx.coroutines.core)
-            implementation(libs.ktx.serialization.json)
+            api(libs.ktx.datetime)
+            api(libs.ktor.network)
+            api(libs.uuid)
+            api(libs.knbt)
+            api(libs.ktx.atomicfu)
+            api(libs.ktx.coroutines.core)
+            api(libs.ktx.serialization.json)
 
             if (project.name != "andesite-shared") {
-              implementation(projects.andesiteShared)
+              api(projects.andesiteShared)
             }
           }
         }
@@ -117,11 +117,11 @@ subprojects {
       val jvmMain by getting {
         dependencies {
           afterEvaluate {
-            implementation(libs.log4j.api)
-            implementation(libs.log4j.core)
-            implementation(libs.log4j.kotlin)
+            api(libs.log4j.api)
+            api(libs.log4j.core)
+            api(libs.log4j.kotlin)
 
-            implementation(libs.ktx.coroutines.jdk8)
+            api(libs.ktx.coroutines.jdk8)
           }
         }
       }

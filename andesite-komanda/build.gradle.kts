@@ -31,7 +31,7 @@ kotlin {
     val commonMain by getting {
       dependencies {
         implementation(libs.betterParse)
-        implementation(projects.andesiteProtocol.andesiteProtocolCommon)
+        api(projects.andesiteProtocol.andesiteProtocolCommon)
       }
     }
   }

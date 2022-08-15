@@ -18,10 +18,10 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(projects.andesiteProtocol.andesiteProtocolCommon)
-        implementation(projects.andesiteProtocol.andesiteProtocolJava)
+        api(projects.andesiteProtocol.andesiteProtocolCommon)
+        api(projects.andesiteProtocol.andesiteProtocolJava)
 
-        implementation(projects.andesiteWorld.andesiteWorldCommon)
+        api(projects.andesiteWorld.andesiteWorldCommon)
       }
     }
   }

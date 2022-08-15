@@ -18,15 +18,15 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(libs.ktor.network)
-        implementation(libs.okio)
-        implementation(libs.mordant)
+        api(libs.ktor.network)
+        api(libs.okio)
+        api(libs.mordant)
       }
     }
 
     val jvmMain by getting {
       dependencies {
-        implementation(libs.kt.reflect)
+        api(libs.kt.reflect)
       }
     }
   }
