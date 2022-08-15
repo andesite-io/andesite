@@ -34,6 +34,7 @@ ij_markdown_wrap_text_if_long = true
 ij_markdown_wrap_text_inside_blockquotes = true
 
 [{*.gradle.kts,*.kt,*.kts,*.main.kts,*.space.kts}]
+disabled_rules = filename
 max_line_length = 100
 ij_kotlin_align_in_columns_case_branch = false
 ij_kotlin_align_multiline_binary_operation = false
