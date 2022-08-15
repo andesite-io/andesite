@@ -55,6 +55,7 @@ subprojects {
   }
 
   configure<KtlintExtension> {
+    version.set("0.45.2")
     android.set(false)
     additionalEditorconfigFile.set(rootProject.file(".editorconfig"))
   }
