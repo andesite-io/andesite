@@ -18,6 +18,7 @@ package andesite.world
 
 import io.ktor.utils.io.core.ByteReadPacket
 
+/** Represents a generic Minecraft chunk section. */
 public interface ChunkSection {
   public fun writeToNetwork(): ByteReadPacket
 }

@@ -46,6 +46,9 @@ import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.OkioApi
 
+/**
+ * A [Decoder] that deserializes a [ProtocolValue] from a [ByteReadPacket].
+ */
 public interface ProtocolDecoder : Decoder, CompositeDecoder {
   public val nbt: Nbt
   public val json: Json
@@ -131,6 +134,7 @@ internal class ProtocolDecoderImpl(
 
       value
     }
+
     else -> decodeString()
   }
 
@@ -179,9 +183,11 @@ internal class ProtocolDecoderImpl(
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolJson>().isNotEmpty() -> {
         configuration.json.decodeFromString(deserializer, packet.readString())
       }
+
       descriptor.getElementAnnotations(index).filterIsInstance<ProtocolNbt>().isNotEmpty() -> {
         configuration.nbt.decodeFromSource(deserializer, InputSource(packet))
       }
+
       else -> deserializer.deserialize(ProtocolDecoderImpl(packet, configuration))
     }
   }

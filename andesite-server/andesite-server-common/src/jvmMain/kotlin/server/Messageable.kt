@@ -19,6 +19,7 @@ package andesite.server
 import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
 
+/** Represents an Entity that can receive messages. */
 public interface Messageable {
   public suspend fun sendMessage(chat: Chat)
 

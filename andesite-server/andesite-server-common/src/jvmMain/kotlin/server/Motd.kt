@@ -18,12 +18,22 @@ package andesite.server
 
 import andesite.protocol.misc.Chat
 
+/**
+ * Represents a MOTD (Message of the Day).
+ *
+ * @param version the Minecraft's version
+ * @param maxPlayers the maximum amount of players that can be connected
+ * @param text the MOTD text
+ */
 public data class Motd(
   val version: String,
   val maxPlayers: Int,
   val text: Chat,
 )
 
+/**
+ * The builder class for [Motd]
+ */
 public interface MotdBuilder {
   public var version: String
   public var maxPlayers: Int

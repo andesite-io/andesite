@@ -18,6 +18,7 @@ package andesite.shared
 
 import kotlin.properties.ReadWriteProperty
 
+/** Represents a null-initialized thread local property delegate. */
 public expect class NullableThreadLocalProperty<A : Any> internal constructor() :
   ReadWriteProperty<Any?, A?> {
   public var value: A?

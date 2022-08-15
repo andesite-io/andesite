@@ -19,6 +19,11 @@ package andesite.shared
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/**
+ * Represents a value-initialized thread local property delegate.
+ *
+ * @param value the initial value of the property
+ */
 public actual class ThreadLocalProperty<A : Any> internal actual constructor(value: A) :
   ReadWriteProperty<Any?, A> {
   private val _value: ThreadLocal<A> = ThreadLocal.withInitial { value }

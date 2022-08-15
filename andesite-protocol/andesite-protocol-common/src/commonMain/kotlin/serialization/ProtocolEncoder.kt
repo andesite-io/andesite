@@ -46,6 +46,9 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 
+/**
+ * An [Encoder] that serializes a [ProtocolValue] over a [BytePacketBuilder].
+ */
 public interface ProtocolEncoder : Encoder, CompositeEncoder {
   public val nbt: Nbt
   public val json: Json

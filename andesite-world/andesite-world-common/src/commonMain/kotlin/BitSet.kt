@@ -16,6 +16,7 @@
 
 package andesite.world
 
+/** The bit set class */
 public expect class BitSet() {
   public fun get(index: Int): Boolean
 

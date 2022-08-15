@@ -18,6 +18,11 @@ package andesite.shared
 
 import kotlin.properties.ReadWriteProperty
 
+/**
+ * Represents a value-initialized thread local property delegate.
+ *
+ * @param value the initial value of the property
+ */
 public expect class ThreadLocalProperty<A : Any> internal constructor(value: A) :
   ReadWriteProperty<Any?, A> {
   public var value: A

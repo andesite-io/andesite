@@ -29,22 +29,48 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.serializer
 
+/** [Chat] component's click event. */
 @Serializable(ClickEventSerializer::class)
 @SerialName("ClickEvent")
 public sealed class ClickEvent
 
+/**
+ * Opens a URL for the player.
+ *
+ * @param url the URL to open
+ */
 @Serializable
 public data class OpenUrl(val url: String) : ClickEvent()
 
+/**
+ * Runs a command as the player.
+ *
+ * @param command the command to run
+ */
 @Serializable
 public data class RunCommand(val command: String) : ClickEvent()
 
+/**
+ * Suggets a command to the player.
+ *
+ * @param command the command to suggest
+ */
 @Serializable
 public data class SuggestCommand(val command: String) : ClickEvent()
 
+/**
+ * Changes the page of the current open book.
+ *
+ * @param page the page to change to
+ */
 @Serializable
 public data class ChangePage(val page: Int) : ClickEvent()
 
+/**
+ * Copies a [text] to the player's clipboard.
+ *
+ * @param text the text to copy
+ */
 @Serializable
 public data class CopyToClipboard(val text: String) : ClickEvent()
 

@@ -16,4 +16,9 @@
 
 package andesite.protocol
 
+/**
+ * Gets the current time in milliseconds.
+ *
+ * @return the current time in milliseconds
+ */
 public expect fun currentTimeMillis(): Long
