@@ -8,8 +8,8 @@ body:
       label: Is there an existing issue for this?
       description: Please search to see if an issue already exists for the bug you encountered.
       options:
-        - Yes
-        - No
+        - 'Yes'
+        - 'No'
   - type: textarea
     attributes:
       label: 🐛 Describe the bug
