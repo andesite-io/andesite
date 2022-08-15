@@ -16,6 +16,7 @@
 
 package andesite.world
 
+/** Represents a generic Minecraft chunk section. */
 public interface Chunk {
   public val sections: List<ChunkSection>
 }

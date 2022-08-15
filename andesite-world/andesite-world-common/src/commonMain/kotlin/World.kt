@@ -16,7 +16,22 @@
 
 package andesite.world
 
+/** Represents a generic Minecraft world. */
 public interface World {
+  /**
+   * Tries to get a [Chunk] at the given [x] and [z] coordinates.
+   *
+   * @param x the x coordinate of the chunk
+   * @param z the z coordinate of the chunk
+   * @return if found, a [Chunk] at the given coordinates, otherwise null
+   */
   public fun getChunkAt(x: Int, z: Int): Chunk?
+
+  /**
+   * Tries to get a [Chunk] at the given [location].
+   *
+   * @param location the location of the chunk
+   * @return if found, a [Chunk] at the given coordinates, otherwise null
+   */
   public fun getChunkAt(location: Location): Chunk?
 }

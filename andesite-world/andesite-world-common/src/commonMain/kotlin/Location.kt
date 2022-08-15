@@ -17,7 +17,14 @@
 package andesite.world
 
 /**
- * Class that represents a location in the game.
+ * Represents a generic Minecraft location.
+ *
+ * @param x the x coordinate
+ * @param y the y coordinate
+ * @param z the z coordinate
+ * @param yaw the yaw
+ * @param pitch the pitch
+ * @param world the world
  */
 public data class Location(
   val x: Double,
