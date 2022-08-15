@@ -71,7 +71,7 @@ subprojects {
   configure<KotlinMultiplatformExtension> {
     jvm {
       compilations.all {
-        kotlinOptions.jvmTarget = "16"
+        kotlinOptions.jvmTarget = "1.8"
       }
 
       testRuns["test"].executionTask.configure {
