@@ -8,6 +8,10 @@
 Simple library for building [Minecraft Protocol](https://wiki.vg/Main_Page) for Minecraft Java Edition and Bedrock
 Edition.
 
+### User guide
+
+The full documentation is [here](https://andesite.devgabi.me)
+
 ### Protocol versions
 
 The following versions of Minecraft are supported:
