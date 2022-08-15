@@ -34,7 +34,6 @@ import andesite.protocol.java.data.Dimension
 import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.java.handshake.HandshakePacket
 import andesite.protocol.java.handshake.NextState
-import andesite.protocol.resource
 import andesite.protocol.serialization.MinecraftCodec
 import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.server.Messageable
@@ -93,9 +92,9 @@ internal class JavaMinecraftServer(
   override val protocolVersion = codec.configuration.protocolVersion
   override val minecraftVersion = extractMinecraftVersion(codec.configuration.protocolVersion)
 
-  internal val dimensionCodec = nbt.decodeRootTag<DimensionCodec>(resource("dimension_codec.nbt"))
+  internal val dimensionCodec = nbt.decodeRootTag<DimensionCodec>("dimension_codec.nbt")
 
-  internal val dimension = nbt.decodeRootTag<Dimension>(resource("dimension.nbt"))
+  internal val dimension = nbt.decodeRootTag<Dimension>("dimension.nbt")
 
   internal suspend fun addPlayer(player: JavaPlayer) {
     playersMutex.withLock { playersMut.add(player) }

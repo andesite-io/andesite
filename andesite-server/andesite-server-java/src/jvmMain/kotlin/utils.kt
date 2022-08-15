@@ -19,6 +19,7 @@
 package andesite.java
 
 import andesite.protocol.java.v756.ChunkDataPacket
+import andesite.protocol.readResource
 import andesite.protocol.types.VarInt
 import andesite.server.MinecraftServer
 import andesite.world.Chunk
@@ -26,7 +27,6 @@ import andesite.world.anvil.AnvilChunk
 import andesite.world.anvil.HeightmapUsage
 import io.ktor.utils.io.core.BytePacketBuilder
 import io.ktor.utils.io.core.readBytes
-import java.io.File
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.descriptors.serialDescriptor
@@ -40,13 +40,13 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.Utils")
 
-inline fun <reified T : Any> Nbt.decodeRootTag(file: File): T {
+inline fun <reified T : Any> Nbt.decodeRootTag(path: String): T {
   val descriptor = serialDescriptor<T>()
 
   return decodeFromNbtTag(
     buildNbtCompound {
-      val root = decodeFromByteArray<NbtCompound>(file.readBytes())
-      val content = root[""]?.nbtCompound ?: error("Could not find content for nbt file $file")
+      val root = decodeFromByteArray<NbtCompound>(readResource(path))
+      val content = root[""]?.nbtCompound ?: error("Could not find content for nbt path $path")
 
       put(descriptor.serialName, content)
     },
