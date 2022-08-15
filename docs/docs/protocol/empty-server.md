@@ -12,7 +12,7 @@ The project only supports the Java Edition currently.
 
 :::
 
-### Dependencies
+## Dependencies
 
 These are the dependencies required to run the server.
 
@@ -28,7 +28,7 @@ implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 implementation("net.benwoodworth.knbt:knbt:0.11.2")
 ```
 
-### Getting Started
+## Getting Started
 
 You will need to create a simple TCP server with Ktor.
 
@@ -143,6 +143,6 @@ when (handshake.nextState) {
 }
 ```
 
-### The final source
+## The final source
 
 The source code built with this tutorial is [here](https://gist.github.com/33b13abb79ff051f669fbcf40d01878b)

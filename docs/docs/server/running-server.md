@@ -12,7 +12,7 @@ The project only supports the Java Edition 1.17.1 currently.
 
 :::
 
-### Dependencies
+## Dependencies
 
 These are the dependencies required to run the server.
 
@@ -38,7 +38,7 @@ implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 implementation("net.benwoodworth.knbt:knbt:0.11.2")
 ```
 
-### Getting Started
+## Getting Started
 
 Here, you will only need to consume the existing API:
 

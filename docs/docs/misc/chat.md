@@ -6,7 +6,7 @@ sidebar_position: 1
 
 The [Chat](https://github.com/gabrielleeg1/andesite/blob/main/andesite-protocol/andesite-protocol-common/src/commonMain/kotlin/misc/Chat.kt) is a wrapper for the Minecraft text components.
 
-### Simple chat
+## Simple chat
 
 You can instantiate a simple chat with the `Chat.of()` function:
 
@@ -19,7 +19,7 @@ It is supported all bukkit color codes with the `&` prefix. You can look [here](
 :::
 
 
-### Placeholder chat
+## Placeholder chat
 
 You can use chat with placeholders to make the chat more customized like:
 
@@ -47,7 +47,7 @@ You can set up click events too, the complete list of events are:
   * Copy to clipboard
 :::
 
-### Mordant
+## Mordant
 
 You can transform the `Chat` into text to print into a colored terminal using `.mordant()` function like:
 
