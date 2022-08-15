@@ -16,10 +16,27 @@
 
 package andesite.shared
 
+/** Andesite property delegates. */
 public object AndesiteProperties {
+  /**
+   * Creates a new [NullableThreadLocalProperty].
+   *
+   * @return a new [NullableThreadLocalProperty]
+   */
   public fun <A : Any> threadLocal(): NullableThreadLocalProperty<A> = NullableThreadLocalProperty()
 
+  /**
+   * Creates a new [ThreadLocalProperty] with the given [value].
+   *
+   * @param value the value to be set initially
+   * @return a new [ThreadLocalProperty]
+   */
   public fun <A : Any> threadLocal(value: A): ThreadLocalProperty<A> = ThreadLocalProperty(value)
 
+  /**
+   * Creates a new [BuilderProperty].
+   *
+   * @return a new [BuilderProperty]
+   */
   public fun <A : Any> builder(): BuilderProperty<A> = BuilderProperty()
 }

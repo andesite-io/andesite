@@ -19,6 +19,7 @@ package andesite.shared
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/** Represents a null-initialized thread local property delegate. */
 public actual class NullableThreadLocalProperty<A : Any> internal actual constructor() :
   ReadWriteProperty<Any?, A?> {
   private val _value: ThreadLocal<A> = ThreadLocal<A>()

@@ -16,6 +16,12 @@
 
 package andesite.shared
 
+/**
+ * Public API marked with this annotation is effectively internal, which means it should not be used
+ * outside of Andesite. Signature, semantics, source and binary compatibilities are not guaranteed
+ * for this API and will be changed without any warnings or migration aids. If you cannot avoid
+ * using internal API to solve your problem, please report your use-case to the issue tracker.
+ */
 @RequiresOptIn(
   level = RequiresOptIn.Level.ERROR,
   message = "This API is internal in andesite and should not be used." +

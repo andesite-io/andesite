@@ -19,6 +19,7 @@ package andesite.shared
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+/** Represents a property delegate to be used in builder classes. */
 public class BuilderProperty<T : Any> : ReadWriteProperty<Any?, T> {
   private var value: T? = null
 
