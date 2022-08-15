@@ -40,7 +40,7 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.Utils")
 
-inline fun <reified T : Any> Nbt.decodeRootTag(path: String): T {
+public inline fun <reified T : Any> Nbt.decodeRootTag(path: String): T {
   val descriptor = serialDescriptor<T>()
 
   return decodeFromNbtTag(

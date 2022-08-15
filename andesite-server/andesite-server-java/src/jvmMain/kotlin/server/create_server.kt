@@ -27,7 +27,14 @@ import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import kotlin.coroutines.CoroutineContext
 
-fun createJavaServer(
+/**
+ * Creates a [MinecraftServer] with the [builder].
+ *
+ * @param context the coroutine context to use
+ * @param builder the [MinecraftServerBuilder] to use
+ * @return a new [JavaMinecraftServer]
+ */
+public fun createJavaServer(
   context: CoroutineContext,
   builder: MinecraftServerBuilder.() -> Unit,
 ): MinecraftServer {
