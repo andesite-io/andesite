@@ -143,6 +143,6 @@ when (handshake.nextState) {
 }
 ```
 
-### The source code of this page
+### The final source
 
 The source code built with this tutorial is [here](https://gist.github.com/33b13abb79ff051f669fbcf40d01878b)
