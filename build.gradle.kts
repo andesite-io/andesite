@@ -23,7 +23,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintExtension
 plugins {
   kotlin("multiplatform") version "1.7.0" apply false
   kotlin("plugin.serialization") version "1.7.0" apply false
-  id("org.jlleitschuh.gradle.ktlint") version "10.2.1" apply false
+  id("org.jlleitschuh.gradle.ktlint") version "10.3.0" apply false
   id("io.gitlab.arturbosch.detekt") version "1.19.0" apply false
   id("io.github.gradle-nexus.publish-plugin") version "1.1.0"
   `maven-publish`
@@ -55,6 +55,7 @@ subprojects {
   }
 
   configure<KtlintExtension> {
+    version.set("0.45.2")
     android.set(false)
     additionalEditorconfigFile.set(rootProject.file(".editorconfig"))
   }
