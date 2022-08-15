@@ -24,6 +24,8 @@ import kotlinx.serialization.Serializable
 
 /**
  * Determines packet id.
+ *
+ * @param id packet id.
  */
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
@@ -48,6 +50,8 @@ public annotation class ProtocolNbt
 
 /**
  * Sets packet's field to decode string with [max] size.
+ *
+ * @param max maximum size of string.
  */
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)
@@ -64,6 +68,8 @@ public annotation class ProtocolEnum
 
 /**
  * Determines a number value.
+ *
+ * @param value number value.
  */
 @SerialInfo
 @Retention(AnnotationRetention.SOURCE)

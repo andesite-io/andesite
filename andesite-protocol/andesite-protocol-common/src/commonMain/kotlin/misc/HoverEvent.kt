@@ -31,10 +31,16 @@ import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.decodeFromJsonElement
 import kotlinx.serialization.serializer
 
+/** [Chat] component's hover event. */
 @Serializable(HoverEventSerializer::class)
 @SerialName("HoverEvent")
 public sealed class HoverEvent
 
+/**
+ * Shows a [chat] when hovering.
+ *
+ * @param chat the [Chat] component to show
+ */
 @Serializable
 public data class ShowText(val chat: Chat) : HoverEvent() {
   public constructor(text: String) : this(Chat.of(text))
@@ -69,6 +75,7 @@ internal object HoverEventSerializer : KSerializer<HoverEvent> {
         is JsonObject -> ShowText(json.decodeFromJsonElement<Chat>(value))
         else -> error("Unsupported value for 'show_text' action in HoverEvent!")
       }
+
       else -> error("Unsupported action '${surrogate.action}' for HoverEvent!")
     }
   }

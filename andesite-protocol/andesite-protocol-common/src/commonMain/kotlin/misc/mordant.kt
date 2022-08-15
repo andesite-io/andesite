@@ -18,6 +18,12 @@ package andesite.protocol.misc
 
 import com.github.ajalt.mordant.rendering.TextStyle
 
+/**
+ * Converts a [Chat] component into a [String] that have color information using Mordant.
+ *
+ * @receiver the [Chat] component to be converted
+ * @return the [String] with color information
+ */
 public fun Chat.mordant(): String {
   return flatten().joinToString("") { chat ->
     val text = when (chat.obfuscated) {
@@ -40,6 +46,12 @@ public fun Chat.mordant(): String {
   }
 }
 
+/**
+ * Converts a [Chat] component with many [Chat.extra] children into a [List] of [Chat].
+ *
+ * @receiver the [Chat] component to be converted
+ * @return the [List] of [Chat]
+ */
 public fun Chat.flatten(): List<Chat> {
   if (extra.isNullOrEmpty()) return listOf(this)
 

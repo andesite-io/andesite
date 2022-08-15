@@ -29,6 +29,15 @@ import net.benwoodworth.knbt.NbtVariant
 
 /**
  * Configuration for the serialization of the protocol.
+ *
+ * @param protocolVersion the version of the protocol to use.
+ * @param protocolVariant the variant of the protocol to use.
+ * @param serializersModule the serializers module to use.
+ * @param packetRegistry the packet registry to use.
+ * @param nbt the NBT configuration to use.
+ * @param json the JSON configuration to use.
+ * @param encryption the encryption configuration to use.
+ * @param encodeDefaults whether to encode default values.
  */
 public data class ProtocolConfiguration(
   val protocolVersion: Int,
@@ -44,10 +53,19 @@ public data class ProtocolConfiguration(
   var encodeDefaults: Boolean = false,
 )
 
+/**
+ * Represents the variant of the Minecraft protocol to use.
+ */
 public enum class ProtocolVariant {
   Java, Bedrock;
 }
 
+/**
+ * Extracts the Minecraft version from [protocolVersion].
+ *
+ * @param protocolVersion the protocol version to extract the version from.
+ * @return the Minecraft version.
+ */
 public fun extractMinecraftVersion(protocolVersion: Int): String = when (protocolVersion) {
   758 -> "1.18.1"
   757 -> "1.18"

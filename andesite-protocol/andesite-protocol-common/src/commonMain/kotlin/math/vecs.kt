@@ -16,10 +16,36 @@
 
 package andesite.protocol.math
 
+/**
+ * Vector used for 3D math using integer coordinates.
+ *
+ * @property x X coordinate
+ * @property y Y coordinate
+ * @property z Z coordinate
+ */
 public data class Vector3i(val x: Int, val y: Int, val z: Int)
 
+/**
+ * Vector used for 2D math using integer coordinates.
+ *
+ * @property x X coordinate
+ * @property y Y coordinate
+ */
 public data class Vector2i(val x: Int, val y: Int)
 
+/**
+ * Vector used for 3D math using float coordinates.
+ *
+ * @property x X coordinate
+ * @property y Y coordinate
+ * @property z Z coordinate
+ */
 public data class Vector3f(val x: Float, val y: Float, val z: Float)
 
+/**
+ * Vector used for 2D math using float coordinates.
+ *
+ * @property x X coordinate
+ * @property y Y coordinate
+ */
 public data class Vector2f(val x: Float, val y: Float)

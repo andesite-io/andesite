@@ -23,6 +23,15 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * Identifiers are a namespaced location, in the form of minecraft:thing. If the namespace is not
+ * provided, it defaults to minecraft (i.e. thing is minecraft:thing). Custom content should always
+ * be in its own namespace, not the default one. Both the namespace and value can use all lowercase
+ * alphanumeric characters (a-z and 0-9), dot (.), dash (-), and underscore (_). In addition, values
+ * can use slash (/). The naming convention is lower_case_with_underscores.
+ *
+ * @param fullPath the full path of the identifier
+ */
 @Serializable(IdentifierSerializer::class)
 public class Identifier(public val fullPath: String) {
   public val namespace: String = fullPath.substringBefore(':', "minecraft")

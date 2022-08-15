@@ -62,6 +62,8 @@ import net.benwoodworth.knbt.Nbt
  *
  * println(packet)
  * ```
+ *
+ * @param configuration Configuration for the codec.
  */
 public class MinecraftCodec(public val configuration: ProtocolConfiguration) : BinaryFormat {
   override val serializersModule: SerializersModule = configuration.serializersModule
@@ -75,7 +77,7 @@ public class MinecraftCodec(public val configuration: ProtocolConfiguration) : B
    */
   override fun <T> decodeFromByteArray(
     deserializer: DeserializationStrategy<T>,
-    bytes: ByteArray
+    bytes: ByteArray,
   ): T {
     return ProtocolDecoderImpl(ByteReadPacket(bytes), configuration)
       .decodeSerializableValue(deserializer)
@@ -94,6 +96,14 @@ public class MinecraftCodec(public val configuration: ProtocolConfiguration) : B
     }.readBytes()
   }
 
+  /**
+   * The codec versions object. Here are the extensions for version-specific codecs.
+   *
+   * Example:
+   * ```kt
+   * MinecraftCodec.v756 { ... }
+   * ```
+   */
   public companion object Versions
 }
 
@@ -102,6 +112,12 @@ public typealias CodecBuilder = MinecraftCodecBuilder.() -> Unit
 public val DefaultProtocolConfiguration: ProtocolConfiguration =
   ProtocolConfiguration(protocolVersion = -1)
 
+/**
+ * Extends an existing [MinecraftCodec] with [builder]
+ *
+ * @param from The codec to extend.
+ * @param builder The builder to extend the codec with.
+ */
 public fun MinecraftCodec(
   from: ProtocolConfiguration = DefaultProtocolConfiguration,
   builder: CodecBuilder,
@@ -123,6 +139,11 @@ public class RegistryBuilder(@PublishedApi internal val serializersModule: Seria
   }
 }
 
+/**
+ * Builder class for [MinecraftCodec]
+ *
+ * @param configuration The configuration for the codec.
+ */
 public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   public var protocolVersion: Int = configuration.protocolVersion
   public var protocolVariant: ProtocolVariant = configuration.protocolVariant
@@ -133,6 +154,19 @@ public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   public var encodeDefaults: Boolean = configuration.encodeDefaults
   public var packetRegistry: Map<Int, KType> = configuration.packetRegistry
 
+  /**
+   * Creates a new packet registry with the current configuration.
+   *
+   * Example:
+   * ```kt
+   * createPacketRegistry {
+   *   register<JoinGamePacket>()
+   * }
+   * ```
+   *
+   * @param builder The builder to create the registry with.
+   * @return The new packet registry.
+   */
   public fun createPacketRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
     val registry = RegistryBuilder(serializersModule).apply(builder)
 

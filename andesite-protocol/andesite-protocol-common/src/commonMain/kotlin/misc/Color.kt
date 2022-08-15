@@ -27,10 +27,16 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * Minecraft's color component wrapper.
+ */
 @Serializable(ColorSerializer::class)
 @SerialName("Color")
 public sealed class Color {
+  /** The color text. */
   public abstract val text: String
+
+  /** The text style to be represented in a terminal context with Mordant. */
   public abstract val style: TextStyle
 
   public companion object {
@@ -53,9 +59,20 @@ public sealed class Color {
   }
 }
 
+/**
+ * Minecraft default color.
+ *
+ * @param text the color text.
+ * @param style the text style to be represented in a terminal context with Mordant.
+ */
 @Serializable
 public data class MinecraftColor(override val text: String, override val style: TextStyle) : Color()
 
+/**
+ * Minecraft color with a HEX value.
+ *
+ * @param text the HEX color value.
+ */
 @Serializable
 public data class HexColor(override val text: String) : Color() {
   init {
