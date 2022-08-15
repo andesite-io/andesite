@@ -91,37 +91,45 @@ subprojects {
 
       val commonMain by getting {
         dependencies {
-          implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.1")
-          implementation("io.ktor:ktor-network:2.0.3")
-          implementation("com.benasher44:uuid:0.3.1")
-          implementation("net.benwoodworth.knbt:knbt:0.11.1")
-          implementation("org.jetbrains.kotlinx:atomicfu:0.17.2")
-          implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
-          implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
+          afterEvaluate {
+            implementation(libs.ktx.datetime)
+            implementation(libs.ktor.network)
+            implementation(libs.uuid)
+            implementation(libs.knbt)
+            implementation(libs.ktx.atomicfu)
+            implementation(libs.ktx.coroutines.core)
+            implementation(libs.ktx.serialization.json)
 
-          if (project.name != "andesite-shared") {
-            implementation(project(":andesite-shared"))
+            if (project.name != "andesite-shared") {
+              implementation(projects.andesiteShared)
+            }
           }
         }
       }
       val commonTest by getting {
         dependencies {
-          implementation(kotlin("test-common"))
+          afterEvaluate {
+            implementation(libs.kt.test.common)
+          }
         }
       }
 
       val jvmMain by getting {
         dependencies {
-          implementation("org.apache.logging.log4j:log4j-api-kotlin:1.1.0")
-          implementation("org.apache.logging.log4j:log4j-api:2.17.2")
-          implementation("org.apache.logging.log4j:log4j-core:2.17.2")
+          afterEvaluate {
+            implementation(libs.log4j.api)
+            implementation(libs.log4j.core)
+            implementation(libs.log4j.kotlin)
 
-          implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2")
+            implementation(libs.ktx.coroutines.jdk8)
+          }
         }
       }
       val jvmTest by getting {
         dependencies {
-          implementation(kotlin("test-junit5"))
+          afterEvaluate {
+            implementation(libs.kt.test.junit)
+          }
         }
       }
     }

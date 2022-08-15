@@ -30,8 +30,8 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation("com.github.h0tk3y.betterParse:better-parse:0.4.4")
-        implementation(project(":andesite-protocol:andesite-protocol-common"))
+        implementation(libs.betterParse)
+        implementation(projects.andesiteProtocol.andesiteProtocolCommon)
       }
     }
   }

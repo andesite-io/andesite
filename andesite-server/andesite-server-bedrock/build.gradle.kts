@@ -18,10 +18,9 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(project(":andesite-server:andesite-server-common"))
-
-        implementation(project(":andesite-protocol:andesite-protocol-common"))
-        implementation(project(":andesite-protocol:andesite-protocol-bedrock:andesite-protocol-bedrock-v465"))
+        implementation(projects.andesiteServer.andesiteServerCommon)
+        implementation(projects.andesiteProtocol.andesiteProtocolCommon)
+        implementation(projects.andesiteProtocol.andesiteProtocolBedrock.andesiteProtocolBedrockV465)
       }
     }
   }
