@@ -2,6 +2,7 @@
   "label": "Protocol",
   "position": 2,
   "link": {
-    "type": "generated-index"
+    "type": "generated-index",
+    "description": "Builtin server documentation"
   }
 }
