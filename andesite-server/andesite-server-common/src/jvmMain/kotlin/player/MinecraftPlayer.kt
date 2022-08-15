@@ -26,6 +26,7 @@ import kotlinx.serialization.SerializationStrategy
 import kotlinx.serialization.serializer
 import org.apache.logging.log4j.kotlin.Logging
 
+/** Represents a generic Minecraft player. */
 public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Messageable {
   public val id: Uuid
   public val protocol: Int
@@ -34,6 +35,7 @@ public sealed interface MinecraftPlayer : EventHolder<PlayerEvent>, Logging, Mes
     @AndesiteInternalAPI set
 }
 
+/** Represents a Java Edition Minecraft player. */
 public interface JavaPlayer : MinecraftPlayer {
   public suspend fun <A : JavaPacket> sendPacket(serializer: SerializationStrategy<A>, packet: A)
 }
@@ -42,4 +44,5 @@ public suspend inline fun <reified A : JavaPacket> JavaPlayer.sendPacket(packet:
   sendPacket(serializer(), packet)
 }
 
+/** Represents a Bedrock Edition Minecraft player. */
 public interface BedrockPlayer : MinecraftPlayer

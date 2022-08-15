@@ -16,4 +16,5 @@
 
 package andesite.event
 
+/** Represents a generic Minecraft event. */
 public interface MinecraftEvent

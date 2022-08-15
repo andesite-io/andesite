@@ -26,10 +26,23 @@ import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
+/** Holds an event bus that can be used to listen [E] events. */
 public interface EventHolder<E : MinecraftEvent> : CoroutineScope {
+  /**
+   * The event bus for [E].
+   *
+   * @return the event bus for [E]
+   */
   public fun eventFlow(): Flow<E>
 }
 
+/**
+ * Listen events on a [EventHolder].
+ *
+ * @param E the type of the [MinecraftEvent] to listen for.
+ * @param context the [CoroutineContext] to use for the coroutine.
+ * @param handle the function to execute when an event of type [E] is received.
+ */
 public inline fun <reified E : MinecraftEvent> EventHolder<out MinecraftEvent>.on(
   context: CoroutineContext = EmptyCoroutineContext,
   noinline handle: suspend E.() -> Unit,

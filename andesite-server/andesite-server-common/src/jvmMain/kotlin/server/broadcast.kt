@@ -20,6 +20,11 @@ import andesite.protocol.misc.Chat
 import andesite.protocol.misc.ChatBuilder
 import andesite.protocol.misc.mordant
 
+/**
+ * Broadcasts the [chat] to all connected clients.
+ *
+ * @param chat the [Chat] component to broadcast
+ */
 public suspend fun MinecraftServer.broadcast(chat: Chat) {
   logger.info(chat.mordant())
 
@@ -28,6 +33,12 @@ public suspend fun MinecraftServer.broadcast(chat: Chat) {
   }
 }
 
+/**
+ * Broadcasts the [text] to all connected clients.
+ *
+ * @param text the base text
+ * @param builder the builder function for the full-featured component
+ */
 public suspend fun MinecraftServer.broadcast(text: String, builder: ChatBuilder.() -> Unit = {}) {
   broadcast(Chat.build(text, builder))
 }

@@ -18,6 +18,7 @@ package andesite.player
 
 import andesite.event.MinecraftEvent
 
+/** Represents a generic [MinecraftEvent] linked to [MinecraftPlayer]. */
 public interface PlayerEvent : MinecraftEvent {
   public val player: MinecraftPlayer
 }

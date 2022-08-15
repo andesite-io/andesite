@@ -20,5 +20,5 @@ import andesite.protocol.misc.Chat
 
 public data class PlayerChatEvent(
   val message: Chat,
-  override val player: MinecraftPlayer
+  override val player: MinecraftPlayer,
 ) : PlayerEvent

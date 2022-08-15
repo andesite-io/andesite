@@ -20,6 +20,11 @@ import andesite.komanda.Execution
 import andesite.komanda.PatternBuilder
 import andesite.player.MinecraftPlayer
 
+/**
+ * Sets a [Execution] that only executes when the sender is a [MinecraftPlayer].
+ *
+ * @param handler the [Execution] handler
+ */
 public fun PatternBuilder.onPlayerExecution(handler: Execution<MinecraftPlayer>) {
   onExecution(handler)
 }

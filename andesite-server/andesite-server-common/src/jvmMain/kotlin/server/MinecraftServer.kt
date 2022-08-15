@@ -28,6 +28,7 @@ import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
 import org.apache.logging.log4j.kotlin.Logging
 
+/** Represents a generic Minecraft server. */
 public interface MinecraftServer :
   CoroutineScope,
   EventHolder<MinecraftEvent>,
@@ -43,9 +44,11 @@ public interface MinecraftServer :
   public val nbt: Nbt
   public val json: Json
 
+  /** Listen to connections */
   public fun listen()
 }
 
+/** The builder class for [MinecraftServer]. */
 public interface MinecraftServerBuilder {
   public var hostname: String
   public var port: Int
