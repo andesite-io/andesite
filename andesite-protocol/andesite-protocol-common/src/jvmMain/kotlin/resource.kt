@@ -24,3 +24,9 @@ public fun resource(path: String): File {
     ?.let(::File)
     ?: error("Can not find resource $path")
 }
+
+public fun readResource(path: String): ByteArray {
+  return ClassLoader.getSystemResource(path)
+    ?.readBytes()
+    ?: error("Can not find resource $path")
+}
