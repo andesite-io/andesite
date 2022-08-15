@@ -31,33 +31,13 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.AnvilWorld")
 
-internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
-  var pos: Int
-  val chunks = List(1024) { i ->
-    pos = i * 4
-    val offset = (bytes[pos].toInt() shl 16) or
-      ((bytes[pos + 1].toInt() and 0xff) shl 8) or
-      (bytes[pos + 2].toInt() and 0xff)
-
-    if (bytes[pos + 3] == 0.toByte()) {
-      return@List null
-    }
-
-    pos = 4096 + i * 4
-    bytes[pos + 4] // timestamp
-
-    pos = 4096 * offset + 4
-
-    val regionChunkBytes = bytes.drop(pos + 1).toByteArray()
-
-    Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
-      .decodeFromByteArray<RegionChunk>(regionChunkBytes)
-      .level
-  }
-
-  return AnvilRegion(name, chunks.filterNotNull())
-}
-
+/**
+ * Reads an [AnvilWorld] with the [registry] and the world folder [folder].
+ *
+ * @param registry the [BlockRegistry] to use for the world
+ * @param folder the world folder to read from
+ * @return a new [AnvilWorld]
+ */
 public fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
   logger.info("Loading world `${folder.name}`")
 
@@ -88,6 +68,33 @@ public fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
   logger.info("Finish loading world `${folder.name}`")
 
   return AnvilWorld(regions.filterNotNull().toTypedArray())
+}
+
+internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
+  var pos: Int
+  val chunks = List(1024) { i ->
+    pos = i * 4
+    val offset = (bytes[pos].toInt() shl 16) or
+      ((bytes[pos + 1].toInt() and 0xff) shl 8) or
+      (bytes[pos + 2].toInt() and 0xff)
+
+    if (bytes[pos + 3] == 0.toByte()) {
+      return@List null
+    }
+
+    pos = 4096 + i * 4
+    bytes[pos + 4] // timestamp
+
+    pos = 4096 * offset + 4
+
+    val regionChunkBytes = bytes.drop(pos + 1).toByteArray()
+
+    Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
+      .decodeFromByteArray<RegionChunk>(regionChunkBytes)
+      .level
+  }
+
+  return AnvilRegion(name, chunks.filterNotNull())
 }
 
 @Serializable
