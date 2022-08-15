@@ -16,6 +16,8 @@
 
 rootProject.name = "andesite"
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include("andesite-shared")
 include("andesite-world:andesite-world-common")
 include("andesite-world:andesite-world-anvil")

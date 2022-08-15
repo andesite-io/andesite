@@ -1,0 +1,87 @@
+[versions]
+ktx-coroutines = "1.6.4"
+ktx-serialization = "1.4.0-RC"
+ktx-datetime = "0.3.1"
+ktx-atomicfu = "0.17.2"
+kt = "1.7.0"
+ktor = "2.0.3"
+knbt = "0.11.2"
+uuid = "0.3.1"
+mordant = "2.0.0-beta4"
+log4j-core = "2.17.2"
+log4j-kotlin = "1.1.0"
+okio = "3.0.0"
+betterParse = "0.4.4"
+
+# Libraries
+[libraries.kt-reflect]
+module = "org.jetbrains.kotlin:kotlin-reflect"
+version.ref = "kt"
+
+[libraries.kt-test-common]
+module = "org.jetbrains.kotlin:kotlin-test-common"
+version.ref = "kt"
+
+[libraries.kt-test-junit]
+module = "org.jetbrains.kotlin:kotlin-test-junit5"
+version.ref = "kt"
+
+[libraries.kt-test-annotations-common]
+module = "org.jetbrains.kotlin:kotlin-test-annotations-common"
+version.ref = "kt"
+
+[libraries.ktx-atomicfu]
+module = "org.jetbrains.kotlinx:atomicfu"
+version.ref = "ktx-atomicfu"
+
+[libraries.ktx-datetime]
+module = "org.jetbrains.kotlinx:kotlinx-datetime"
+version.ref = "ktx-datetime"
+
+[libraries.ktx-serialization-json]
+module = "org.jetbrains.kotlinx:kotlinx-serialization-json"
+version.ref = "ktx-serialization"
+
+[libraries.ktx-coroutines-core]
+module = "org.jetbrains.kotlinx:kotlinx-coroutines-core"
+version.ref = "ktx-coroutines"
+
+[libraries.ktx-coroutines-jdk8]
+module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8"
+version.ref = "ktx-coroutines"
+
+[libraries.mordant]
+module = "com.github.ajalt.mordant:mordant"
+version.ref = "mordant"
+
+[libraries.log4j-api]
+module = "org.apache.logging.log4j:log4j-api"
+version.ref = "log4j-core"
+
+[libraries.log4j-core]
+module = "org.apache.logging.log4j:log4j-core"
+version.ref = "log4j-core"
+
+[libraries.log4j-kotlin]
+module = "org.apache.logging.log4j:log4j-api-kotlin"
+version.ref = "log4j-kotlin"
+
+[libraries.okio]
+module = "com.squareup.okio:okio"
+version.ref = "okio"
+
+[libraries.ktor-network]
+module = "io.ktor:ktor-network"
+version.ref = "ktor"
+
+[libraries.knbt]
+module = "net.benwoodworth.knbt:knbt"
+version.ref = "knbt"
+
+[libraries.uuid]
+module = "com.benasher44:uuid"
+version.ref = "uuid"
+
+[libraries.betterParse]
+module = "com.github.h0tk3y.betterParse:better-parse"
+version.ref = "betterParse"

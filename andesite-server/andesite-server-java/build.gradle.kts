@@ -20,22 +20,21 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        implementation(project(":andesite-komanda"))
-        implementation(project(":andesite-server:andesite-server-common"))
+        api(projects.andesiteKomanda)
+        api(projects.andesiteServer.andesiteServerCommon)
 
-        implementation(project(":andesite-protocol:andesite-protocol-common"))
-        implementation(project(":andesite-protocol:andesite-protocol-java"))
-        implementation(project(":andesite-protocol:andesite-protocol-java:andesite-protocol-java-v756"))
+        api(projects.andesiteProtocol.andesiteProtocolCommon)
+        api(projects.andesiteProtocol.andesiteProtocolJava)
+        api(projects.andesiteProtocol.andesiteProtocolJava.andesiteProtocolJavaV756)
 
-        implementation(project(":andesite-world:andesite-world-common"))
-        implementation(project(":andesite-world:andesite-world-slime"))
-        implementation(project(":andesite-world:andesite-world-anvil"))
+        api(projects.andesiteWorld.andesiteWorldCommon)
+        api(projects.andesiteWorld.andesiteWorldAnvil)
       }
     }
 
     val jvmMain by getting {
       dependencies {
-        implementation(kotlin("reflect"))
+        api(libs.kt.reflect)
       }
     }
   }
