@@ -16,7 +16,7 @@ public data class JoinGamePacket(
   val gameMode: GameMode, // You can pass enums with @ProtocolEnum annotation to be serialized with the packet
   val previousGameMode: PreviousGameMode,
   val worlds: List<Identifier>,
-  @ProtocolNbt val dimensionCodec: DimensionCodec, // You can use the @ProtocolNbt annotation to specify the Nbt codec for this field, as you can use @ProtocolJson for json fields
+  @ProtocolNbt val dimensionCodec: DimensionCodec, // You can use the @ProtocolNbt annotation to specify the Nbt codec
   @ProtocolNbt val dimension: Dimension,
   val world: Identifier,
   val hashedSeed: Long,
@@ -56,5 +56,22 @@ public enum class GameMode {
   @ProtocolValue(1) Creative,
   @ProtocolValue(2) Adventure,
   @ProtocolValue(3) Spectator;
+}
+```
+
+:::tip
+You can use @ProtocolJson to specify the json codec for the field as the same you can use @ProtocolNbt.
+:::
+
+You will also need to add it to the `PacketRegistry` in the codec:
+
+```kotlin title="codec.kt"
+val codec = MinecraftCodec {
+  protocolVersion = 756
+  packetRegistry = createPacketRegistry {
+    register<JoinGamePacket>()
+    // ...other packets
+  }
+  // ...other configs
 }
 ```
