@@ -8,6 +8,11 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  flex: 1;
+}
+
+.mainWrapper {
+  display: flex;
 }
 
 @media screen and (max-width: 996px) {

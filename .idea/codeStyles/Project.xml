@@ -36,7 +36,6 @@
     <codeStyleSettings language="kotlin">
       <option name="CODE_STYLE_DEFAULTS" value="KOTLIN_OFFICIAL" />
       <option name="RIGHT_MARGIN" value="100" />
-      <option name="TRAILING_COMMA" value="true" />
     </codeStyleSettings>
   </code_scheme>
 </component>
