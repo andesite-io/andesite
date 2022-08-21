@@ -104,7 +104,7 @@ internal class JavaMinecraftServer(
     playersMutex.withLock { playersMut.remove(player) }
   }
 
-  internal suspend fun publish(event: MinecraftEvent) {
+  override suspend fun publish(event: MinecraftEvent) {
     eventFlow.emit(event)
   }
 

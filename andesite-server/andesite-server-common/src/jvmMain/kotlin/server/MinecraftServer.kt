@@ -44,6 +44,13 @@ public interface MinecraftServer :
   public val nbt: Nbt
   public val json: Json
 
+  /**
+   * Publish events to [MinecraftServer]
+   *
+   * @param event the event to publish
+   */
+  public suspend fun publish(event: MinecraftEvent)
+
   /** Listen to connections */
   public fun listen()
 }
