@@ -12,7 +12,6 @@ body:
         - Will this feature just help you or is it something everyone needs?
         - Have you tried to implement or *draft* this feature?
         - Is your feature a breaking change?
-        - None of the others
   - type: textarea
     attributes:
       label: 😄 Describe the solution you'd like
