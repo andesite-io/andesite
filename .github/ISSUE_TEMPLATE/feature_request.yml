@@ -34,7 +34,6 @@ body:
     attributes:
       label: 💻 Platform
       description: On which platforms do you want this feature to be applied?
-      default: "All"
       placeholder: "e.g. All, Linux"
   
   - type: input
