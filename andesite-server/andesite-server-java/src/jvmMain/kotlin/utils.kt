@@ -59,7 +59,7 @@ internal suspend fun MinecraftServer.convertChunk(chunk: Chunk): ChunkDataPacket
   val heightmaps = chunk.heightmaps
     .filterKeys { it.usage == HeightmapUsage.Client }
     .mapKeys { it.key.kind }
-    .let { nbt.encodeToNbtTag(it) }
+    .let { nbt.encodeToNbtTag(NbtCompound(it)) }
 
   val buf = BytePacketBuilder()
   val primaryBitmask = chunk.extractChunkData(buf)
