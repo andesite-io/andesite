@@ -16,8 +16,10 @@
 
 package andesite.java
 
+import andesite.command.CommandPreProcessEvent
 import andesite.event.on
 import andesite.java.server.createJavaServer
+import andesite.player.MinecraftPlayer
 import andesite.player.PlayerChatEvent
 import andesite.player.PlayerJoinEvent
 import andesite.player.PlayerQuitEvent
@@ -41,6 +43,9 @@ import kotlinx.serialization.modules.contextual
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
+import org.apache.logging.log4j.kotlin.logger
+
+private val logger = logger("andesite.main")
 
 internal fun main() {
   System.setProperty(DEBUG_PROPERTY_NAME, DEBUG_PROPERTY_VALUE_ON)
@@ -85,7 +90,7 @@ internal fun main() {
 }
 
 private fun createServer(): MinecraftServer {
-  return createJavaServer(SupervisorJob()) {
+  val server = createJavaServer(SupervisorJob()) {
     blockRegistry = resource("v756")
       .resolve("blocks.json")
       .readText()
@@ -117,4 +122,16 @@ private fun createServer(): MinecraftServer {
       text = Chat.of("&7A Minecraft Server")
     }
   }
+
+  server.on<CommandPreProcessEvent> {
+    if (sender is MinecraftPlayer) {
+      val player = sender as MinecraftPlayer
+
+      logger.info("${player.username} issued command: $message")
+    }
+
+    server.dispatch(message, sender)
+  }
+
+  return server
 }

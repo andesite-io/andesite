@@ -16,6 +16,7 @@
 
 package andesite.java.game
 
+import andesite.command.CommandPreProcessEvent
 import andesite.java.player.Session
 import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
@@ -33,7 +34,12 @@ internal suspend fun JavaMinecraftServer.handleChat(session: Session, player: Ja
   session.inboundPacketFlow
     .filterIsInstance<ServerChatMessagePacket>()
     .onEach { packet ->
-      publish(PlayerChatEvent(Chat.of(packet.message), player))
+      val message = packet.message
+
+      when {
+        message.startsWith("/") -> publish(CommandPreProcessEvent(message, player))
+        else -> publish(PlayerChatEvent(Chat.of(message), player))
+      }
     }
     .collect()
 }
