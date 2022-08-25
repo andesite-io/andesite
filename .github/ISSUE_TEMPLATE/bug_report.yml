@@ -37,6 +37,7 @@ body:
     attributes:
       label: 💻 Platform
       description: On which platform did the bug occur?
+      placeholder: "e.g. All, Linux"
   - type: input
     id: environment
     attributes:
