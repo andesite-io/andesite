@@ -60,10 +60,16 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) :
 
     val id = packet.readVarInt().toInt()
 
-    val type = codec.configuration.packetRegistry[id]
+    val representation = codec.configuration.packetRegistry[id]
       ?: return null.also {
-        logger.trace { "Could not find a serializer for packet: 0x%02x".format(id) }
+        logger.trace { "Could not find a entry for packet: 0x%02x".format(id) }
       }
+
+    val type = representation.referTo ?: return null.also {
+      logger.trace {
+        "Could not find a serializer for packet: 0x%02x (${representation.name})".format(id)
+      }
+    }
 
     val deserializer = codec.serializersModule
       .serializer(type)

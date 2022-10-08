@@ -18,7 +18,6 @@
 
 package andesite.protocol.serialization
 
-import kotlin.reflect.KType
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.EmptySerializersModule
@@ -43,7 +42,7 @@ public data class ProtocolConfiguration(
   val protocolVersion: Int,
   val protocolVariant: ProtocolVariant = ProtocolVariant.Java,
   val serializersModule: SerializersModule = EmptySerializersModule,
-  val packetRegistry: Map<Int, KType> = emptyMap(),
+  val packetRegistry: PacketRegistry = PacketRegistry(mode = "PLAY"),
   val nbt: Nbt = Nbt {
     variant = NbtVariant.Java
     compression = NbtCompression.None

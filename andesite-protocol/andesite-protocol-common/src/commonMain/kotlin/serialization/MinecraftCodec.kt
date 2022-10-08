@@ -127,15 +127,22 @@ public fun MinecraftCodec(
 
 public class RegistryBuilder(@PublishedApi internal val serializersModule: SerializersModule) {
   @PublishedApi
-  internal val value: MutableMap<Int, KType> = mutableMapOf()
+  internal val value: MutableMap<Int, PacketRepr> = mutableMapOf()
 
   public fun <A : Any> register(id: Int, type: KType) {
-    value[id] = type
+    value[id] = PacketRepr(extractPacketName(id), type)
   }
 
   public inline fun <reified A : Any> register() {
     val serializer = serializersModule.serializer(typeOf<A>())
-    value[extractPacketId(serializer.descriptor)] = typeOf<A>()
+    val packetId = extractPacketId(serializer.descriptor)
+    val representation = PacketRepr(extractPacketName(packetId), typeOf<A>())
+    value[packetId] = representation
+  }
+
+  @PublishedApi
+  internal fun extractPacketName(id: Int): String {
+    return "STUB" // TODO: find packet name from "packets.json"
   }
 }
 
@@ -152,7 +159,7 @@ public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   public var serializersModule: SerializersModule = configuration.serializersModule
   public var encryption: Boolean = configuration.encryption
   public var encodeDefaults: Boolean = configuration.encodeDefaults
-  public var packetRegistry: Map<Int, KType> = configuration.packetRegistry
+  public var packetRegistry: PacketRegistry = configuration.packetRegistry
 
   /**
    * Creates a new packet registry with the current configuration.
@@ -167,10 +174,10 @@ public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
    * @param builder The builder to create the registry with.
    * @return The new packet registry.
    */
-  public fun createPacketRegistry(builder: RegistryBuilder.() -> Unit): Map<Int, KType> {
+  public fun createPacketRegistry(builder: RegistryBuilder.() -> Unit): PacketRegistry {
     val registry = RegistryBuilder(serializersModule).apply(builder)
 
-    return registry.value
+    return PacketRegistry(mode = "PLAY", registry = registry.value)
   }
 
   internal fun build(): MinecraftCodec {
