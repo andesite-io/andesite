@@ -6,7 +6,7 @@
     </Console>
   </Appenders>
   <Loggers>
-    <Logger level="DEBUG" name="andesite" additivity="false">
+    <Logger level="${env:LOG_LEVEL:-ERROR}" name="andesite" additivity="false">
       <AppenderRef ref="Console"/>
     </Logger>
     <Root level="ERROR">
