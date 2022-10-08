@@ -16,7 +16,14 @@
 
 package andesite.protocol.serialization
 
+import kotlinx.serialization.Serializable
+
 public class PacketRegistry(
-  public val mode: String,
+  public val mode: RegistryMode,
   public val registry: Map<Int, PacketRepr> = emptyMap(),
 ) : Map<Int, PacketRepr> by registry
+
+@Serializable
+public enum class RegistryMode {
+  HANDSHAKING, PLAY, STATUS, LOGIN;
+}

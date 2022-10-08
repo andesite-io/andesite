@@ -39,7 +39,7 @@ public data class ProtocolConfiguration(
   val protocolVersion: Int,
   val protocolVariant: ProtocolVariant = ProtocolVariant.Java,
   val serializersModule: SerializersModule = EmptySerializersModule(),
-  val packetRegistry: PacketRegistry = PacketRegistry(mode = "PLAY"),
+  val packetRegistry: PacketRegistry = PacketRegistry(RegistryMode.PLAY),
   val nbt: Nbt = Nbt {
     variant = NbtVariant.Java
     compression = NbtCompression.None
