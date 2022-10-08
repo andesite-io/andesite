@@ -25,5 +25,5 @@ public class PacketRegistry(
 
 @Serializable
 public enum class RegistryMode {
-  HANDSHAKING, PLAY, STATUS, LOGIN;
+  Handshaking, Play, Status, Login;
 }

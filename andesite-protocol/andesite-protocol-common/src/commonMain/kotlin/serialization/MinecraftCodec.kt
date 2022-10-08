@@ -196,7 +196,7 @@ public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
   ): PacketRegistry {
     val registry = RegistryBuilder(packets, serializersModule).apply(builder)
 
-    return PacketRegistry(RegistryMode.PLAY, registry = registry.registry)
+    return PacketRegistry(RegistryMode.Play, registry = registry.registry)
   }
 
   internal fun build(): MinecraftCodec {
