@@ -16,6 +16,8 @@
 
 package andesite.protocol.serialization
 
+import andesite.protocol.registry.PacketRegistry
+import andesite.protocol.registry.RegistryMode
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule

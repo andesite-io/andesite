@@ -14,16 +14,13 @@
  *    limitations under the License.
  */
 
-package andesite.protocol.serialization
+package andesite.protocol.registry
 
-import kotlinx.serialization.Serializable
+import kotlin.reflect.KType
 
-public class PacketRegistry(
-  public val mode: RegistryMode,
-  public val registry: Map<Int, PacketRepr> = emptyMap(),
-) : Map<Int, PacketRepr> by registry
-
-@Serializable
-public enum class RegistryMode {
-  HANDSHAKING, PLAY, STATUS, LOGIN;
+public data class PacketRepr(
+  public val name: String,
+  public val referTo: KType?,
+) {
+  public fun hasImplementation(): Boolean = referTo != null
 }

@@ -17,6 +17,9 @@
 package andesite.protocol.serialization
 
 import andesite.protocol.extractPacketId
+import andesite.protocol.registry.PacketRegistry
+import andesite.protocol.registry.PacketRepr
+import andesite.protocol.registry.RegistryMode
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
