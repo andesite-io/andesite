@@ -14,11 +14,8 @@
  *    limitations under the License.
  */
 
-@file:OptIn(ExperimentalSerializationApi::class)
-
 package andesite.protocol.serialization
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.EmptySerializersModule
 import kotlinx.serialization.modules.SerializersModule
@@ -41,7 +38,7 @@ import net.benwoodworth.knbt.NbtVariant
 public data class ProtocolConfiguration(
   val protocolVersion: Int,
   val protocolVariant: ProtocolVariant = ProtocolVariant.Java,
-  val serializersModule: SerializersModule = EmptySerializersModule,
+  val serializersModule: SerializersModule = EmptySerializersModule(),
   val packetRegistry: PacketRegistry = PacketRegistry(mode = "PLAY"),
   val nbt: Nbt = Nbt {
     variant = NbtVariant.Java
