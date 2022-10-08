@@ -16,6 +16,7 @@
 
 package andesite.protocol.java.v756
 
+import andesite.protocol.registry.readPackets
 import andesite.protocol.serialization.CodecBuilder
 import andesite.protocol.serialization.DefaultProtocolConfiguration
 import andesite.protocol.serialization.MinecraftCodec
@@ -28,7 +29,7 @@ public fun Versions.v756(
 ): MinecraftCodec {
   return MinecraftCodec(from) {
     protocolVersion = 756
-    packetRegistry = createPacketRegistry {
+    packetRegistry = createPacketRegistry(readPackets("v756/packets.json")) {
       register<ChunkDataPacket>()
       register<JoinGamePacket>()
       register<KeepAlivePacket>()

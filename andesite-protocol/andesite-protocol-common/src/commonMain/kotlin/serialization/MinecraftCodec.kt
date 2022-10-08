@@ -19,6 +19,7 @@ package andesite.protocol.serialization
 import andesite.protocol.extractPacketId
 import andesite.protocol.registry.PacketRegistry
 import andesite.protocol.registry.PacketRepr
+import andesite.protocol.registry.Packets
 import andesite.protocol.registry.RegistryMode
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
@@ -128,24 +129,35 @@ public fun MinecraftCodec(
   return MinecraftCodecBuilder(from).apply(builder).build()
 }
 
-public class RegistryBuilder(@PublishedApi internal val serializersModule: SerializersModule) {
+public class RegistryBuilder(
+  @PublishedApi internal val packets: Packets,
+  @PublishedApi internal val serializersModule: SerializersModule,
+) {
   @PublishedApi
-  internal val value: MutableMap<Int, PacketRepr> = mutableMapOf()
+  internal val registry: MutableMap<Int, PacketRepr> = mutableMapOf()
 
   public fun <A : Any> register(id: Int, type: KType) {
-    value[id] = PacketRepr(extractPacketName(id), type)
+    registry[id] = PacketRepr(extractPacketName(id, isClientBound(type)), type)
   }
 
   public inline fun <reified A : Any> register() {
     val serializer = serializersModule.serializer(typeOf<A>())
+    val isClientBound = isClientBound(typeOf<A>())
     val packetId = extractPacketId(serializer.descriptor)
-    val representation = PacketRepr(extractPacketName(packetId), typeOf<A>())
-    value[packetId] = representation
+    val representation = PacketRepr(extractPacketName(packetId, isClientBound), typeOf<A>())
+    registry[packetId] = representation
   }
 
   @PublishedApi
-  internal fun extractPacketName(id: Int): String {
-    return "STUB" // TODO: find packet name from "packets.json"
+  internal fun isClientBound(type: KType): Boolean {
+    return true // TODO
+  }
+
+  @PublishedApi
+  internal fun extractPacketName(id: Int, clientBound: Boolean): String {
+    val packetEntryList = if (clientBound) packets.play.clientBound else packets.play.serverBound
+
+    return packetEntryList[id]?.name ?: "unknown packet"
   }
 }
 
@@ -174,13 +186,17 @@ public class MinecraftCodecBuilder(configuration: ProtocolConfiguration) {
    * }
    * ```
    *
+   * @param packets The packet stub with names, to make easier to debug.
    * @param builder The builder to create the registry with.
    * @return The new packet registry.
    */
-  public fun createPacketRegistry(builder: RegistryBuilder.() -> Unit): PacketRegistry {
-    val registry = RegistryBuilder(serializersModule).apply(builder)
+  public fun createPacketRegistry(
+    packets: Packets = Packets(),
+    builder: RegistryBuilder.() -> Unit,
+  ): PacketRegistry {
+    val registry = RegistryBuilder(packets, serializersModule).apply(builder)
 
-    return PacketRegistry(RegistryMode.PLAY, registry = registry.value)
+    return PacketRegistry(RegistryMode.PLAY, registry = registry.registry)
   }
 
   internal fun build(): MinecraftCodec {
