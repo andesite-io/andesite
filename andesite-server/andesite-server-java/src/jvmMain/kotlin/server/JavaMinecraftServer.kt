@@ -29,7 +29,6 @@ import andesite.java.processPlay
 import andesite.java.processStatus
 import andesite.komanda.KomandaRoot
 import andesite.player.JavaPlayer
-import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.data.Dimension
 import andesite.protocol.java.data.DimensionCodec
 import andesite.protocol.java.handshake.HandshakePacket
@@ -133,9 +132,6 @@ internal class JavaMinecraftServer(
               val player = processLogin(session, handshake)
 
               runCatching { processPlay(session, player).join() }
-
-              removePlayer(player)
-              publish(PlayerQuitEvent(player))
             }
           }
         } catch (error: Throwable) {
