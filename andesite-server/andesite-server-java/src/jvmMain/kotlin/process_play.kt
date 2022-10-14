@@ -33,7 +33,6 @@ import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
-import andesite.shared.AndesiteInternalAPI
 import io.ktor.network.sockets.awaitClosed
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
@@ -43,7 +42,6 @@ import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
-@AndesiteInternalAPI
 internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlayer) {
   session.sendPacket(
     JoinGamePacket(

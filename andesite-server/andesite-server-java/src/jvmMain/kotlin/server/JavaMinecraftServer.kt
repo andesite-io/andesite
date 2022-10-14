@@ -14,8 +14,6 @@
  *    limitations under the License.
  */
 
-@file:OptIn(AndesiteInternalAPI::class)
-
 package andesite.java.server
 
 import andesite.AndesiteError
@@ -38,7 +36,6 @@ import andesite.protocol.serialization.extractMinecraftVersion
 import andesite.server.Messageable
 import andesite.server.MinecraftServer
 import andesite.server.Motd
-import andesite.shared.AndesiteInternalAPI
 import andesite.world.Location
 import andesite.world.block.BlockRegistry
 import io.ktor.network.selector.ActorSelectorManager
