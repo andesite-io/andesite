@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.onEach
 
-@AndesiteInternalAPI
+@OptIn(AndesiteInternalAPI::class)
 internal suspend fun JavaMinecraftServer.handleMove(session: Session, player: JavaPlayer) {
   session.inboundPacketFlow
     .filterIsInstance<PositionMutatorPacket>()
