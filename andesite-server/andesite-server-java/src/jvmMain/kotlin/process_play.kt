@@ -26,6 +26,7 @@ import andesite.java.player.sendPacket
 import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
 import andesite.player.PlayerJoinEvent
+import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.v756.GameMode
 import andesite.protocol.java.v756.JoinGamePacket
 import andesite.protocol.java.v756.PlayerPositionAndLookPacket
@@ -33,56 +34,69 @@ import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
 import andesite.shared.AndesiteInternalAPI
+import io.ktor.network.sockets.awaitClosed
 import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
 
 @AndesiteInternalAPI
-internal fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlayer): Job =
-  session.launch(Job() + CoroutineName("io/processPlay")) job@{
-    session.sendPacket(
-      JoinGamePacket(
-        entityId = 0,
-        isHardcore = false,
-        gameMode = GameMode.Adventure,
-        previousGameMode = PreviousGameMode.Unknown,
-        worlds = listOf(Identifier("world")),
-        dimensionCodec = dimensionCodec,
-        dimension = dimension,
-        world = Identifier("world"),
-        hashedSeed = 0,
-        maxPlayers = VarInt(20),
-        viewDistance = VarInt(32),
-        reducedDebugInfo = false,
-        enableRespawnScreen = false,
-        isDebug = false,
-        isFlat = true,
-      ),
-    )
+internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: JavaPlayer) {
+  session.sendPacket(
+    JoinGamePacket(
+      entityId = 0,
+      isHardcore = false,
+      gameMode = GameMode.Adventure,
+      previousGameMode = PreviousGameMode.Unknown,
+      worlds = listOf(Identifier("world")),
+      dimensionCodec = dimensionCodec,
+      dimension = dimension,
+      world = Identifier("world"),
+      hashedSeed = 0,
+      maxPlayers = VarInt(20),
+      viewDistance = VarInt(32),
+      reducedDebugInfo = false,
+      enableRespawnScreen = false,
+      isDebug = false,
+      isFlat = true,
+    ),
+  )
 
-    addPlayer(player)
+  addPlayer(player)
 
-    session.sendPacket(
-      PlayerPositionAndLookPacket(
-        x = 0.0,
-        y = 50.0,
-        z = 0.0,
-        yaw = 0f,
-        pitch = 0f,
-        flags = 0x00,
-        teleportId = VarInt(0),
-        dismountVehicle = false,
-      ),
-    )
+  session.sendPacket(
+    PlayerPositionAndLookPacket(
+      x = 0.0,
+      y = 50.0,
+      z = 0.0,
+      yaw = 0f,
+      pitch = 0f,
+      flags = 0x00,
+      teleportId = VarInt(0),
+      dismountVehicle = false,
+    ),
+  )
 
-    publish(PlayerJoinEvent(player))
+  publish(PlayerJoinEvent(player))
 
-    launch(CoroutineName("in/listenPackets")) { handlePackets(this@job, session) }
+  coroutineScope {
     launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
     launch(CoroutineName("out/sendChunk")) { handleChunks(session, player) }
     launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
     launch(CoroutineName("in/listenMove")) { handleMove(session, player) }
+    launch(CoroutineName("io/handleDisconnect")) {
+      session.socket.awaitClosed()
+
+      removePlayer(player)
+
+      publish(PlayerQuitEvent(player))
+    }
   }
+
+  withContext(CoroutineName("in/listenPackets")) {
+    handlePackets(this, session)
+  }
+}

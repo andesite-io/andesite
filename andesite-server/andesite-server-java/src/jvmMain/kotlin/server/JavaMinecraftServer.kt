@@ -131,7 +131,7 @@ internal class JavaMinecraftServer(
             NextState.Login -> {
               val player = processLogin(session, handshake)
 
-              runCatching { processPlay(session, player).join() }
+              processPlay(session, player)
             }
           }
         } catch (error: Throwable) {

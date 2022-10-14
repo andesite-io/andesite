@@ -22,20 +22,26 @@ import andesite.java.player.Session
 import andesite.java.player.sendPacket
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.v756.KeepAlivePacket
-import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.ExperimentalTime
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.java.game.KeepAlive")
 
 internal suspend fun handleKeepAlive(session: Session) {
   while (true) {
-    delay(20.seconds)
+    delay(500.milliseconds)
 
     try {
       session.sendPacket(KeepAlivePacket(currentTimeMillis()))
-    } catch (_: Throwable) {
+    } catch (error: Throwable) {
+      withContext(Dispatchers.IO) {
+        session.socket.close()
+      }
+
       break
     }
   }
