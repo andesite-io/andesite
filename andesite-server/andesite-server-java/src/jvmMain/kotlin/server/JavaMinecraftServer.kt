@@ -131,7 +131,9 @@ internal class JavaMinecraftServer(
             NextState.Login -> {
               val player = processLogin(session, handshake)
 
-              processPlay(session, player)
+              withContext(CoroutineName("io/processPlay")) {
+                processPlay(session, player)
+              }
             }
           }
         } catch (error: Throwable) {
