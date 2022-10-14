@@ -53,7 +53,7 @@ internal class JavaPlayerImpl(
 
   override suspend fun <A : JavaPacket> sendPacket(
     serializer: SerializationStrategy<A>,
-    packet: A
+    packet: A,
   ) {
     session.sendPacket(serializer, packet)
   }
