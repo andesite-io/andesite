@@ -77,8 +77,7 @@ internal data class Session(val codec: MinecraftCodec, val socket: Socket) :
       codec.decodeFromByteArray(deserializer, packet.readBytes())
         ?: andesiteError("Decoded packet `$name` is null")
     } catch (error: Throwable) {
-      logger.error("Error while trying to deserialize: $name")
-      logger.error(error)
+      logger.error("Error while trying to deserialize: $name", error)
       throw error
     }
 
