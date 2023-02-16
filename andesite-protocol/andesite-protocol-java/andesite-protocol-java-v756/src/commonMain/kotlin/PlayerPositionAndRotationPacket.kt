@@ -23,17 +23,16 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-@SerialName("PlayerPositionPacket")
+@SerialName("PlayerPositionAndRotationPacket")
 @ProtocolPacket(0x12)
 public data class PlayerPositionAndRotationPacket(
   val x: Double,
   val feetY: Double,
   val z: Double,
   val yaw: Float,
-  val pitch: Float,
   val onGround: Boolean,
 ) : JavaPacket, PositionMutatorPacket {
   override fun apply(location: Location): Location {
-    return location.copy(x = x, y = feetY, z = z, yaw = yaw, pitch = pitch)
+    return location.copy(x = x, y = feetY, z = z, yaw = yaw, pitch = 0.0f)
   }
 }
