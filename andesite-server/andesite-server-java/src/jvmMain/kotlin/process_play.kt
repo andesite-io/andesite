@@ -37,7 +37,6 @@ import io.ktor.network.sockets.awaitClosed
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.apache.logging.log4j.kotlin.logger
 
 private val logger = logger("andesite.handlers.Play")
@@ -81,6 +80,7 @@ internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: J
   publish(PlayerJoinEvent(player))
 
   coroutineScope {
+    launch(CoroutineName("in/listenPackets")) { handlePackets(this, session) }
     launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
     launch(CoroutineName("out/sendChunk")) { handleChunks(session, player) }
     launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
@@ -92,9 +92,5 @@ internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: J
 
       publish(PlayerQuitEvent(player))
     }
-  }
-
-  withContext(CoroutineName("in/listenPackets")) {
-    handlePackets(this, session)
   }
 }
