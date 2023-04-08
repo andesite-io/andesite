@@ -82,7 +82,7 @@ internal class ProtocolDecoderImpl(
   override fun decodeByte(): Byte = packet.readByte()
   override fun decodeChar(): Char = packet.readByte().toInt().toChar()
   override fun decodeDouble(): Double = packet.readDouble()
-  override fun decodeFloat(): Float = packet.readDouble().toFloat()
+  override fun decodeFloat(): Float = packet.readFloat()
   override fun decodeInt(): Int = packet.readInt()
   override fun decodeLong(): Long = packet.readLong()
   override fun decodeShort(): Short = packet.readShort()
