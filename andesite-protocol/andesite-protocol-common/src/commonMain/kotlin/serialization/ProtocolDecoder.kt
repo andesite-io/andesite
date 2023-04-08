@@ -30,6 +30,7 @@ import andesite.protocol.readVarInt
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.isEmpty
 import io.ktor.utils.io.core.readDouble
+import io.ktor.utils.io.core.readFloat
 import io.ktor.utils.io.core.readInt
 import io.ktor.utils.io.core.readLong
 import io.ktor.utils.io.core.readShort
