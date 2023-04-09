@@ -21,32 +21,55 @@ import kotlin.test.assertEquals
 
 class QuoteTest {
   @Test
-  fun `test parse placeholder empty`() {
-    val expected = listOf(Quote("{} doing", false))
-    val actual = quoteString("{} doing")
+  fun `test parse empty placeholder`() {
+    val expected = listOf(Quote("Hello {}!", false))
+    val actual = quoteString("Hello {}!")
 
     assertEquals(expected, actual)
   }
 
   @Test
-  fun `test parse placeholder with text behind placeholder`() {
+  fun `test parse placeholder with text before`() {
     val expected = listOf(
-      Quote("hello ", false),
+      Quote("Hello ", false),
       Quote("player", true, "{player}"),
-      Quote(" doing", false),
     )
-    val actual = quoteString("hello {player} doing")
+    val actual = quoteString("Hello {player}")
 
     assertEquals(expected, actual)
   }
 
   @Test
-  fun `test parse placeholder`() {
+  fun `test parse placeholder with text after`() {
     val expected = listOf(
       Quote("player", true, "{player}"),
-      Quote(" doing", false),
+      Quote(", hi!", false),
     )
-    val actual = quoteString("{player} doing")
+    val actual = quoteString("{player}, hi!")
+
+    assertEquals(expected, actual)
+  }
+
+  @Test
+  fun `test parse placeholder with text before and after`() {
+    val expected = listOf(
+      Quote("Hello ", false),
+      Quote("player", true, "{player}"),
+      Quote(", welcome!", false),
+    )
+    val actual = quoteString("Hello {player}, welcome!")
+
+    assertEquals(expected, actual)
+  }
+
+  @Test
+  fun `test parse placeholder with escaped curly braces`() {
+    val expected = listOf(
+      Quote("Hello ", false),
+      Quote("player", true, "{player}"),
+      Quote(", welcome to \\{our server\\}!", false),
+    )
+    val actual = quoteString("Hello {player}, welcome to \\{our server\\}!")
 
     assertEquals(expected, actual)
   }
