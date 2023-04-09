@@ -89,7 +89,7 @@ public fun parseCommandString(string: String): List<ExecutionNode> {
     val argument: Parser<ExecutionNode> by parser { simpleArgument } or quotedArgument
 
     override val rootParser: Parser<List<ExecutionNode>> by
-    separatedTerms(argument, ws, acceptZero = true)
+      separatedTerms(argument, ws, acceptZero = true)
   }
 
   return try {

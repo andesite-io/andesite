@@ -39,7 +39,7 @@ public data class DimensionCodec(
 @SerialName("Registry")
 public data class Registry<T : Any>(
   @SerialName("type") val kind: String,
-  val value: List<Entry<T>>
+  val value: List<Entry<T>>,
 ) {
   @Serializable
   @SerialName("Registry.Entry")

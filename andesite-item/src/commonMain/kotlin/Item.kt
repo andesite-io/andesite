@@ -35,5 +35,5 @@ public data class Item(
   val eatingSound: Identifier,
   val drinkingSound: Identifier,
   val specificItemData: SpecificItemData,
-  val foodProperties: FoodProperties? = null
+  val foodProperties: FoodProperties? = null,
 )

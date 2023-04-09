@@ -20,8 +20,6 @@ import andesite.protocol.extractPacketId
 import io.ktor.utils.io.core.ByteReadPacket
 import io.ktor.utils.io.core.buildPacket
 import io.ktor.utils.io.core.readBytes
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
 import kotlinx.serialization.BinaryFormat
 import kotlinx.serialization.DeserializationStrategy
 import kotlinx.serialization.SerializationStrategy
@@ -29,6 +27,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.serializer
 import net.benwoodworth.knbt.Nbt
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 /**
  * Minecraft's protocol codec.

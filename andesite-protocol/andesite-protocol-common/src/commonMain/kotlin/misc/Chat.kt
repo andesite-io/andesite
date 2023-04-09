@@ -16,10 +16,10 @@
 
 package andesite.protocol.misc
 
-import kotlin.properties.PropertyDelegateProvider
-import kotlin.properties.ReadOnlyProperty
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlin.properties.PropertyDelegateProvider
+import kotlin.properties.ReadOnlyProperty
 
 /**
  * Minecraft's text component wrapper.
@@ -201,7 +201,7 @@ public data class Chat(
 }
 
 public typealias PlaceholderProvider =
-  PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, Chat>>
+PropertyDelegateProvider<Nothing?, ReadOnlyProperty<Nothing?, Chat>>
 
 public class ChatListBuilder internal constructor() {
   private val components: MutableList<Chat> = mutableListOf()

@@ -18,7 +18,6 @@ package andesite.protocol.types
 
 import andesite.protocol.readVarInt
 import andesite.protocol.writeVarInt
-import kotlin.jvm.JvmInline
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -27,6 +26,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import kotlin.jvm.JvmInline
 
 /**
  * A variable-length integer.

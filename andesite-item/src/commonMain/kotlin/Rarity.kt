@@ -31,5 +31,5 @@ public enum class Rarity {
   Rare,
 
   @SerialName("UNCOMMON")
-  Uncommon;
+  Uncommon,
 }

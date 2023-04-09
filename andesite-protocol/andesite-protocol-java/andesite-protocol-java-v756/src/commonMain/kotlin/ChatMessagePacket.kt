@@ -52,5 +52,5 @@ public enum class ChatPosition {
   SystemMessage,
 
   @ProtocolValue(2)
-  ActionBar
+  ActionBar,
 }

@@ -24,5 +24,5 @@ public data class Effect(
   val id: Identifier,
   val amplifier: Long,
   val duration: Long,
-  val chance: Double
+  val chance: Double,
 )

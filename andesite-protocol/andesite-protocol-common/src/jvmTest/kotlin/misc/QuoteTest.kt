@@ -16,8 +16,8 @@
 
 package andesite.protocol.misc
 
-import kotlin.test.assertEquals
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
 class QuoteTest {
   @Test

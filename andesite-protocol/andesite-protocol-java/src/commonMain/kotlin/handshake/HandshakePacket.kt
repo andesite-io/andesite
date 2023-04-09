@@ -45,5 +45,5 @@ public enum class NextState {
   Status,
 
   @ProtocolValue(2)
-  Login;
+  Login,
 }

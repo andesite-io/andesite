@@ -95,7 +95,7 @@ public class ParameterBuilder<A>(
 
   public operator fun provideDelegate(
     _thisRef: Any?,
-    property: KProperty<*>
+    property: KProperty<*>,
   ): Parameter<A> {
     name = property.name
 

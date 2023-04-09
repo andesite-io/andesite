@@ -19,8 +19,6 @@
 package andesite.world.block
 
 import andesite.protocol.misc.Identifier
-import kotlin.math.ceil
-import kotlin.math.log2
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -33,6 +31,8 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.serializer
+import kotlin.math.ceil
+import kotlin.math.log2
 
 public typealias StateId = Int
 

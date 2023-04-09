@@ -71,7 +71,9 @@ public enum class PreviousGameMode {
   Adventure,
 
   @ProtocolValue(3)
-  Spectator;
+  Spectator,
+
+  ;
 
   public fun toGameMode(): GameMode? {
     return when (this) {
@@ -96,5 +98,5 @@ public enum class GameMode {
   Adventure,
 
   @ProtocolValue(3)
-  Spectator;
+  Spectator,
 }

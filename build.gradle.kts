@@ -15,10 +15,10 @@
  */
 
 import io.gitlab.arturbosch.detekt.extensions.DetektExtension
-import java.lang.System.getenv
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import java.lang.System.getenv
 
 plugins {
   kotlin("multiplatform") version "1.7.0" apply false

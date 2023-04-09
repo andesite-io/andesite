@@ -18,7 +18,6 @@
 
 package andesite.protocol.serialization
 
-import kotlin.reflect.KType
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.EmptySerializersModule
@@ -26,6 +25,7 @@ import kotlinx.serialization.modules.SerializersModule
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
+import kotlin.reflect.KType
 
 /**
  * Configuration for the serialization of the protocol.
@@ -57,7 +57,7 @@ public data class ProtocolConfiguration(
  * Represents the variant of the Minecraft protocol to use.
  */
 public enum class ProtocolVariant {
-  Java, Bedrock;
+  Java, Bedrock
 }
 
 /**

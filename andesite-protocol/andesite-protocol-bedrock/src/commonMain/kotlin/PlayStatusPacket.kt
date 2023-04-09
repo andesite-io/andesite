@@ -56,5 +56,5 @@ public enum class PlayStatus {
   FailedEduVanilla,
 
   @ProtocolValue(7)
-  FailedServerFull;
+  FailedServerFull,
 }
