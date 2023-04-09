@@ -27,8 +27,8 @@ internal suspend fun handlePackets(scope: CoroutineScope, session: Session) {
 
       session.inboundPacketFlow.emit(packet)
     } catch (_: Throwable) {
-      scope.cancel()
-      break
+//      scope.cancel()
+//      break
     }
   }
 }

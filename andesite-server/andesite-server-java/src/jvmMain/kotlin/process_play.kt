@@ -81,10 +81,12 @@ internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: J
 
   coroutineScope {
     launch(CoroutineName("in/listenPackets")) { handlePackets(this, session) }
-    launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
-    launch(CoroutineName("out/sendChunk")) { handleChunks(session, player) }
     launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
     launch(CoroutineName("in/listenMove")) { handleMove(session, player) }
+    
+    launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
+    launch(CoroutineName("out/sendChunk")) { handleChunks(session, player) }
+    
     launch(CoroutineName("io/handleDisconnect")) {
       session.socket.awaitClosed()
 
