@@ -32,7 +32,7 @@ public data class PlayerPositionAndRotationPacket(
   val yaw: Float,
   val onGround: Boolean,
 ) : JavaPacket, PositionMutatorPacket {
-  override fun apply(location: Location): Location {
+  override fun applyTo(location: Location): Location {
     return location.copy(x = x, y = feetY, z = z, yaw = yaw, pitch = 0.0f)
   }
 }

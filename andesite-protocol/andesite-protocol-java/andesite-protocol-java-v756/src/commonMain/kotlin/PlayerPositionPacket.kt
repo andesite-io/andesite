@@ -31,7 +31,7 @@ public data class PlayerPositionPacket(
   val z: Double,
   val onGround: Boolean,
 ) : JavaPacket, PositionMutatorPacket {
-  override fun apply(location: Location): Location {
+  override fun applyTo(location: Location): Location {
     return location.copy(x = x, y = feetY, z = z)
   }
 }

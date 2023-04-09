@@ -32,7 +32,7 @@ internal suspend fun JavaMinecraftServer.handleMove(session: Session, player: Ja
     .filterIsInstance<PositionMutatorPacket>()
     .onEach { packet ->
       val oldLocation = player.location
-      val newLocation = packet.apply(oldLocation)
+      val newLocation = packet.applyTo(oldLocation)
       player.location = newLocation
 
       publish(PlayerMoveEvent(oldLocation, newLocation, player))
