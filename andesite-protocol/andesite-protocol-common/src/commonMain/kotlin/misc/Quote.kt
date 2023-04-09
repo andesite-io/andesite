@@ -24,46 +24,16 @@ internal data class Quote(val text: String, val placeholder: Boolean, val fullTe
       " fullText=\"$fullText\")"
 }
 
-internal fun quoteString(string: String): List<Quote> = buildList {
-  fun addIfNotEmpty(i: Int, j: Int, placeholder: Boolean = false) {
-    val text = string.substring(i, j)
-    if (text.isEmpty()) return
-
-    add(Quote(text, placeholder))
-  }
-
-  var i = 0
-  var j = 0
-  var escaping = false
-
-  while (j < string.length) {
-    val c = string[j]
-
-    if (!escaping && c == '{') {
-      var k = i + 1
-      while (string[k] != '}') {
-        k++
-      }
-      k++
-
-      val placeholder = string.substring(j + 1, k - 1)
-      if (placeholder.isNotEmpty()) {
-        addIfNotEmpty(i, j)
-        add(Quote(placeholder, true, string.substring(j, k)))
-        i = k
+internal fun quoteString(string: String): List<Quote> =
+  """((?:\\[{}]|\{}|[^{}])+)|\{([a-zA-Z_][a-zA-Z0-9_]*)+}"""
+    .toRegex()
+    .findAll(string)
+    .map { match ->
+      val commonStrMatch = match.groupValues[1]
+      if (commonStrMatch.isNotEmpty()) {
+        Quote(commonStrMatch, false)
       } else {
-        j++
+        Quote(match.groupValues[2], true, match.value)
       }
     }
-
-    escaping = false
-
-    if (c == '\\') {
-      escaping = true
-    }
-
-    j++
-  }
-
-  addIfNotEmpty(i, j)
-}
+    .toList()
