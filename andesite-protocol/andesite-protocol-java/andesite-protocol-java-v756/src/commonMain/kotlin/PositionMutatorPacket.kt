@@ -20,5 +20,5 @@ import andesite.protocol.java.JavaPacket
 import andesite.world.Location
 
 public interface PositionMutatorPacket : JavaPacket {
-  public fun apply(location: Location): Location
+  public fun applyTo(location: Location): Location
 }
