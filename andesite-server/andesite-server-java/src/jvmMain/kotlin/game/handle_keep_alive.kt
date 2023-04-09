@@ -22,12 +22,12 @@ import andesite.java.player.Session
 import andesite.java.player.sendPacket
 import andesite.protocol.currentTimeMillis
 import andesite.protocol.java.v756.KeepAlivePacket
-import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.apache.logging.log4j.kotlin.logger
+import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.ExperimentalTime
 
 private val logger = logger("andesite.java.game.KeepAlive")
 

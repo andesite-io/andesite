@@ -19,10 +19,10 @@
 package andesite.java.player
 
 import andesite.protocol.java.JavaPacket
-import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.serialization.serializer
+import kotlin.time.ExperimentalTime
 
 internal suspend inline fun <reified T : JavaPacket> Session.awaitPacket(): T? {
   return inboundPacketFlow.filterIsInstance<T>().firstOrNull()

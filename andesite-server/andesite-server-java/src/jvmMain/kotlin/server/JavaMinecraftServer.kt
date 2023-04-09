@@ -42,7 +42,6 @@ import io.ktor.network.selector.ActorSelectorManager
 import io.ktor.network.sockets.InetSocketAddress
 import io.ktor.network.sockets.aSocket
 import io.ktor.utils.io.ClosedWriteChannelException
-import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -56,6 +55,7 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import net.benwoodworth.knbt.Nbt
+import kotlin.coroutines.CoroutineContext
 
 internal class JavaMinecraftServer(
   context: CoroutineContext,

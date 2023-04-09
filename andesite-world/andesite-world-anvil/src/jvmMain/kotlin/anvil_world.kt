@@ -17,7 +17,6 @@
 package andesite.world.anvil
 
 import andesite.world.block.BlockRegistry
-import java.io.File
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromByteArray
@@ -28,6 +27,7 @@ import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import net.benwoodworth.knbt.detect
 import org.apache.logging.log4j.kotlin.logger
+import java.io.File
 
 private val logger = logger("andesite.AnvilWorld")
 

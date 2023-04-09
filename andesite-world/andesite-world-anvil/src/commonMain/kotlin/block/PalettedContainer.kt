@@ -31,10 +31,10 @@ import io.ktor.utils.io.core.isNotEmpty
 import io.ktor.utils.io.core.writeFully
 import io.ktor.utils.io.core.writeShort
 import io.ktor.utils.io.core.writeUByte
+import net.benwoodworth.knbt.NbtCompound
 import kotlin.math.ceil
 import kotlin.math.log2
 import kotlin.math.max
-import net.benwoodworth.knbt.NbtCompound
 
 public class PalettedContainer(public val palette: Palette, public val storage: BitStorage) {
   public val bitsPerBlock: Int = palette.bitsPerBlock
@@ -75,7 +75,6 @@ internal fun directPalette(registry: BlockRegistry): PalettedContainer {
   }
 }
 
-@Suppress("UNUSED_PARAMETER")
 internal fun readBlockPalette(
   registry: BlockRegistry,
   blockStates: LongArray,

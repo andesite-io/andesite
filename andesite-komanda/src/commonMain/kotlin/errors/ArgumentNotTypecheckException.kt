@@ -21,7 +21,7 @@ import kotlin.reflect.KClass
 public class ArgumentNotTypecheckException(
   public val name: String,
   public val expected: KClass<*>,
-  public val actual: KClass<*>
+  public val actual: KClass<*>,
 ) : RuntimeException() {
   override val message: String =
     "Argument with name $name expected to have type $expected, but got $actual"

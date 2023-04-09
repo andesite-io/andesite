@@ -31,5 +31,5 @@ public enum class Slot {
   Head,
 
   @SerialName("legs")
-  Legs;
+  Legs,
 }
