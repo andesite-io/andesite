@@ -30,7 +30,7 @@ import andesite.protocol.serialization.MinecraftCodec
 import andesite.server.MinecraftServer
 import andesite.server.broadcast
 import andesite.world.Location
-import andesite.world.anvil.readAnvilWorld
+import andesite.world.anvil.AnvilWorld
 import andesite.world.block.readBlockRegistry
 import kotlinx.coroutines.DEBUG_PROPERTY_NAME
 import kotlinx.coroutines.DEBUG_PROPERTY_VALUE_ON
@@ -109,7 +109,7 @@ private fun createServer(): MinecraftServer {
 
     hostname = "127.0.0.1"
     port = 25565
-    spawn = Location(0.0, 10.0, 0.0, 0f, 0f, readAnvilWorld(blockRegistry, resource("world")))
+    spawn = Location(0.0, 10.0, 0.0, 0f, 0f, AnvilWorld.of(blockRegistry, resource("world")))
 
     motd {
       maxPlayers = 20
