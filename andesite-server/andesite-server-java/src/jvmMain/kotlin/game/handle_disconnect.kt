@@ -1,5 +1,5 @@
 /*
- *    Copyright 2022 Gabrielle Guimarães de Oliveira
+ *    Copyright 2023 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -17,19 +17,26 @@
 package andesite.java.game
 
 import andesite.java.player.Session
+import andesite.java.server.JavaMinecraftServer
+import andesite.player.JavaPlayer
+import andesite.player.PlayerQuitEvent
+import io.ktor.network.sockets.awaitClosed
+import io.ktor.utils.io.CancellationException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.channels.ClosedReceiveChannelException
+import kotlinx.coroutines.cancel
+import org.apache.logging.log4j.kotlin.logger
 
-internal suspend fun handlePackets(scope: CoroutineScope, session: Session) {
-  while (true) {
-    try {
-      val packet = session.acceptPacket() ?: continue
+private val logger = logger("andesite.java.game.Disconnect")
 
-      session.inboundPacketFlow.emit(packet)
-    } catch (_: ClosedReceiveChannelException) {
-      break
-    } catch (_: Throwable) {
-      // nothing
-    }
-  }
+internal suspend fun JavaMinecraftServer.handleDisconnect(
+  scope: CoroutineScope,
+  session: Session,
+  player: JavaPlayer,
+) {
+  session.socket.awaitClosed()
+
+  removePlayer(player)
+  publish(PlayerQuitEvent(player))
+
+  scope.cancel(CancellationException("Player disconnected"))
 }
