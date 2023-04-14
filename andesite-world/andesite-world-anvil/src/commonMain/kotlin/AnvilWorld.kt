@@ -28,7 +28,6 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import net.benwoodworth.knbt.detect
-import okio.BufferedSource
 import okio.FileSystem
 import okio.Path
 import org.apache.logging.log4j.kotlin.logger
@@ -68,36 +67,27 @@ public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String,
         read(locationTable)
 
         val pos = ((chunkX and 31) + (chunkZ and 31) * 32) * 4
-        readChunk(this, locationTable, pos, nbt)
+        val offset = locationTable[pos + 0].toInt() and 0xff shl 16 or
+          (locationTable[pos + 1].toInt() and 0xff shl 8) or
+          (locationTable[pos + 2].toInt() and 0xff)
+        val size = locationTable[pos + 3].toInt() and 0xFF
+
+        if (offset == 0 && size == 0) {
+          // Chunk not generated yet
+          return null
+        }
+
+        // Read chunk data from file
+        var regionChunkBytes = ByteArray(size * 4096)
+        skip((offset.toLong() - 1) * 4096) // LocationTable already skipped (read)
+        read(regionChunkBytes)
+
+        // Skipping chunk header
+        regionChunkBytes = regionChunkBytes.drop(5).toByteArray()
+        return Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
+          .decodeFromByteArray<RegionChunk>(regionChunkBytes)
+          .level
       }
-
-    private fun readChunk(
-      regionFile: BufferedSource,
-      locationTable: ByteArray,
-      locationTablePos: Int,
-      nbt: Nbt,
-    ): AnvilChunk? {
-      val offset = locationTable[locationTablePos + 0].toInt() and 0xff shl 16 or
-        (locationTable[locationTablePos + 1].toInt() and 0xff shl 8) or
-        (locationTable[locationTablePos + 2].toInt() and 0xff)
-      val size = locationTable[locationTablePos + 3].toInt() and 0xFF
-
-      if (offset == 0 && size == 0) {
-        // Chunk not generated yet
-        return null
-      }
-
-      // Read chunk data from file
-      var regionChunkBytes = ByteArray(size * 4096)
-      regionFile.skip((offset.toLong() - 1) * 4096)
-      regionFile.read(regionChunkBytes)
-
-      // Skipping chunk header
-      regionChunkBytes = regionChunkBytes.drop(5).toByteArray()
-      return Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
-        .decodeFromByteArray<RegionChunk>(regionChunkBytes)
-        .level
-    }
   }
 
   override fun getChunkAt(location: Location): AnvilChunk? {
