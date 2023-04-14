@@ -28,13 +28,14 @@ import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
 import net.benwoodworth.knbt.detect
+import okio.BufferedSource
+import okio.FileSystem
+import okio.Path
 import org.apache.logging.log4j.kotlin.logger
-import java.io.File
-import java.io.RandomAccessFile
 
 private val logger = logger("andesite.AnvilWorld")
 
-public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String, File>) : World {
+public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String, Path>) : World {
   public companion object {
     /**
      * Reads an [AnvilWorld] with the [registry] and the world folder [folder].
@@ -43,7 +44,7 @@ public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String,
      * @param folder the world folder to read from
      * @return a new [AnvilWorld]
      */
-    public fun of(registry: BlockRegistry, folder: File): AnvilWorld {
+    public fun of(registry: BlockRegistry, folder: Path): AnvilWorld {
       val nbt = Nbt {
         variant = NbtVariant.Java
         compression = NbtCompression.None
@@ -53,31 +54,25 @@ public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String,
         }
       }
 
-      val fileRegions = folder.resolve("region").listFiles().orEmpty()
+      val regionFiles = FileSystem.SYSTEM.list(folder.resolve("region"))
 
-      val regions = fileRegions.associateBy { it.nameWithoutExtension }
+      val regions = regionFiles.associateBy { it.name.substringBeforeLast(".") }
 
       return AnvilWorld(nbt, regions)
     }
 
-    private fun readChunk(regionFile: File, nbt: Nbt, chunkX: Int, chunkZ: Int): AnvilChunk? {
-      // Read location entry from location table
-      val raf = RandomAccessFile(regionFile, "r")
+    private fun readChunk(regionFile: Path, nbt: Nbt, chunkX: Int, chunkZ: Int): AnvilChunk? =
+      FileSystem.SYSTEM.read(regionFile) {
+        // Read location entry from location table
+        val locationTable = ByteArray(4096)
+        read(locationTable)
 
-      if (raf.length() == 0L) return null
-
-      val locationTable = ByteArray(4096)
-      raf.read(locationTable)
-
-      val pos = ((chunkX and 31) + (chunkZ and 31) * 32) * 4
-      val chunk = readChunk(raf, locationTable, pos, nbt)
-
-      raf.close()
-      return chunk
-    }
+        val pos = ((chunkX and 31) + (chunkZ and 31) * 32) * 4
+        readChunk(this, locationTable, pos, nbt)
+      }
 
     private fun readChunk(
-      regionFile: RandomAccessFile,
+      regionFile: BufferedSource,
       locationTable: ByteArray,
       locationTablePos: Int,
       nbt: Nbt,
@@ -94,7 +89,7 @@ public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String,
 
       // Read chunk data from file
       var regionChunkBytes = ByteArray(size * 4096)
-      regionFile.seek(offset.toLong() * 4096)
+      regionFile.skip((offset.toLong() - 1) * 4096)
       regionFile.read(regionChunkBytes)
 
       // Skipping chunk header

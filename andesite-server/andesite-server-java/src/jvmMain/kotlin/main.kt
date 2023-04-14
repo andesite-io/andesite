@@ -41,6 +41,7 @@ import kotlinx.serialization.modules.contextual
 import net.benwoodworth.knbt.Nbt
 import net.benwoodworth.knbt.NbtCompression
 import net.benwoodworth.knbt.NbtVariant
+import okio.Path.Companion.toOkioPath
 
 internal fun main() {
   System.setProperty(DEBUG_PROPERTY_NAME, DEBUG_PROPERTY_VALUE_ON)
@@ -109,7 +110,7 @@ private fun createServer(): MinecraftServer {
 
     hostname = "127.0.0.1"
     port = 25565
-    spawn = Location(0.0, 10.0, 0.0, 0f, 0f, AnvilWorld.of(blockRegistry, resource("world")))
+    spawn = Location(0.0, 10.0, 0.0, 0f, 0f, AnvilWorld.of(blockRegistry, resource("world").toOkioPath()))
 
     motd {
       maxPlayers = 20
