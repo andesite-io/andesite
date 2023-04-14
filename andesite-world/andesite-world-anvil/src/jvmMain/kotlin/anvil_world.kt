@@ -28,6 +28,7 @@ import net.benwoodworth.knbt.NbtVariant
 import net.benwoodworth.knbt.detect
 import org.apache.logging.log4j.kotlin.logger
 import java.io.File
+import java.io.RandomAccessFile
 
 private val logger = logger("andesite.AnvilWorld")
 
@@ -56,13 +57,7 @@ public fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
     val percentage = (i.toFloat() / fileRegions.size * 100).toInt()
     logger.info("Preparing region [$percentage%]")
 
-    val bytes = file.readBytes()
-
-    if (bytes.isEmpty()) {
-      null
-    } else {
-      readRegion(file.nameWithoutExtension, nbt, bytes)
-    }
+    readRegion(file, nbt)
   }
 
   logger.info("Finish loading world `${folder.name}`")
@@ -70,31 +65,48 @@ public fun readAnvilWorld(registry: BlockRegistry, folder: File): AnvilWorld {
   return AnvilWorld(regions.filterNotNull().toTypedArray())
 }
 
-internal fun readRegion(name: String, nbt: Nbt, bytes: ByteArray): AnvilRegion {
-  var pos: Int
+internal fun readRegion(regionFile: File, nbt: Nbt): AnvilRegion? {
+  val raf = RandomAccessFile(regionFile, "r")
+
+  if (raf.length() == 0L) return null
+
+  val locationTable = ByteArray(4096)
+  raf.read(locationTable)
+
   val chunks = List(1024) { i ->
-    pos = i * 4
-    val offset = (bytes[pos].toInt() shl 16) or
-      ((bytes[pos + 1].toInt() and 0xff) shl 8) or
-      (bytes[pos + 2].toInt() and 0xff)
+    readChunk(raf, locationTable, i * 4, nbt)
+  }.filterNotNull()
 
-    if (bytes[pos + 3] == 0.toByte()) {
-      return@List null
-    }
+  raf.close()
+  return AnvilRegion(regionFile.nameWithoutExtension, chunks)
+}
 
-    pos = 4096 + i * 4
-    bytes[pos + 4] // timestamp
+internal fun readChunk(
+  regionFile: RandomAccessFile,
+  locationTable: ByteArray,
+  locationTablePos: Int,
+  nbt: Nbt,
+): AnvilChunk? {
+  val offset = locationTable[locationTablePos + 0].toInt() and 0xff shl 16 or
+    (locationTable[locationTablePos + 1].toInt() and 0xff shl 8) or
+    (locationTable[locationTablePos + 2].toInt() and 0xff)
+  val size = locationTable[locationTablePos + 3].toInt() and 0xFF
 
-    pos = 4096 * offset + 4
-
-    val regionChunkBytes = bytes.drop(pos + 1).toByteArray()
-
-    Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
-      .decodeFromByteArray<RegionChunk>(regionChunkBytes)
-      .level
+  if (offset == 0 && size == 0) {
+    // Chunk not generated yet
+    return null
   }
 
-  return AnvilRegion(name, chunks.filterNotNull())
+  // Read chunk data from file
+  var regionChunkBytes = ByteArray(size * 4096)
+  regionFile.seek(offset.toLong() * 4096)
+  regionFile.read(regionChunkBytes)
+
+  // No one knows why, but we had to skip 5 bytes...
+  regionChunkBytes = regionChunkBytes.drop(5).toByteArray()
+  return Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
+    .decodeFromByteArray<RegionChunk>(regionChunkBytes)
+    .level
 }
 
 @Serializable
