@@ -110,7 +110,14 @@ private fun createServer(): MinecraftServer {
 
     hostname = "127.0.0.1"
     port = 25565
-    spawn = Location(0.0, 10.0, 0.0, 0f, 0f, AnvilWorld.of(blockRegistry, resource("world").toOkioPath()))
+    spawn = Location(
+      0.0,
+      10.0,
+      0.0,
+      0f,
+      0f,
+      AnvilWorld.of(blockRegistry, resource("world").toOkioPath()),
+    )
 
     motd {
       maxPlayers = 20
