@@ -18,6 +18,7 @@ package andesite.java
 
 import andesite.java.game.handleChat
 import andesite.java.game.handleChunks
+import andesite.java.game.handleDisconnect
 import andesite.java.game.handleKeepAlive
 import andesite.java.game.handleMove
 import andesite.java.game.handlePackets
@@ -26,14 +27,12 @@ import andesite.java.player.sendPacket
 import andesite.java.server.JavaMinecraftServer
 import andesite.player.JavaPlayer
 import andesite.player.PlayerJoinEvent
-import andesite.player.PlayerQuitEvent
 import andesite.protocol.java.v756.GameMode
 import andesite.protocol.java.v756.JoinGamePacket
 import andesite.protocol.java.v756.PlayerPositionAndLookPacket
 import andesite.protocol.java.v756.PreviousGameMode
 import andesite.protocol.misc.Identifier
 import andesite.protocol.types.VarInt
-import io.ktor.network.sockets.awaitClosed
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -80,19 +79,13 @@ internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: J
   publish(PlayerJoinEvent(player))
 
   coroutineScope {
+    launch(CoroutineName("io/handleDisconnect")) { handleDisconnect(this, session, player) }
+
     launch(CoroutineName("in/listenPackets")) { handlePackets(this, session) }
     launch(CoroutineName("in/listenChat")) { handleChat(session, player) }
     launch(CoroutineName("in/listenMove")) { handleMove(session, player) }
-    
+
     launch(CoroutineName("out/sendKeepAlive")) { handleKeepAlive(session) }
     launch(CoroutineName("out/sendChunk")) { handleChunks(session, player) }
-    
-    launch(CoroutineName("io/handleDisconnect")) {
-      session.socket.awaitClosed()
-
-      removePlayer(player)
-
-      publish(PlayerQuitEvent(player))
-    }
   }
 }
