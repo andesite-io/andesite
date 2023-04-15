@@ -1,5 +1,5 @@
 /*
- *    Copyright 2021 Gabrielle Guimarães de Oliveira
+ *    Copyright 2023 Gabrielle Guimarães de Oliveira
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
  *    you may not use this file except in compliance with the License.
@@ -18,21 +18,98 @@ package andesite.world.anvil
 
 import andesite.world.Location
 import andesite.world.World
+import andesite.world.block.BlockRegistry
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromByteArray
+import kotlinx.serialization.modules.SerializersModule
+import kotlinx.serialization.modules.contextual
+import net.benwoodworth.knbt.Nbt
+import net.benwoodworth.knbt.NbtCompression
+import net.benwoodworth.knbt.NbtVariant
+import net.benwoodworth.knbt.detect
+import okio.FileSystem
+import okio.Path
+import org.apache.logging.log4j.kotlin.logger
 
-private const val LoadFactor: Int = 4000000
+private val logger = logger("andesite.AnvilWorld")
 
-public class AnvilWorld(public val regions: Array<AnvilRegion>) : World {
-  public val chunks: MutableMap<Long, AnvilChunk> = HashMap<Long, AnvilChunk>().apply {
-    regions.flatMap(AnvilRegion::chunks).forEach {
-      put((it.x * LoadFactor + it.z).toLong(), it)
+public class AnvilWorld(public val nbt: Nbt, public val regionFiles: Map<String, Path>) : World {
+  public companion object {
+    /**
+     * Reads an [AnvilWorld] with the [registry] and the world folder [folder].
+     *
+     * @param registry the [BlockRegistry] to use for the world
+     * @param folder the world folder to read from
+     * @return a new [AnvilWorld]
+     */
+    public fun of(registry: BlockRegistry, folder: Path): AnvilWorld {
+      val nbt = Nbt {
+        variant = NbtVariant.Java
+        compression = NbtCompression.None
+        ignoreUnknownKeys = true
+        serializersModule = SerializersModule {
+          contextual(AnvilChunkSectionSerializer(registry))
+        }
+      }
+
+      val regionFiles = FileSystem.SYSTEM.list(folder.resolve("region"))
+
+      val regions = regionFiles.associateBy { it.name.substringBeforeLast(".") }
+
+      return AnvilWorld(nbt, regions)
     }
-  }
 
-  override fun getChunkAt(x: Int, z: Int): AnvilChunk? {
-    return chunks[(x * LoadFactor + z).toLong()]
+    private fun readChunk(regionFile: Path, nbt: Nbt, chunkX: Int, chunkZ: Int): AnvilChunk? =
+      FileSystem.SYSTEM.read(regionFile) {
+        // Read location entry from location table
+        val locationTable = ByteArray(4096)
+        read(locationTable)
+
+        val pos = ((chunkX and 31) + (chunkZ and 31) * 32) * 4
+        val offset = locationTable[pos + 0].toInt() and 0xff shl 16 or
+          (locationTable[pos + 1].toInt() and 0xff shl 8) or
+          (locationTable[pos + 2].toInt() and 0xff)
+        val size = locationTable[pos + 3].toInt() and 0xFF
+
+        if (offset == 0 && size == 0) {
+          // Chunk not generated yet
+          return null
+        }
+
+        // Read chunk data from file
+        var regionChunkBytes = ByteArray(size * 4096)
+        skip((offset.toLong() - 1) * 4096) // LocationTable already skipped (read)
+        read(regionChunkBytes)
+
+        // Skipping chunk header
+        regionChunkBytes = regionChunkBytes.drop(5).toByteArray()
+        return Nbt(nbt) { compression = NbtCompression.detect(regionChunkBytes) }
+          .decodeFromByteArray<RegionChunk>(regionChunkBytes)
+          .level
+      }
   }
 
   override fun getChunkAt(location: Location): AnvilChunk? {
-    return null
+    return getChunkAt(location.x.toInt(), location.y.toInt())
+  }
+
+  override fun getChunkAt(x: Int, z: Int): AnvilChunk? {
+    val chunkX = x shr 4
+    val chunkZ = z shr 4
+
+    return readChunk(
+      regionFiles["r.${chunkX shr 5}.${chunkZ shr 5}"]!!,
+      nbt,
+      chunkX,
+      chunkZ,
+    )
   }
 }
+
+@Serializable
+@SerialName("")
+internal data class RegionChunk(
+  @SerialName("Level") val level: AnvilChunk,
+  @SerialName("DataVersion") val dataVersion: Int,
+)

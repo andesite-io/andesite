@@ -22,6 +22,7 @@ kotlin {
       dependencies {
         api(projects.andesiteProtocol.andesiteProtocolCommon)
         api(projects.andesiteWorld.andesiteWorldCommon)
+        api("com.squareup.okio:okio:3.3.0")
       }
     }
   }

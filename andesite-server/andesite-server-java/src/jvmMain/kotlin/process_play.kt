@@ -64,7 +64,7 @@ internal suspend fun JavaMinecraftServer.processPlay(session: Session, player: J
   addPlayer(player)
 
   session.sendPacket(
-    PlayerPositionAndLookPacket(
+    PlayerPositionAndLookPacket( // TODO: Save player last pos + send spawn pos on first join
       x = 0.0,
       y = 50.0,
       z = 0.0,
